@@ -1,0 +1,112 @@
+## Created by core on 16/2/25.
+#parse("sys_param.vm")
+##<script type="text/javascript" src="$!{CONTEXT_PATH}/statics/js/sys.js"></script>
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height: 134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="mappCreateForm" action="$!{CONTEXT_PATH}/sys/mapp/${nextAction}"
+      method="post">
+
+
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+     #if(${nextAction}=='create')  令牌名称：#end
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input #if(${nextAction}=='create') type="text"#elseif(${nextAction}=='update') type="hidden"  #end id="token" class="form-control" name="token" value="$!{mapp.token}"
+                   notnull="true">
+
+        </div>
+
+    </div>
+
+
+
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            终端型号：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="phoneModel" class="form-control" name="phoneModel" value="$!{mapp.phoneModel}"
+                   notnull="true">
+
+        </div>
+
+    </div>
+
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+          终端品牌：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="phoneBrand" class="form-control" name="phoneBrand" value="$!{mapp.phoneBrand}"
+                   notnull="true">
+
+        </div>
+
+    </div>
+
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            终端串号：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="phoneImei" class="form-control" name="phoneImei" value="$!{mapp.phoneImei}"
+                   notnull="true">
+
+        </div>
+
+    </div>
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            终端号码：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="mobileNum" class="form-control" name="mobileNum" value="$!{mapp.mobileNum}"
+                   notnull="true"  onchange="checkMobileNum()"><span id="mpspan"></span>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+</form>
+<!--脚部-->
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="saveInfo('mappQry','mappCreateForm','cancel')"><i
+            class="iconfont icon-baocun"></i>保存
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消
+    </button>
+</div>
+

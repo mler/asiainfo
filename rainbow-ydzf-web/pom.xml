@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.bdx</groupId>
+		<artifactId>rainbow</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>com.bdx</groupId>
+	<artifactId>rainbow-ydzf-web</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>rainbow-ydzf-web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<!--指定编码 -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- <start-class>com.test.ApplicationMain</start-class> -->
+
+	</properties>
+
+
+	<dependencies>
+		<!-- spring boot web -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-velocity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- spring boot web end -->
+		
+		<!-- 子模块 -->
+	
+		<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-mapp</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-cache</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+			<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-ydzf-dao</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-ydzf-service</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+			<dependency>
+			<groupId>com.bdx</groupId>
+			<artifactId>rainbow-ydzf-mapp</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- 子模块 end -->
+
+		<!-- other -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.2</version>
+		</dependency>
+		  <dependency>
+		<groupId>com.alibaba</groupId>
+		<artifactId>dubbo</artifactId>
+		<version>2.5.3</version>
+		<exclusions>
+			<exclusion>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+			</exclusion>
+			<exclusion>
+				<groupId>redis.clients</groupId>
+				<artifactId>jedis</artifactId>
+			</exclusion>
+		</exclusions>
+	</dependency>
+<!-- 如果war包启动 -->
+<!-- <dependency>  
+            <groupId>org.apache.tomcat</groupId>  
+            <artifactId>tomcat-servlet-api</artifactId>  
+            <version>7.0.42</version>  
+            <scope>provided</scope>  
+</dependency>   -->
+<!--  -->
+
+		<!-- other end -->
+	</dependencies>
+	<build>
+		<finalName>rainbow-ydzf-web</finalName>
+		  <pluginManagement>
+      <plugins>
+          <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.springframework.boot</groupId>  
+                <artifactId>spring-boot-maven-plugin</artifactId>  
+                <version>1.2.5.RELEASE</version>  
+                <dependencies>  
+                    <!--引入springloaded来实现动态加载-->  
+                    <!--<dependency>  -->
+                        <!--<groupId>org.springframework</groupId>  -->
+                        <!--<artifactId>springloaded</artifactId>  -->
+                        <!--<version>1.2.0.RELEASE</version>  -->
+                    <!--</dependency>  -->
+                </dependencies>  
+                <executions>  
+                    <execution>  
+                        <goals>  
+                            <goal>repackage</goal>  
+                        </goals>  
+                        <configuration>  
+                            <classifier>exec</classifier>  
+                        </configuration>  
+                    </execution>  
+                </executions>  
+                <configuration>  
+                    <!--  <mainClass>com.dhgate.rate.ApplicationSearch</mainClass> -->  
+                    <!--指定监听的端口号-->  
+                    <jvmArguments>  
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=7777  
+                    </jvmArguments>  
+                </configuration>  
+            </plugin>
+      </plugins>
+</pluginManagement>
+	</build>
+</project>

@@ -1,0 +1,136 @@
+#parse("sys_param.vm")
+
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-nav">
+                <a href="$!{CONTEXT_PATH}/employee#employee-list">员工列表</a>
+                &gt;
+                <a href="javascript:void(0)" class="last">查看员工详情</a>
+                <button class="reback" onclick="goBack()"><i class="iconfont icon-left"></i>返回</button>
+            </div>
+            <!--table-->
+            <div class="btn-list">
+                <button class="btn btn-success" onclick="goEdit()"><i class="iconfont icon-bianji"></i>编辑</button>
+            </div>
+            <!--info table-->
+            <table class="table table-bordered detailInfo">
+                <tr class="caption">
+                    <th colspan="7">从业人员基本信息</th>
+                </tr>
+                <tr>
+                    <td>姓名</td>
+                    <td>$!{employee.fullName}</td>
+                    <td>性别</td>
+                    <td>$!{employee.sex}</td>
+                    <td>所属企业</td>
+                    <td>$!{employee.enterpriseId}</td>
+                    <td rowspan="4" class="photo"><img src="$!{CONTEXT_PATH}/img/tb.png" alt="tuxiang" /></td>
+                </tr>
+                <tr>
+                    <td>证件类型</td>
+                    <td>$!{employee.idType}</td>
+                    <td>证件号码</td>
+                    <td>$!{employee.idCode}</td>
+                    <td>出生日期</td>
+                    <td>$!{date.format('yyyy-MM-dd', $!{employee.birthday})}</td>
+                </tr>
+                <tr>
+                    <td>名族</td>
+                    <td>$!{employee.nation}</td>
+                    <td>国籍</td>
+                    <td>$!{employee.citizenship}</td>
+                    <td>政治面貌</td>
+                    <td>$!{employee.politicalLandscape}</td>
+                </tr>
+                <tr>
+                    <td>学历</td>
+                    <td>$!{employee.education}</td>
+                    <td>专业</td>
+                    <td>$!{employee.specialty}</td>
+                    <td>毕业时间</td>
+                    <td>$!{employee.graduationTime}</td>
+                </tr>
+                <tr>
+                    <td>职务</td>
+                    <td>$!{employee.post}</td>
+                    <td>职称</td>
+                    <td>$!{employee.jobTitle}</td>
+                    <td>首次参加工作时间</td>
+                    <td colspan="2">$!{employee.firsttimeWork}</td>
+                </tr>
+                <tr>
+                    <td>工作年限</td>
+                    <td>$!{employee.workExperience}</td>
+                    <td>个人电话</td>
+                    <td>$!{employee.personalPhone}</td>
+                    <td>个人联系地址</td>
+                    <td colspan="2">$!{employee.personalAddredd}</td>
+                </tr>
+                <tr>
+                    <td>个人违法、违纪情况登记</td>
+                    <td colspan="3"></td>
+                    <td>是否需要办理健康证</td>
+                    <td colspan="2">$!{employee.isneedHealth}</td>
+                </tr>
+                <tr>
+                    <td>备注</td>
+                    <td colspan="3"></td>
+                    <td>户籍登记处</td>
+                    <td colspan="2">$!{employee.householdRegister}</td>
+                </tr>
+                <tr class="caption">
+                    <th colspan="7">健康证查看</th>
+                </tr>
+                <tr>
+                    <td>健康证编号</td>
+                    <td>$!{health.healthCode}</td>
+                    <td>工种</td>
+                    <td>$!{health.jobs}</td>
+                    <td>体检结果</td>
+                    <td colspan="2">$!{health.healthResult}</td>
+                </tr>
+                <tr>
+                    <td>发证日期</td>
+                    <td>$!{date.format('yyyy-MM-dd', $!{health.issueDate})}</td>
+                    <td>有效期至</td>
+                    <td>$!{date.format('yyyy-MM-dd', $!{health.validDate})}</td>
+                    <td>健康检查单位</td>
+                    <td colspan="2">$!{health.checkUnit}</td>
+                </tr>
+                <tr>
+                    <td>健康证照片</td>
+                    <td colspan="6" class="cardList">
+                        <a href="#pic" data-toggle="modal"><img src="$!{health.healthPath}" title="点击查看大图" style="width: 150px; height: 100px;" /></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--相册功能-->
+<div class="modal fade pic" id="pic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <img src="$!{health.healthPath}" alt="" />
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+    $(function() {
+
+    });
+
+    function goEdit() {
+        load('$!{CONTEXT_PATH}/employee/edit?employeeId=$!{request.getParameter("employeeId")}');
+    }
+
+    function goBack() {
+        load('$!{CONTEXT_PATH}/employee');
+    }
+</script>

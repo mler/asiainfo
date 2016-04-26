@@ -1,0 +1,124 @@
+#set($X=('update' == ${nextAction}))
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<script src="${RESOURCE_PATH}/js/common.js"></script>
+<form name="skuEditForm" id="skuEditForm" method="POST" onsubmit="return false">
+	#if($X)
+		<input type="hidden" name="skuId" id="skuId" value="$!{sku.skuId}" />
+	#end
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">${action}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品名称</label>
+                <div class="col-sm-4">
+                    <input type="text" id="skuName" name="skuName" class="form-control" notnull="true" value="$!{sku.skuName}"/>
+                </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品规格</label>
+            <div class="col-sm-4">
+                 <input type="text" id="spec" name="spec" class="form-control" notnull="true" value="$!{sku.spec}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品条码</label>
+            <div class="col-sm-4">
+                 <input type="text" id="skuBarcode" name="skuBarcode" notnull="true" class="form-control" value="$!{sku.skuBarcode}"/>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品标准号</label>
+            <div class="col-sm-4">
+                 <input type="text" id="standExeCode" name="standExeCode" class="form-control" notnull="true" value="$!{sku.standExeCode}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">专利号</label>
+            <div class="col-sm-4">
+                 <input type="text" class="form-control" id="patentNum" name="patentNum" value="$!{sku.patentNum}"/>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>保质期</label>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" id="lifeTime" name="lifeTime" notnull="true" class="form-control">
+                        <select name="timetype" id="timetype">
+                            <option value="年">年</option>
+                            <option value="月">月</option>
+                            <option value="天">天</option>
+                        </select>
+				</div>
+            </div>
+          </div>		  
+          <div class="form-group">
+               <label class="col-sm-2 control-label">营养成分</label>
+               <div class="col-sm-10">
+                  <textarea class="form-control" id="functionComponent" name="functionComponent" style="resize:none" placeholder="多项用“;”分隔开" >$!{sku.functionComponent}</textarea>
+               </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label"><font style="color:red">*</font>主要配料</label>
+              <div class="col-sm-10">
+                  <textarea class="form-control" id="mainMaterial" name="mainMaterial" notnull="true" style="resize:none" placeholder="多项用“;”分隔开">$!{sku.mainMaterial}</textarea>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label"><font style="color:red">*</font>存储条件</label>
+              <div class="col-sm-10">
+                   <input type="text" class="form-control" id="storageMethod" notnull="true" name="storageMethod" value="$!{sku.storageMethod}"/>
+              </div>               
+           </div>
+       </div>
+       <div class="modal-footer">
+           <button type="button" class="btn btn-success" onclick="saveSku(1)"><i class="iconfont icon-baocun"></i>保存</button>
+		   #if(!$X)
+             <button type="button" class="btn btn-blue" onclick="saveSku(2)"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+		   #end
+       </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function() { 
+	   var lifeTime = '$!{sku.lifeTime}';
+	   if(lifeTime!=null && lifeTime!=""){
+	      var length = lifeTime.length;
+	      var ltime = lifeTime.substring(0,length-1);
+	      var ttype = lifeTime.substring(length-1,length);
+	      $("#lifeTime").val(ltime);
+	      $("#timetype").val(ttype);
+       }
+    });
+	
+    function saveSku(type){
+	    var ret = true;
+        $("input,select", $("#skuEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("*标记不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}
+        	 }
+        });
+		if(ret){
+        	jQuery.ajax({
+        		url: "${rc.ContextPath}/sku/${nextAction}.do",
+        		data:$("#skuEditForm").serialize(),
+        		type:'POST',
+        		success: function(result){
+            		if(result.success){
+            			alert(result.message);
+                		if(type==2){
+                		  resetFormValue('skuEditForm');
+                		}else{
+    					  $('#addPro').modal('hide');
+                		  window.location.reload();
+                		}
+            	    }else{
+            			alert(result.message);
+            		}
+        		}
+        	});
+		}
+    }
+</script>

@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="${RESOURCE_PATH}/uploadify/uploadify.css">
+<script src="${RESOURCE_PATH}/uploadify/jquery.uploadify.js"></script>
+<div class="modal fade" id="upload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog">
+	      <div class="modal-content">
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h4 class="modal-title" id="myModalLabel">
+	               数据批量上传
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	         	<div class="account">
+					<p><label>模板下载：</label>产品批量导入模板(skufood).xlsx(29k)<a href="$!{RESOURCE_PATH}/template/skufood.xlsx"><i class="iconfont icon-xiazai"></i></a></p>
+					<p>
+                        <label>上传产品</label>
+                        <input type="text" id="fileName" placeholder="请选择文件" disabled="disabled"/>
+                        <span class="fileupload btn">
+							<input type="file" id="uploadify" name="uploadify" class="upload"/>
+                        </span>
+                        <button type="button" onclick="insertBatch()" class="btn btn-warning upload"><i class="iconfont icon-shangchuan"></i>上传</button>
+                    </p>
+					<p id="fileQueue"></p>
+	            </div>
+				<div id="error" class="red"></div>
+	         </div>
+	      </div>
+	</div>
+</div>
+<script>
+     function insertBatch(){
+	    $('#fileQueue').show();
+     	$('#uploadify').uploadify('upload','*');
+	 }
+	 
+	 $(document).ready(function(){
+         $("#uploadify").uploadify({
+             width : 80,
+			 height: 20,
+             swf : '$!{RESOURCE_PATH}/uploadify/uploadify.swf',
+             uploader : '$!{rc.ContextPath}/sku/batchInsert.do',
+             fileDesc : '',
+             fileTypeExts : '*.xls;*.xlsx',
+             method : 'post',
+             multi : false,
+             folder: 'UploadFile',
+             queueID: 'fileQueue',
+    		 successTimeout: 120,
+			 queueSizeLimit: 1,
+    		 fileSizeLimit:'1024KB',
+			 hideButton: false,
+             auto: false,
+    		 buttonText : '<i class="iconfont icon-wenjianjia"></i>选择文件',
+    		 fileObjName : 'file',
+			 onSelect: function(file, data) {
+                $('#fileName').val(file.name);    
+                $('#queue').hide();
+             },
+             onUploadSuccess : function(file, data, response) {
+    			 if(data != null && data != ""){
+                   	$('#error').html(data);
+    			 }else{
+    				alert("导入成功!");
+					$('#upload').modal('hide');
+					window.location.reload();
+    			}
+            }
+        });
+	});
+</script>

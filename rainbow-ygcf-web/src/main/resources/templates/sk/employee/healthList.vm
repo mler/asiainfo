@@ -1,0 +1,33 @@
+#set($layout = "/sk/employee/layout.vm")
+#parse("sys_param.vm")
+
+
+
+    <table class="table table-bordered inner_table table-condensed table-striped table-hover">
+        <tr>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>编号</th>
+            <th>体检结果</th>
+            <th>工种</th>
+            <th>发证日期</th>
+            <th>有效期</th>
+            <th>健康检查单位</th>
+            <th>是否有效</th>
+            <th>操作</th>
+        </tr>
+        #foreach($row in $list)
+        <tr>
+            <td>$!{velocityCount}</td>
+            <td>$!{employee.fullName}</td>
+            <td>$!{row.healthCode}</td>
+            <td>$!{row.jobs}</td>
+            <td>$!{row.healthResult}</td>
+            <td>$!{date.format('yyyy-MM-dd', $!{row.issueDate})}</td>
+            <td>$!{date.format('yyyy-MM-dd', $!{row.validDate})}</td>
+            <td>$!{row.checkUnit}</td>
+            <td>$!{row.status}</td>
+            <td><a href="#check" data-toggle="modal">查看</a></td>
+        </tr>
+        #end
+    </table>

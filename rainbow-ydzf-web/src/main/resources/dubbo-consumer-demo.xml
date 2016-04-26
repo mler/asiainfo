@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+ 	 <dubbo:application name="rainbow-ydzf-consumer"  />
+   <dubbo:registry id="common" address="${dubbo.registry.address}" timeout="${dubbo.timeout}"  check="true"/>
+   <dubbo:consumer generic="false"/>
+   
+  <!--  	<dubbo:registry id="juan" address="zookeeper://10.10.31.68:2181" timeout="${dubbo.timeout}"/> -->
+   
+<!--    <dubbo:registry id="shufeng" address="zookeeper://10.10.31.153:2181" timeout="${dubbo.timeout}"/> -->
+
+   <!-- usrdubbo -->
+  <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubUserService" id="dubUserService" timeout="10000" registry="common"  check="true"  />
+   <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubDeptService" id="dubDeptService" timeout="10000" registry="common"  check="true"/>
+   <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubDicService" id="dubDicService" timeout="10000"  registry="common" check="true" />
+   
+   
+<!--       <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubUserService" id="dubUserService" timeout="10000"   check="true" url="dubbo://10.10.31.153:20888"/>
+   <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubDeptService" id="dubDeptService" timeout="10000"   check="true" url="dubbo://10.10.31.153:20888"/>
+   <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubDicService" id="dubDicService" timeout="10000"  check="true" url="dubbo://10.10.31.153:20888"/> -->
+   
+   <!-- baseduubo -->
+    <dubbo:reference interface="com.bdx.rainbow.basic.dubbo.service.IEnterpriseDubboService" id="enterpriseService" timeout="10000" registry="common"  check="true"/>
+	<dubbo:reference interface="com.bdx.rainbow.basic.dubbo.service.ILawDubboService" id="lawDubboService" timeout="10000" registry="common"  check="true"/>
+	
+     <dubbo:reference interface="com.bdx.rainbow.vfs.dubbo.IFileDubboService" id="fileDubboService" registry="common" check="true"  timeout="100000"/>  
+ <!--  
+ <dubbo:reference interface="com.bdx.rainbow.ydzf.dubbo.IDubboService" id="ydzfDubboTestService" timeout="10000"/>
+-->
+	
+</beans>

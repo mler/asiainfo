@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>移动执法</title>
+    <!-- Bootstrap core CSS -->
+    <link href="../js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    	<!--link the font css-->
+    	<link rel="stylesheet" href="../fonts/iconfont.css" />
+    	<!--global css-->
+    	<link rel="stylesheet" href="../css/global.css" />
+
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+  		
+<div class="SecondLevelMenu">
+	<a href="routine_inspection_tasks.html">日常巡检任务</a>
+	<a href="special_task.html" class="active">专项任务</a>
+	<a href="spot_checks_task.html">突击抽查任务</a>
+	<a href="inspection_task.html">抽验任务</a>
+</div>
+
+
+  	
+    <div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+        		<div class="searchArea">
+	        		<div class="form-group">
+	        			<label>巡检单位：</label>
+	        			<input type="text" class="FormGroupInput">
+	        			<label>任务计划执行时间：</label>
+		        		<div class="inputbox form-control" style="margin-right:0px;">
+		        			<input type="text" class="date1"/>
+		        			<i class="iconfont icon-date"></i>
+		        		</div>
+		        		－
+		        		<div class="inputbox form-control">
+		        			<input type="text" class="date2"/>
+		        			<i class="iconfont icon-date"></i>
+		        		</div>
+		        		<label>执行状态：</label>
+		        		<div class="inputbox form-control">
+			        		<select name="" class="form-control">
+		        				<option value="">请选择</option>
+		        				<option value="">执行中</option>
+		        				<option value="">未执行</option>
+		        				<option value="">已执行</option>
+		        			</select>
+	        			</div>
+	        		</div>
+	        		<button class="btn btn-primary search"><i class="iconfont icon-sousuo"></i>查询</button>
+	          </div>
+          
+	        	<div class="search_area clearfix">
+	        		<div class="col-sm-12">
+		        		<button class="btn btn-success" data-toggle="modal" data-target="#addPro"><i class="iconfont icon-jia"></i>添加</button>
+		        		<button class="btn btn-blue"><i class="iconfont icon-shanchu"></i>删除</button>
+	        		</div>
+	        	</div>
+        		<div class="table_area m-t-sm TableControl">
+  				<table class="table table-bordered table-striped table-hover">
+  					<tr>
+  						<th><input type="checkbox" /></th>
+  						<th>序号</th>
+  						<th>巡检任务编号</th>
+  						<th>稽查单位</th>
+  						<th>管辖范围</th>
+  						<th>任务计划执行开始日期</th>
+  						<th>任务计划执行开始日期</th>
+  						<th>执行状态</th>
+  						<th>操作</th>
+  					</tr>
+  					<tr>
+  						<td><input type="checkbox" /></td>
+  						<td>1</td>
+  						<td><a href="#" data-toggle="modal" data-target="#CaseReview">150501</a></td>
+  						<td>咸阳市食品药品稽查支队</td>
+  						<td>咸阳市</td>
+  						<td>2015/05/01</td>
+  						<td>初步调查</td>
+  						<td class="blue">执行中</td>
+  						<td><a href="#" class="orange" data-toggle="modal" data-target="#addPro">修改</a></td>
+  					</tr>
+  					<tr>
+  						<td><input type="checkbox" /></td>
+  						<td>1</td>
+  						<td><a href="#" data-toggle="modal" data-target="#addPro22">150501</a></td>
+  						<td>咸阳市食品药品稽查支队</td>
+  						<td>咸阳市</td>
+  						<td>2015/05/01</td>
+  						<td>初步调查</td>
+  						<td class="blue">执行中</td>
+  						<td><a href="#" class="orange" data-toggle="modal" data-target="#addPro">修改</a></td>
+  					</tr>
+  					<tr>
+  						<td><input type="checkbox" /></td>
+  						<td>1</td>
+  						<td><a href="#" data-toggle="modal" data-target="#seeinfo">150501</a></td>
+  						<td>咸阳市食品药品稽查支队</td>
+  						<td>咸阳市</td>
+  						<td>2015/05/01</td>
+  						<td>初步调查</td>
+  						<td class="blue">执行中</td>
+  						<td><a href="#" class="orange" data-toggle="modal" data-target="#addPro">修改</a></td>
+  					</tr>
+  					<tr>
+  						<td><input type="checkbox" /></td>
+  						<td>2</td>
+  						<td><a href="#" data-toggle="modal" data-target="#seeinfo">150501</a></td>
+  						<td>咸阳市食品药品稽查支队</td>
+  						<td>咸阳市</td>
+  						<td>2015/05/01</td>
+  						<td>初步调查</td>
+  						<td class="gray">未执行</td>
+  						<td><a href="#" class="orange" data-toggle="modal" data-target="#addPro">修改</a></td>
+  					</tr>
+  					<tr>
+  						<td><input type="checkbox" /></td>
+  						<td>2</td>
+  						<td><a href="#" data-toggle="modal" data-target="#seeinfo">150501</a></td>
+  						<td>咸阳市食品药品稽查支队</td>
+  						<td>咸阳市</td>
+  						<td>2015/05/01</td>
+  						<td>初步调查</td>
+  						<td class="green">已执行</td>
+  						<td><a href="#" class="orange" data-toggle="modal" data-target="#addPro">修改</a></td>
+  					</tr>
+  				</table>  
+  				<div class="pageBar clearfix">
+	          		<ul class="pagination">
+					  <li class="previous"><a href="#">上一页</a></li>
+					  <li class="active"><a href="#">1</a></li>
+					  <li><a href="#">2</a></li>
+					  <li><a href="#">3</a></li>
+					  <li><a href="#">4</a></li>
+					  <li><a href="#">5</a></li>
+					  <li class="next"><a href="#">下一页</a></li>
+					</ul>
+	          	</div>
+        		</div>
+        </div>
+    </div>
+    
+    
+    <!--modal start  添加 -->
+    <div class="modal fade" id="addPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">新增专项任务</h4>
+	      </div>
+	      <div class="modal-body addinfo">
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">巡检任务编号</label>
+	      		<div class="col-sm-4">
+	      			XY150501
+	      		</div>
+	      		<label class="control-label col-sm-2">任务制定部门</label>
+	      		<div class="col-sm-4">
+	      			咸阳市食品药品稽查支队
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">任务制定人</label>
+	      		<div class="col-sm-4">
+			        刘小军
+	      		</div>
+	      		<label class="control-label col-sm-2">投诉创建时间</label >
+	      		<div class="col-sm-4">
+	      			2016-02-23
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2" style="line-height:30px;">巡检单位</label>
+	      		<div class="col-sm-10">
+	      			
+<div class="searchArea" style="padding:0px;">
+    		<div class="inputbox form-control">
+        		<select name="" class="form-control">
+    				<option value="">请选择</option>
+    				<option value="">执行中</option>
+    				<option value="">未执行</option>
+    				<option value="">已执行</option>
+    			</select>
+		</div>
+</div>	      			
+
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2" style="line-height:30px;">任务计划执行时间</label>
+	      		<div class="col-sm-10">
+<div class="searchArea" style="padding:0px;">
+	<div class="form-group">
+		<div class="inputbox form-control" style="margin-right:0px;">
+			<input type="text" class="date1"/>
+			<i class="iconfont icon-date"></i>
+		</div>
+		－
+		<div class="inputbox form-control">
+			<input type="text" class="date2"/>
+			<i class="iconfont icon-date"></i>
+		</div>
+	</div>
+  </div>
+	      		</div>
+	      	</div>
+	      	
+	      <div class="form-group">
+	      		<label class="control-label col-sm-2" style="line-height:30px;">巡检范围</label>
+<div class="col-sm-10 CaseReviewRadio">
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+		    批准立案
+		  </label>
+		</div>
+		<div class="col-sm-10 inputbox form-control" style="width:200px;">
+        		<select name="" class="form-control">
+    				<option value="">请选择</option>
+    				<option value="">执行中</option>
+    				<option value="">未执行</option>
+    				<option value="">已执行</option>
+    			</select>
+  		</div>
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+		    批准立案
+		  </label>
+		</div>
+</div>
+	      </div>
+
+	      	
+	      <div class="form-group">
+	      		<label class="control-label col-sm-2" style="line-height:30px;">监管对象</label>
+<div class="col-sm-10 CaseReviewRadio">
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+		    批准立案
+		  </label>
+		</div>
+		<div class="col-sm-10 inputbox form-control" style="width:200px;">
+        		<select name="" class="form-control">
+    				<option value="">请选择</option>
+    				<option value="">执行中</option>
+    				<option value="">未执行</option>
+    				<option value="">已执行</option>
+    			</select>
+  		</div>
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+		    批准立案
+		  </label>
+		</div>
+</div>
+	      </div>
+	
+	      	
+	      <div class="form-group">
+	      		<label class="control-label col-sm-2" style="line-height:30px;">巡检人员</label>
+<div class="col-sm-10 CaseReviewRadio">
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+		    批准立案
+		  </label>
+		</div>
+		<div class="col-sm-10 inputbox form-control" style="width:200px;">
+        		<select name="" class="form-control">
+    				<option value="">请选择</option>
+    				<option value="">执行中</option>
+    				<option value="">未执行</option>
+    				<option value="">已执行</option>
+    			</select>
+  		</div>
+		<div class="radio" style="padding-top:6px;">
+		  <label>
+		    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+		    批准立案
+		  </label>
+		</div>
+</div>
+	      </div>
+	
+
+			<div class="form-group">
+	      		<label class="control-label col-sm-2">备注</label>
+	      		<div class="col-sm-10">
+	      			<textarea name="message" title="请输入备注内容" rows="6" placeholder="请输入备注内容"></textarea>
+	      		</div>
+	      	</div>
+	      	
+	      
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="iconfont icon-baocun"></i>保存</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	</div>
+	<!-- end -->
+
+
+
+
+    <!--modal start  查看 -->
+    <div class="modal fade" id="CaseReview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">查看日常巡检任务</h4>
+	      </div>
+	      <div class="modal-body addinfo">
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">巡检任务编号</label>
+	      		<div class="col-sm-4">
+	      			XY150501
+	      		</div>
+	      		<label class="control-label col-sm-2">任务制定部门</label>
+	      		<div class="col-sm-4">
+	      			咸阳市食品药品稽查支队
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">任务制定人</label>
+	      		<div class="col-sm-4">
+			        刘小军
+	      		</div>
+	      		<label class="control-label col-sm-2">投诉创建时间</label >
+	      		<div class="col-sm-4">
+	      			2016-02-23
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">巡检单位</label>
+	      		<div class="col-sm-4">
+			        武功县食品药品稽查支队
+	      		</div>
+	      		<label class="control-label col-sm-2">任务计划执行日期</label >
+	      		<div class="col-sm-4">
+	      			2016-02-23 至 2016-07-23
+	      		</div>
+	      	</div>
+	      	<div class="form-group">
+	      		<label class="control-label col-sm-2">任务状态</label>
+	      		<div class="col-sm-10 green">
+			        已执行
+	      		</div>
+	      	</div>
+	      	
+	      	<div class="AuditObject">
+	      		<h1>稽查对象</h1>
+	      		<div class="AuditObjectList">
+		      		<div class="form-group">
+			      		<div class="col-sm-6">
+			      			<i class="iconfont icon-jichabananrenwu greens"></i><h2>咸阳市天源海鲜狮子楼</h2><span>XY234501</span><span>餐饮业</span>
+			      		</div>
+			      		<div class="col-sm-4">
+			      			<i class="iconfont icon-jichaduixiang orange"></i><h2 class="audit_object_margin">王小君</h2><i class="iconfont icon-jichashouji greens"></i><h2>13876787678</h2>
+			      		</div>
+			      		<div class="col-sm-2 blue textaling_r">
+			      			<h2 class="red">不合格</h2>
+			      		</div>
+			      	</div>
+			      	<div class="form-group AuditObjectInfo">
+			      		<label class="col-sm-2 textaling_r">地址:</label>
+			      		<div class="col-sm-3">咸阳市人民大道213号</div>
+			      		<label class="col-sm-2 textaling_r">抽验人员:</label>
+			      		<div class="col-sm-3">杨俊</div>
+			      		<div class="col-sm-2 textaling_r">2016-02-23</div>
+			      		<label class="col-sm-2 textaling_r">取证材料:</label>
+			      		<div class="col-sm-10 ForensicMaterials">
+			      			<a href="#">1.执法文书.png</a>
+			      			<a href="#">2.录音取证<i class="iconfont icon-jichayuyin greens"></i></a>
+			      			<a href="#">3.照片取证.png</a>
+			      			<a href="#">4.巡查记录表.exl</a>
+						</div>
+						<label class="col-sm-2 textaling_r">关联案件编号：</label>
+			      		<div class="col-sm-10 blue">20150529163148963753</div>
+			      	</div>
+			    </div>
+			    <div class="AuditObjectList">
+		      		<div class="form-group">
+			      		<div class="col-sm-6">
+			      			<i class="iconfont icon-jichabananrenwu greens"></i><h2>咸阳市天源海鲜狮子楼</h2><span>XY234501</span><span>餐饮业</span>
+			      		</div>
+			      		<div class="col-sm-4">
+			      			<i class="iconfont icon-jichaduixiang orange"></i><h2 class="audit_object_margin">王小君</h2><i class="iconfont icon-jichashouji greens"></i><h2>13876787678</h2>
+			      		</div>
+			      		<div class="col-sm-2 blue textaling_r">
+			      			<h2 class="greens">合格</h2>
+			      		</div>
+			      	</div>
+			      	<div class="form-group AuditObjectInfo">
+			      		<label class="col-sm-2 textaling_r">地址:</label>
+			      		<div class="col-sm-3">咸阳市人民大道213号</div>
+			      		<label class="col-sm-2 textaling_r">抽验人员:</label>
+			      		<div class="col-sm-3">杨俊</div>
+			      		<div class="col-sm-2 textaling_r">2016-02-23</div>
+			      		<label class="col-sm-2 textaling_r">取证材料:</label>
+			      		<div class="col-sm-10 ForensicMaterials">
+			      			<a href="#">1.执法文书.png</a>
+			      			<a href="#">2.录音取证<i class="iconfont icon-jichayuyin greens"></i></a>
+			      			<a href="#">3.照片取证.png</a>
+			      			<a href="#">4.巡查记录表.exl</a>
+						</div>
+						<label class="col-sm-2 textaling_r">关联案件编号：</label>
+			      		<div class="col-sm-10 blue">20150529163148963753</div>
+			      	</div>
+			    </div>
+			    <div class="AuditObjectList">
+		      		<div class="form-group">
+			      		<div class="col-sm-6">
+			      			<i class="iconfont icon-jichabananrenwu greens"></i><h2>咸阳市天源海鲜狮子楼</h2><span>XY234501</span><span>餐饮业</span>
+			      		</div>
+			      		<div class="col-sm-4">
+			      			<i class="iconfont icon-jichaduixiang orange"></i><h2 class="audit_object_margin">王小君</h2><i class="iconfont icon-jichashouji greens"></i><h2>13876787678</h2>
+			      		</div>
+			      		<div class="col-sm-2 blue textaling_r">
+			      			<h2 class="greens">合格</h2>
+			      		</div>
+			      	</div>
+			      	<div class="form-group AuditObjectInfo">
+			      		<label class="col-sm-2 textaling_r">地址:</label>
+			      		<div class="col-sm-3">咸阳市人民大道213号</div>
+			      		<label class="col-sm-2 textaling_r">抽验人员:</label>
+			      		<div class="col-sm-3">杨俊</div>
+			      		<div class="col-sm-2 textaling_r">2016-02-23</div>
+			      		<label class="col-sm-2 textaling_r">取证材料:</label>
+			      		<div class="col-sm-10 ForensicMaterials">
+			      			<a href="#">1.执法文书.png</a>
+			      			<a href="#">2.录音取证<i class="iconfont icon-jichayuyin greens"></i></a>
+			      			<a href="#">3.照片取证.png</a>
+			      			<a href="#">4.巡查记录表.exl</a>
+						</div>
+						<label class="col-sm-2 textaling_r">关联案件编号：</label>
+			      		<div class="col-sm-10 blue">20150529163148963753</div>
+			      	</div>
+			    </div>
+			    
+			    
+	      	</div>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="iconfont icon-baocun"></i>保存</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+	      </div>
+	      
+	    </div>
+	  </div>
+	</div>
+	<!-- end -->
+	
+
+	
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../js/jquery-1.11.1.js"></script>
+    <script src="../js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../js/self.js"></script>
+  </body>
+  <script type="text/javascript">
+  	document.getElementById("uploadBtn").onchange=function(){
+  		document.getElementById("fileName").value=this.value;
+  	};
+  	$(function(){
+  		$('#storage').click(function(){
+  			var check=$(this)
+  			var addr=$(this).parent().parent().next();
+  			if(check.is(':checked')){
+  				addr.slideUp();
+  			}else{
+  				addr.slideDown();
+  			}
+  		});
+  	})
+  </script>
+</html>
+

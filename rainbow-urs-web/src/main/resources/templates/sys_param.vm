@@ -1,0 +1,4 @@
+#set($CONTEXT_PATH = ${rc.contextPath})
+<script>
+	var base = '$!{CONTEXT_PATH}';
+</script>

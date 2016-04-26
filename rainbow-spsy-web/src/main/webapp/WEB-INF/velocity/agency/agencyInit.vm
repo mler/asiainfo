@@ -1,0 +1,66 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>经销商管理</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+	<div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+	        	<div class="search_area clearfix">
+	        		<div class="col-sm-4">
+		        		<button class="btn btn-success" data-toggle="modal" onclick="editInfo('$!{rc.ContextPath}/agency/create.do')"><i class="iconfont icon-jia"></i>添加</button>
+		        		<!--<button class="btn btn-warning" data-toggle="modal" data-target="#upload"><i class="iconfont icon-shangchuan"></i>批量上传</button>-->
+	        		</div>
+	        	</div>
+        	<div id="pagelist" class="table_area m-t-sm"></div>
+        </div>
+      </div>
+   </div>
+   <div class="modal fade" id="addPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+			#parse("/agency/agencyEdit.vm")
+        </div>
+    </div>
+   </div>
+   ##parse("/layout/uploadfile.vm")
+</body>
+#parse("/layout/sys_js.vm")
+<script type="text/javascript">	
+	$(document).ready(function() { 
+	   goSearch(1);
+	   //移除数据，让模态框打开时重新加载数据
+	   $("#addPro").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+       });
+    });
+	
+	function editInfo(url){
+	   $("#addPro").modal({
+	      remote:url,
+		  backdrop:'static'
+	   });
+	}
+	
+	function goSearch(page){
+	   var agcname = $("#agencyName").val();
+	   var data = {agencyName:agcname,pageStart:page};
+	   $("#pagelist").load("${rc.ContextPath}/agency/list.do",data);
+	}
+	
+	function goPage(page){
+	   var currpage = $("#pageNumber").val();
+       var nextpage;
+       if(page>0){
+          nextpage = parseInt(currpage)+1;
+       }else{
+          nextpage = parseInt(currpage)-1;
+       }
+	   goSearch(nextpage);
+	}
+</script>
+</html>

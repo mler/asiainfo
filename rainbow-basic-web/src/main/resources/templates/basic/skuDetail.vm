@@ -1,0 +1,111 @@
+<style type="text/css">
+	.jumbotron{
+		width:100%;
+		height:100%;
+	}
+	.jumbotron ul{
+		list-style:none;
+		overflow:hidden;
+		margin-left: -60px;
+	}
+	.jumbotron li{
+		float: left;
+        width: 20%;
+        text-align: center;
+	}
+	.jumbotron li img{
+		width: 100%;
+		height: 140px;
+		padding: 15px;
+	}
+	.jumbotron li input{
+		font-size: 14px;
+		width:70%;
+        max-width: 100px;
+        height: 30px;
+        line-height: 30px;
+	}
+</style>
+#if(${sku.status} == "0" || ${admin} == 1 || ${admin} == '1' )
+    <a href="javascript:void(0)" onclick="doWithSku(0)" >	
+		保存
+	</a>
+	&nbsp;&nbsp;&nbsp;
+    <a href="javascript:void(0)" onclick="doWithSku(2)" >		
+		删除
+	</a>
+	&nbsp;&nbsp;&nbsp;
+	#if(${sku.status} == "0" && (${admin} == 1 || ${admin} == '1') )
+	<a href="javascript:void(0)" onclick="doWithSku(1)" >		
+		审核通过
+	</a>
+	#end
+#end
+<form id="sku_detail_form">
+	<input type="hidden" value="$!{sku.skuId}" name="skuId" id="sku.skuId"/>
+    <table class="table table-hover table-striped  table-bordered" >
+    	<tr >
+            <th>商品条形码</th><td><input type="text" value="$!{sku.skuBarcode}" name="skuBarcode"/></td>
+            <th>商品名称</th><td><input type="text" value="$!{sku.skuName}" name="skuName"/></td>
+    	</tr><tr>
+    		<th>保质期</th><td ><input type="text" value="$!{sku.lifeTime}" name="lifeTime"/></td>
+			
+			<th>品牌</th><td ><input type="text" value="$!{sku.brand}" name="skuBrand"/></td>
+        </tr><tr >
+    		<th>生产厂家</th><td><input type="text" value="$!{sku.companyName}" name="companyName"/></td>
+    		<th>生产厂商编码</th><td ><input type="text" value="$!{sku.manufactoryCode}" name="manufactoryCode"/></td>
+        </tr><tr >
+    		<th>生产地址</th><td ><input type="text" value="$!{sku.productAddress}" name="productAddress"/></td>
+    		<th>产地</th><td ><input type="text" value="$!{sku.productionArea}" name="productionArea"/></td>
+        </tr><tr >
+    		<th>规格</th><td ><input type="text" value="$!{sku.spec}" name="spec"/></td>
+    		<td colspan="2">&nbsp;
+    		</td>
+        </tr>
+    </table>
+	<div class="jumbotron">
+		<h4 align="center">商品展示图</h4>
+		#if ($null.isNull($imgs) || $imgs.size()==0)
+			&nbsp;
+		#else
+            <ul>
+			#foreach($imgItem in $imgs)
+				<li >
+    				<a class="fancyboxDe" href="$imgItem" rel="groupDetail" title="pic"> 
+    					<img src="$imgItem"/>
+    				</a>
+					##<input type="button" value="删除"/>
+				</li>
+				
+			#end
+			</ul>
+		#end
+    	  ##<div id="fileQueue"></div>
+         ## <input type="file" name="uploadify" id="uploadify" />
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function() {
+		$(".fancyboxDe").fancybox({
+			'padding'			: 0,
+			'width'				: '100%',
+			'height'			: '100%',
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			 'openEffect'  : 'none',
+			 'closeEffect' : 'none',
+			 'prevEffect' : 'none',
+			 'nextEffect' : 'none',
+			 'closeBtn'  : false,
+			 'arrows': false,
+			 'helpers' : {
+				'title' : {
+					'type' : 'inside'
+				},
+				'media' : {},
+				'buttons'	: {}
+			 }		
+    	});
+    });
+</script>
+

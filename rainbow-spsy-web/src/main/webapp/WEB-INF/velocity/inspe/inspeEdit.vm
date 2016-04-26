@@ -1,0 +1,384 @@
+#set($X=('update' == ${nextAction}))
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<form name="inspeEditForm" id="inspeEditForm" method="POST" onsubmit="return false">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">${action}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+			<input type="hidden" name="purchaseId" id="purchaseId" value="$!{inspectionInfo.purchaseId}"/>
+			<input type="hidden" name="detectionResult" id="detectionResult" value="$!{inspectionInfo.detectionResult}"/>
+			<input type="hidden" name="detectionReport" id="detectionReport" value="$!{inspectionInfo.detectionReport}"/>
+            #if($X)
+                <input type="hidden" name="productDetectionId" id="productDetectionId" value="$!{inspectionInfo.productDetectionId}"/>
+            #end
+            <label class="control-label col-sm-2"><font style="color:red">*</font>检测对象类型</label>
+            <div class="col-sm-4">
+                <select class="form-control" name="detectionObjectType" id="detectionObjectType" notnull="true">
+                    <option value="">请选择</option>
+					#foreach($param in $oparams)
+                        <option value="${param.pValue}">$!{param.pDesc}</option>
+					#end
+                </select>				
+            </div>
+			<label class="col-sm-2 control-label"><font style="color:red">*</font>检测批次</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="detectionBatch" id="detectionBatch" value="$!{inspectionInfo.detectionBatch}" notnull="true"/>
+            </div>          
+        </div>
+        <div class="form-group">
+			<label class="control-label col-sm-2"><font style="color:red">*</font>检测对象</label>
+            <div class="searInput col-sm-4">
+				<input type="hidden" id="skuId" name="detectionObject" value="$!{inspectionInfo.detectionObject}"/>
+				<input type="hidden" id="oldSkuName" name="oldSkuName" value="$!{inspectionInfo.detectionObjectName}"/>
+                <input type="text" class="form-control" name="detectionObjectName" id="skuName" value="$!{inspectionInfo.detectionObjectName}" notnull="true" placeholder="输入产品或原材料名称"/>
+				<a href="javascript:void(0)" class="btn btn-default" onclick="selectObject()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>检测时间</label >
+            <div class="inputbox col-sm-4">
+                <input type="text" class="Wdate form-control" name="detectionTime" id="detectionTime" onclick="WdatePicker({lang:'zh-cn'})" value="$!date.format('yyyy-MM-dd',$!{inspectionInfo.detectionDate})" notnull="true"/>
+				<i class="iconfont icon-date" onclick="javascript:document.getElementById('detectionTime').click();"></i>
+			</div>
+        </div>
+		<div id="objList" class="form-group search_result"></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>检测方式</label>
+            <div class="col-sm-4">
+                <select id="detectionMode" name="detectionMode" class="form-control" notnull="true">
+                    <option value="">请选择</option>                 
+					#foreach($param in $mparams)
+                        <option value="${param.pValue}">$!{param.pDesc}</option>
+					#end
+                </select>
+            </div>
+            <label class="control-label col-sm-2">检测标准</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="detectionStandards" id="detectionStandards" value="$!{inspectionInfo.detectionStandards}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>采购或生产日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" class="Wdate form-control" name="productionTime" id="productionTime" onclick="WdatePicker({lang:'zh-cn'})" value="$!date.format('yyyy-MM-dd',$!{inspectionInfo.productionDate})" notnull="true"/>
+				<i class="iconfont icon-date" onclick="javascript:document.getElementById('productionTime').click();"></i>
+			</div>
+            <label class="col-sm-2 control-label"><font style="color:red">*</font>检测基数</label>
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="half half_left">
+                        <input type="text" class="form-control" name="detectionBaseNum" id="detectionBaseNum" value="$!{inspectionInfo.detectionBaseNum}" notnull="true" placeholder="总数"/>
+                    </div>
+                    <span class="percent">/</span>
+                    <div class="half">
+                        <input type="text" class="form-control" name="detectionNumber" id="detectionNumber" value="$!{inspectionInfo.detectionNumber}" notnull="true" placeholder="检测数量"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group radiobox" >
+            <label class="col-sm-2 control-label">检测人员</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="detectionPerson" id="detectionPerson" value="$!{inspectionInfo.detectionPerson}"/>
+            </div>
+            <label class="col-sm-2 control-label"><font style="color:red">*</font>检测结果</label>
+            <div class="col-sm-4">
+                <input type="radio" name="decresult" id="decresult" checked value="0" onclick="selectdectype('0')"/>合格
+				<input type="radio" class="no" name="decresult" id="decresult" value="1" onclick="selectdectype('1')"/>不合格
+				<!--
+				<select name="detectionResult" id="detectionResult" class="form-control" notnull="true">
+					#foreach($param in $rparams)
+                        <option value="${param.pValue}">$!{param.pDesc}</option>
+					#end
+                </select>
+				-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">检测结果确认人</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="detectionConfirmPerson" id="detectionConfirmPerson" value="$!{inspectionInfo.detectionConfirmPerson}"/>
+            </div>
+        </div>
+		
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><font style="color:red">*</font>检测报告</label>
+			<div class="col-sm-10">
+				<span class="fileupload btn">
+					<input type="file" id="uploadify" name="uploadify" class="upload"/>
+				</span>
+				<p id="fileQueue"></p>
+				<div id="imgList" class="imgList">
+					#foreach($fileid in $fileIds)
+						<div class="imgItem">
+							<img id="$fileid" src="$!file.getUrl(${fileid})" height="110" width="100" style="cursor: pointer;">
+							<a onclick="imagedel('$fileid')" id="$fileid">×</a>
+						</div>
+					#end
+				</div>
+			</div>
+        </div>
+		
+		<!--
+        <div class="form-group radiobox">
+            <label class="col-sm-3 control-label">是否复制到下一条数据</label>
+            <div class="col-sm-9">
+                <input type="radio"/>
+                是
+                <input type="radio" class="no"/>
+                否
+                <span>(点击保存并继续添加按钮有效)</span>
+            </div>
+        </div>
+		-->
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="saveInfo()"><i class="iconfont icon-baocun"></i>保存</button>
+        #if(!$X)
+			<button type="button" class="btn btn-blue"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+		#end
+    </div>
+</form>
+<link rel="stylesheet" href="${RESOURCE_PATH}/uploadify/uploadify.css">
+<script src="${RESOURCE_PATH}/uploadify/jquery.uploadify.js"></script>
+<script>	
+	$(document).ready(function() { 
+        #if($X)
+    		$("#detectionObjectType").val('$!{inspectionInfo.detectionObjectType}');
+            $("#detectionResult").val('$!{inspectionInfo.detectionResult}');
+    		$("#detectionMode").val('$!{inspectionInfo.detectionMode}');
+			var detectionResult = '$!{inspectionInfo.detectionResult}';
+			$("input[name='decresult'][value='"+detectionResult+"']").attr("checked","checked");
+		#end
+
+		$("#uploadify").uploadify({	    	
+    	    width : 80,
+    		height: 20,
+    	    swf : '$!{RESOURCE_PATH}/uploadify/uploadify.swf',
+    	    uploader : '$!{rc.ContextPath}/upload/imageUpload.do',
+    	    fileDesc : '',
+    	    fileTypeExts : '*.gif;*.jpg;*.png;*.jpeg',
+    	    method : 'post',
+    	    multi : true,
+    	    uploadLimit: 2,
+			queueSizeLimit: 2,
+			fileSizeLimit: '1MB',
+    	    buttonText : '上传报告',
+    	    fileObjName : 'file',
+			overrideEvents: ['onSelectError', 'onUploadError', 'onDialogClose'],
+    	    onUploadSuccess : function(file, data, response) {
+    	    if(response){
+    	        addImg(data);
+    	      }
+    	    },
+		onSelectError : function(file, errorCode, errorMsg) {
+			var msgText = "选择失败\n";
+            switch (errorCode) {
+                case SWFUpload.QUEUE_ERROR.QUEUE_LIMIT_EXCEEDED:
+                    msgText += "每次最多上传 " + this.settings.queueSizeLimit + "个文件,取消后重新选择";
+                    break;
+                case SWFUpload.QUEUE_ERROR.FILE_EXCEEDS_SIZE_LIMIT:
+                    msgText += "文件大小超过限制( " + this.settings.fileSizeLimit + " )";
+                    break;
+                case SWFUpload.QUEUE_ERROR.ZERO_BYTE_FILE:
+                    msgText += "文件大小为0";
+                    break;
+                case SWFUpload.QUEUE_ERROR.INVALID_FILETYPE:
+                    msgText += "文件格式不正确，仅限 " + this.settings.fileTypeExts;
+                    break;
+                default:
+                    msgText += "错误代码：" + errorCode + "\n" + errorMsg;
+            }
+            alert(msgText);
+           },	
+        onUploadError : function(file, errorCode, errorMsg,errorString) {
+            // 手工取消不弹出提示
+            if (errorCode == SWFUpload.UPLOAD_ERROR.FILE_CANCELLED
+                    || errorCode == SWFUpload.UPLOAD_ERROR.UPLOAD_STOPPED) {
+                return;
+            }
+            var msgText = "上传失败\n";
+            switch (errorCode) {
+                case SWFUpload.UPLOAD_ERROR.HTTP_ERROR:
+                    msgText += "HTTP 错误\n" + errorMsg;
+                    break;
+                case SWFUpload.UPLOAD_ERROR.MISSING_UPLOAD_URL:
+                    msgText += "上传文件丢失，请重新上传";
+                    break;
+                case SWFUpload.UPLOAD_ERROR.IO_ERROR:
+                    msgText += "IO错误";
+                    break;
+                case SWFUpload.UPLOAD_ERROR.SECURITY_ERROR:
+                    msgText += "安全性错误\n" + errorMsg;
+                    break;
+                case SWFUpload.UPLOAD_ERROR.UPLOAD_LIMIT_EXCEEDED:
+                    msgText += "每次最多上传 " + this.settings.uploadLimit + "个文件";
+                    break;
+                case SWFUpload.UPLOAD_ERROR.UPLOAD_FAILED:
+                    msgText += errorMsg;
+                    break;
+                case SWFUpload.UPLOAD_ERROR.SPECIFIED_FILE_ID_NOT_FOUND:
+                    msgText += "找不到指定文件，请重新操作";
+                    break;
+                case SWFUpload.UPLOAD_ERROR.FILE_VALIDATION_FAILED:
+                    msgText += "参数错误";
+                    break;
+                default:
+                    msgText += "文件:" + file.name + "\n错误码:" + errorCode + "\n"
+                            + errorMsg;
+            }
+            alert(msgText);
+		   }
+	    });
+    });
+	
+	function selectdectype(dectype){
+	   $('#detectionResult').val(dectype);
+	}
+	
+	function selectObject(){
+	  var objtype = $('#detectionObjectType').val();
+	  var objname = $('#skuName').val();
+	  if(objtype!=""){
+    	  if(objname!=""){
+		     if(objtype=='01'){
+        	     var skuurl = '${rc.ContextPath}/sku/selectlist.do?skuName='+encodeURI(encodeURI(objname))
+        	     $("#objList").load(skuurl,function(){
+          		 	$('#selectskuId').slideDown();
+                 });
+			 }else{
+			     var batch = $('#detectionBatch').val();
+				 var data = {materialName:objname,detectionBatch:batch};
+				 $("#objList").load('${rc.ContextPath}/material/selectDecList.do',data,function(){
+          		 	$('#objList>div').slideDown();
+                 });
+			 }		 
+    	  }else{
+    	     alert("请输入检测对象名称进行查询");
+    		 return false;
+    	  }
+	  }else{
+	     alert("请先选择检测对象类型");
+		 $('#detectionObjectType').focus();
+		 return false;
+	  }
+	}
+	 
+	 function addImg(imgUrl) {
+		var arr=new Array();
+		arr=imgUrl.split(";");
+		var list = $("#imgList");
+		var img = $("<img id='"+arr[0]+"'>");
+		var imgItem = $("<div class='imgItem'></div>");
+		img.attr("src", arr[1]);
+		img.attr("height", "110");
+		img.attr("width", "100");
+		img.click(function() {
+			window.open(arr[1]);
+		});
+		img.css("cursor", "pointer");
+		var x=$("<a onclick=imagedel('"+arr[0]+"') id='a"+arr[0]+"'>×</a>");
+		var reportId = $('#detectionReport').val();
+		reportId = reportId+arr[0]+";";
+		$('#detectionReport').val(reportId);
+		imgItem.append(img);
+		imgItem.append(x);
+		list.append(imgItem);			
+	}
+		
+	function imagedel(vfsId){
+	    var reportId = $("#detectionReport").val();
+		var end = reportId.indexOf(vfsId);
+		reportId = reportId.substring(0,end);
+		$("#detectionReport").val(reportId);		
+		jQuery.ajax({
+			url: "$!{rc.ContextPath}/upload/delimage.do?vfsId="+vfsId,
+			type:"get",
+			success:function(){					
+				$("#"+vfsId).parent().remove();					
+			}
+		});
+	}
+		
+    function saveInfo(){
+	    var ret = true;
+        $("input,select", $("#inspeEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}				
+        	 }
+        });
+		
+		if(ret){
+		    var skuId = $('#skuId').val();
+			var skuName =$('#skuName').val();
+			var oldSkuName = $('#oldSkuName').val();
+			if(skuId==null || skuId==""){
+			   alert('请选择检测对象');
+			   selectObject();
+			   ret = false;
+			   return false;
+			}else{
+			   if(oldSkuName.indexOf(skuName)>=0){
+        		  $('#skuName').val(oldSkuName);
+        	   }else{
+            	  alert("请选择检测对象");
+				  $('#skuId').val('');
+            	  selectObject();
+            	  ret = false;
+            	  return false;
+               }	
+			}
+			
+    		var baseNum = $('#detectionBaseNum').val();
+    		if(baseNum!=""){
+    		   if(isNaN(baseNum.trim())) {
+        			alert("检测基数必须是数字!");
+        			$('#detectionBaseNum').focus();
+        			ret = false;
+        			return false;
+    			} 
+    		}
+    		
+    		var decNum = $('#detectionNumber').val();
+    		if(decNum!=""){
+    		   if(isNaN(decNum.trim())) {
+        			alert("检测基数必须是数字!");
+        			$('#detectionNumber').focus();
+        			ret = false;
+        			return false;
+    			} 
+    		}
+    		
+    		var  imgflag = $('#imgList').html();
+    	    if(imgflag==null || imgflag==""){
+    	       alert("请上传检测报告");
+    	       ret = false;
+    	       return false;
+    	    }
+		}
+		if(ret){
+            jQuery.ajax({
+                url: "${rc.ContextPath}/inspe/${nextAction}.do",
+                data:$("#inspeEditForm").serialize(),
+                type:'POST',
+                success: function(result){
+                    if(result.success){
+                        alert(result.message);
+                        window.location.reload();
+    					$('#addPro').modal('hide');
+                    }else{
+                    	alert(result.message);
+                    }
+                }
+            });
+		}
+    }
+</script>

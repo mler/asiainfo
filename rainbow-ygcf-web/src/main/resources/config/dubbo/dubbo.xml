@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://code.alibabatech.com/schema/dubbo
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="rainbow-for-ygcf"></dubbo:application>
+    <!--<dubbo:registry address="zookeeper://10.10.31.48:20881" timeout="10000" />-->
+    <!--<dubbo:registry address="zookeeper://60.194.3.161:9090" timeout="10000" />-->
+    <dubbo:registry address="zookeeper://10.1.234.156:9090" timeout="10000" />
+</beans>

@@ -1,0 +1,20 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<meta http-equiv="Cache-Control" content="no-store"/>
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>食品追溯平台</title>
+<link rel="stylesheet" href="${RESOURCE_PATH}/js/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="${RESOURCE_PATH}/fonts/iconfont.css" />
+<link rel="stylesheet" href="${RESOURCE_PATH}/css/global.css" />
+<link rel="stylesheet" href="${RESOURCE_PATH}/css/trace.css">
+<script src="${RESOURCE_PATH}/js/jquery-1.11.1.js"></script>
+<script type="text/javascript">
+    $.ajaxSetup ({
+    cache: false
+    });
+    var CONTEXT_PATH = '${rc.ContextPath}';
+</script>

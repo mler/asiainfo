@@ -1,0 +1,23 @@
+
+#foreach($row in $list)
+    #if(($!{velocityCount}) % 6 == 1)
+        <div class="row statRow">
+    #end
+
+            <div class="col-sm-2">
+                <img src="../img/card.jpg" alt="健康证" />
+                <p class="name">$!{row.fullName}</p>
+                <p>编号：$!{row.healthCode}</p>
+                <p>有效期至：$!{date.format('yyyy-MM-dd', $!{row.validDate})}</p>
+            </div>
+
+    #if($!{velocityCount} % 6 == 0)
+        </div>
+    #end
+#end
+
+<script type="text/javascript">
+    $(function() {
+        $('.statRow:first').addClass('b-t');
+    });
+</script>

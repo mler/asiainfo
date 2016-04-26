@@ -1,0 +1,156 @@
+#myjd {
+	height: 36px;
+	padding: 0 6px;
+	line-height: 36px;
+	text-shadow: 1px 1px #66944A;
+	padding-left: 15px;
+	background: url(../images/sideBar.png) repeat-x;
+}
+
+#myjd select{
+   margin-top:8px;
+   width:100px; 
+   padding:5px 0;
+   border:none;
+   border:1px solid RGB(248,115,56);
+}
+
+.viewNavTitle {
+	height: 30px;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.viewNavMenu {
+	float: left;
+	width: 210px;
+	margin-left: 110px;
+	background: white;
+}
+
+.navKeyword {
+}
+
+.navKeyword input {
+	padding: 5px;
+}
+
+.nav_menu {
+	margin: 0;
+	border-bottom: 1px solid #ddd;
+}
+
+.nav_menu dl {
+	background: url(../img/sideBar.png) no-repeat 0 -38px;
+	width: 210px;
+	zoom: 1;
+	overflow: hidden;
+}
+
+.nav_menu dl dt {
+	height: 31px;
+	width: 210px;
+	line-height: 31px;
+	padding-left: 25px;
+	text-shadow: 1px 1px #fff;
+	cursor: pointer;
+}
+
+.nav_menu dl dt a.minus span {
+	background: url(../img/hidebtn.png) no-repeat right center;
+}
+
+.nav_menu dl dt a.plusm span {
+	background: url(../img/showbtn.png) no-repeat right center;
+}
+
+.nav_menu dl dt a {
+	height: 30px;
+	line-height: 30px;
+	overflow: hidden;
+	color: #000;
+	font-weight: 800;
+	font-family: bold;
+}
+
+.nav_menu dl dt a span {
+	display: inline-block;
+	width: 20px;
+	height: 15px;
+	overflow: hidden;
+	float: right;
+	margin: 6px 5px 0 0;
+}
+
+.nav_menu dl dd {
+	padding-left: 10px;
+	padding-bottom: 5px;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	zoom: 1;
+	overflow: hidden;
+}
+
+.nav_menu dl dd ul {
+	padding-left: 30px;
+	color: #999
+}
+
+.nav_menu dl dd li {
+	height: 25px;
+	line-height: 25px;
+	list-style-type: disc;
+}
+
+.nav_menu dl dd li a {
+	color: #666;
+	color: #000
+}
+
+.nav_menu dl dd li a:hover {
+	color: #ec4c00
+}
+
+.viewNavMenu #myjd {
+	background: RGB(248,115,56);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#08C),
+		to(#04C) );
+	background-image: -webkit-linear-gradient(top, #08C, #04C);
+	background-image: -o-linear-gradient(top, #08C, #04C);
+	background-image: linear-gradient(to bottom, RGB(248,115,56), RGB(248,115,56));
+	background-repeat: repeat-x;
+	text-shadow: 1px 1px #1c5db6;
+}
+
+.viewNavMenu input.commonCheck {
+	float: left;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 5px 5px 0 0;
+}
+
+.viewNavMenu dt input.commonCheck {
+	margin-top: 8px;
+}
+
+.viewNavMenu .nav_menu dl dd li {
+	list-style-type: none;
+}
+
+.viewNavMenu .nav_menu dl dt {
+	cursor: default;
+	padding-left: 10px;
+}
+
+.viewNavMenu .nav_menu ul {
+	padding-left: 15px;
+}
+
+.roleList{
+	float: left;
+	min-height: 1px;
+	width: 100%;
+}
+.roleListCon{
+	margin-right: 220px;
+}

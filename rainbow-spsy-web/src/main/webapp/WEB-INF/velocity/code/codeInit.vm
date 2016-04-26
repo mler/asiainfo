@@ -1,0 +1,61 @@
+<!doctype>
+<html>
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>标识码信息管理</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+	<div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+	        <div class="page-nav">
+	          	<a href="${rc.ContextPath}/code/create.do">食品标识码&gt;</a>
+	          	<a href="javascript:void(0)" class="last">标识码生成历史</a>
+	        </div>
+            <div id="pagelist" class="table_area m-t-xlg"></div>
+         </div>
+	  </div>
+    </div>
+	<div class="modal fade QR_code" id="selectinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+    			#parse("/code/codeSelect.vm")
+            </div>
+        </div>
+    </div>
+	#parse("/layout/sys_js.vm")
+</body>
+<script type="text/javascript">	
+	$(document).ready(function() { 
+	   goSearch(1);
+	   //移除数据，让模态框打开时重新加载数据
+	   $("#selectinfo").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+       });
+    });
+	
+	function goSearch(page){
+	  var data ={pageStart:page};
+	  $("#pagelist").load("${rc.ContextPath}/code/list.do",data);
+	}
+	
+	function goPage(page){
+	   var currpage = $("#pageNumber").val();
+       var nextpage;
+       if(page>0){
+          nextpage = parseInt(currpage)+1;
+       }else{
+          nextpage = parseInt(currpage)-1;
+       }
+	   goSearch(nextpage);
+	}
+	
+	function editInfo(url){
+	   $("#selectinfo").modal({
+	      remote:url
+	   });
+	}
+</script>
+</html>

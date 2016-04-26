@@ -1,0 +1,102 @@
+#parse("sys_param.vm")
+#parse("addon/My97DatePicker.vm")
+
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-nav">
+                <a href="javascript:load('$!{CONTEXT_PATH}/company/index');">企业列表</a>
+                &gt;
+                <a href="javascript:void(0)" class="last">台账详情</a>
+                <button class="reback" onclick="goBack()"><i class="iconfont icon-left"></i>返回</button>
+            </div>
+
+            <ul id="myTab" class="nav nav-tabs account_tab">
+                <li class="active"><a href="#purchaseTab" data-toggle="tab">采购台账</a></li>
+                <li><a href="#additifTab" data-toggle="tab">添加剂使用台账</a></li>
+                <li><a href="#wasteTab" data-toggle="tab">废弃物回收台账</a></li>
+                <li><a href="#sterilizeTab" data-toggle="tab">消毒记录收台账</a></li>
+                <li><a href="#travelTab" data-toggle="tab">接待旅游收台账</a></li>
+                <li><a href="#dinnerTab" data-toggle="tab">集体用餐收台账</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+
+##                采购
+                <div class="tab-pane fade in active paginationDiv" id="purchaseTab">
+
+                </div>
+
+##                添加剂
+                <div class="tab-pane fade paginationDiv" id="additifTab">
+
+                </div>
+
+##                废弃物
+                <div class="tab-pane fade paginationDiv" id="wasteTab">
+
+                </div>
+
+##              消毒记录
+                <div class="tab-pane fade paginationDiv" id="sterilizeTab">
+
+                </div>
+
+##              接待旅游
+                <div class="tab-pane fade paginationDiv" id="travelTab">
+
+                </div>
+
+##              集体用餐
+                <div class="tab-pane fade paginationDiv" id="dinnerTab">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+//        // 采购台账查询
+//        qryData('purchaseForm');
+//        // 废弃物
+//        qryData('wasteForm');
+//        // 消毒记录
+//        qryData('sterilizeForm');
+//        // 旅游接待
+//        qryData('travelForm');
+//        // 集体用餐
+//        qryData('dinnerForm');
+
+        // 采购台账
+        loadLedger('purchaseTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=13&enterpriseId=$!{request.getParameter("enterpriseId")}');
+
+        // 添加剂台账
+        loadLedger('additifTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=11&enterpriseId=$!{request.getParameter("enterpriseId")}');
+
+        // 集体用餐
+        loadLedger('dinnerTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=12&enterpriseId=$!{request.getParameter("enterpriseId")}');
+
+        // 消毒记录台账
+        loadLedger('sterilizeTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=14&enterpriseId=$!{request.getParameter("enterpriseId")}');
+
+        // 旅游接待台账
+        loadLedger('travelTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=15&enterpriseId=$!{request.getParameter("enterpriseId")}');
+
+        // 废弃物台账
+        loadLedger('wasteTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=16&enterpriseId=$!{request.getParameter("enterpriseId")}');
+    });
+
+    function goBack() {
+        load('$!{CONTEXT_PATH}/company/index');
+    }
+
+    // 台账查看中加载页面
+    function loadLedger(el, url) {
+        showMask();
+        $('#' + el).load(url, '', function() {
+            hideMask();
+        });
+    }
+</script>

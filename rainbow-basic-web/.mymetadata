@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="rainbow-basic-web"
+  id="myeclipse.1451027386568"
+  context-root="/rainbow-basic-web"
+  j2ee-spec="1.7"
+  archive="rainbow-basic-web.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

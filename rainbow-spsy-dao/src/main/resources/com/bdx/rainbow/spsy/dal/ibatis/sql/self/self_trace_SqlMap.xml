@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="self_trace" >
+    <sql id="Where_Clause" >
+    	<isNotNull property="skuId" prepend="and">
+            a.SKU_ID = #skuId#
+        </isNotNull>
+        <isNotNull property="skuBarCode" prepend="and">
+            a.SKU_BAR_CODE = #skuBarCode#
+        </isNotNull>
+        <isNotNull property="skuBarCode" prepend="and">
+            a.SKU_BATCH = #skuBatch#
+        </isNotNull>
+        <isNotNull property="enterpriseId" prepend="and">
+            a.ENTERPRISE_ID = #enterpriseId#
+        </isNotNull>
+        <isNotNull property="enterpriseName" prepend="and">
+            a.ENTERPRISE_NAME like #enterpriseName#
+        </isNotNull>
+        <isNotNull property="inName" prepend="and">
+            cy.AGENCY_NAME like #inName#
+        </isNotNull>
+        <isNotEmpty property="queryCondition" prepend="and">
+            a.SKU_NAME like #queryCondition# or a.SKU_BAR_CODE like #queryCondition#
+        </isNotEmpty>
+        <isNotNull property="productionDate_start" prepend="and">
+			<![CDATA[ a.PRODUCTION_DATE >= #productionDate_start# ]]>
+		</isNotNull>
+		<isNotNull property="productionDate_end" prepend="and">
+			<![CDATA[ a.PRODUCTION_DATE <= #productionDate_end# ]]>
+		</isNotNull>
+		<isNotEmpty property="buyAgencyIdsStr">
+            and a.BUY_AGENCY_ID in ( $buyAgencyIdsStr$)
+        </isNotEmpty>
+    </sql>
+    <resultMap id="BaseResultMap_SPJG" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+        <result column="SKU_ID" property="skuId" jdbcType="INTEGER" />
+        <result column="SKU_NAME" property="skuName" jdbcType="VARCHAR" />
+        <result column="SKU_BAR_CODE" property="skuBarCode" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_OUT_RECORDS" property="enterpriseOutRecords" jdbcType="INTEGER" />
+        <result column="MERCHANT_OUT_RECORDS" property="merchantOutRecords" jdbcType="INTEGER" />
+        <result column="PASS_OUT_RECORDS" property="passOutRecords" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectBase_SPJG" resultMap="BaseResultMap_SPJG" parameterClass="java.util.Map" >
+        select
+        	a.SKU_ID, a.SKU_NAME, a.SKU_BAR_CODE,
+        (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT b where a.sku_id=b.sku_id ) as ENTERPRISE_OUT_RECORDS,
+        (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_MERCHANT_STOCK_OUT b where a.sku_id=b.sku_id ) as MERCHANT_OUT_RECORDS,
+        (select COUNT(b.OPERATION_ID) from T_ORIGIN_GOODS_STOCK b where a.sku_id=b.sku_id and b.OPERATION_TYPE='02') as PASS_OUT_RECORDS
+        from T_ORIGIN_PRODUCER_STOCK_IN a where 1=1
+          <isParameterPresent >
+            <include refid="Where_Clause" />
+          </isParameterPresent>
+          	group by a.SKU_ID 
+          <isNotNull property="orderByClause" >
+              order by $orderByClause$
+          </isNotNull>
+	      <isNotNull property="limitClauseStart" >
+	          limit #limitClauseStart:INTEGER#, #limitClauseCount:INTEGER#
+	      </isNotNull>
+        
+    </select>
+
+    <select id="countBase_SPJG" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        select count(distinct(a.SKU_ID)) from T_ORIGIN_PRODUCER_STOCK_IN a where 1 = 1
+        <include refid="Where_Clause"/>
+    </select>
+    <!-- 不用的原因  如果没有入库数据的话，即 T_ORIGIN_PRODUCER_STOCK_IN 里没有 sku_id 的进入 将会与列表的累计数据不一样  即存在异常数据时-->
+    <select id="countTotal_SPJG_bak" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	select 
+       ( (select COUNT(a.OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT a where 1=1 
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+        ) +
+        (select COUNT(a.OPERATION_OUT_ID) from T_ORIGIN_MERCHANT_STOCK_OUT a where 1=1 
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+        ) +
+        (select COUNT(a.OPERATION_ID) from T_ORIGIN_GOODS_STOCK a where a.OPERATION_TYPE='02'
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+        ) )
+        from dual
+    </select>
+    
+    <select id="countTotal_SPJG" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+    	select 
+       		sum( (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT b where a.sku_id=b.sku_id ) +
+       			 (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_MERCHANT_STOCK_OUT b where a.sku_id=b.sku_id ) +
+        		 (select COUNT(b.OPERATION_ID) from T_ORIGIN_GOODS_STOCK b where b.OPERATION_TYPE='02' and a.sku_id=b.sku_id)
+        	   ) 
+       	from T_ORIGIN_PRODUCER_STOCK_IN a where 1=1 
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+    </select>
+    
+    <resultMap id="BaseResultMap_SPJG_Chart" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+        <result column="SKU_ID" property="skuId" jdbcType="INTEGER" />
+        <result column="SKU_NAME" property="skuName" jdbcType="VARCHAR" />
+        <result column="SKU_BATCH" property="skuBatch" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_OUT_RECORDS" property="enterpriseOutRecords" jdbcType="INTEGER" />
+        <result column="MERCHANT_OUT_RECORDS" property="merchantOutRecords" jdbcType="INTEGER" />
+        <result column="PASS_OUT_RECORDS" property="passOutRecords" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectChart_SPJG" parameterClass="java.util.Map" resultMap="BaseResultMap_SPJG_Chart">
+    	select 
+        a.SKU_ID, a.SKU_NAME,a.SKU_BATCH,
+        (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT b where a.sku_id=b.sku_id and a.SKU_BATCH = b.SKU_BATCH) as ENTERPRISE_OUT_RECORDS,
+        (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_MERCHANT_STOCK_OUT b where a.sku_id=b.sku_id and a.SKU_BATCH = b.SKU_BATCH ) as MERCHANT_OUT_RECORDS,
+        (select COUNT(b.OPERATION_ID) from T_ORIGIN_GOODS_STOCK b where a.sku_id=b.sku_id and a.SKU_BATCH = b.SKU_BATCH and b.OPERATION_TYPE='02') as PASS_OUT_RECORDS
+        from T_ORIGIN_PRODUCER_STOCK_IN a where 1=1
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+            	group by a.SKU_BATCH 
+                order by a.SKU_BATCH
+	      <isNotNull property="limitClauseStart" >
+	          limit #limitClauseStart:INTEGER#, #limitClauseCount:INTEGER#
+	      </isNotNull>
+        
+    </select>
+    
+    <resultMap id="BaseResultMap_QYJG" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+        <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="INTEGER" />
+        <result column="IN_NAME" jdbcType="VARCHAR" property="inName" />
+        <result column="SKU_NUM" property="skuNum" jdbcType="INTEGER" />
+        <result column="IN_PRINCIPAL" property="inPrincipal" javaType="java.lang.String" />
+	    <result column="IN_PHONE" property="inPhone" javaType="java.lang.String" />
+        <result column="TRACED_SKU_NUM" property="tracedSkuNum" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectBase_QYJG" parameterClass="java.util.Map" resultMap="BaseResultMap_QYJG">
+    	select  c.*,
+		cy.AGENCY_NAME as IN_NAME,
+		cy.AGENCY_RESPONSIBLE_PERSON as IN_PRINCIPAL,
+		cy.LINK_PHONE as IN_PHONE from
+	(
+	select a.ENTERPRISE_ID,  
+ 			count(DISTINCT a.SKU_ID) as SKU_NUM,   
+ 			count(DISTINCT b.SKU_ID) as TRACED_SKU_NUM   
+ 		from t_origin_producer_stock_in a left join t_origin_producer_stock_out b 
+ 		on a.SKU_ID = b.SKU_ID 
+ 		group by a.ENTERPRISE_ID
+        order by a.ENTERPRISE_ID asc
+         ) c ,t_origin_agency_company cy where
+        c.ENTERPRISE_ID = cy.ENTERPRISE_ID
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+	    <isNotNull property="limitClauseStart" >
+	          limit #limitClauseStart:INTEGER#, #limitClauseCount:INTEGER#
+	    </isNotNull>
+    </select>
+    
+    <select id="countBase_QYJG" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        select count(distinct(a.ENTERPRISE_ID)) from T_ORIGIN_PRODUCER_STOCK_IN a, t_origin_agency_company cy where
+        a.ENTERPRISE_ID = cy.ENTERPRISE_ID
+        <include refid="Where_Clause"/>
+    </select>
+    
+    <select id="countTotal_QYJG" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        select count(OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT a where 1 = 1
+        <include refid="Where_Clause"/>
+    </select>
+    
+    <resultMap id="BaseResultMap_QYJG_Chart" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+        <result column="SKU_ID" property="skuId" jdbcType="INTEGER" />
+        <result column="SKU_NAME" property="skuName" jdbcType="VARCHAR" />
+        <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="INTEGER" />
+        <result column="TRACED_SKU_NUM" property="tracedSkuNum" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="selectChart_QYJG" parameterClass="java.util.Map" resultMap="BaseResultMap_QYJG_Chart">
+    	select 
+        a.SKU_ID, a.SKU_NAME,a.ENTERPRISE_ID,
+        (select COUNT(b.OPERATION_OUT_ID) from T_ORIGIN_PRODUCER_STOCK_OUT b where a.sku_id=b.sku_id ) as TRACED_SKU_NUM
+        from T_ORIGIN_PRODUCER_STOCK_IN a where 1=1
+        <isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+            	group by a.SKU_ID 
+            	order by a.SKU_ID
+	      <isNotNull property="limitClauseStart" >
+	          limit #limitClauseStart:INTEGER#, #limitClauseCount:INTEGER#
+	      </isNotNull>
+    </select>
+    
+    <!-- 商品追溯 -->
+    <resultMap id="BaseResultMap_SPZS_Sale" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+	    <result column="AGENCY_ID" property="agencyId" javaType="java.lang.Integer" nullValue="0" />
+	    <result column="OUT_DATE" property="outDate" javaType="java.sql.Timestamp" />
+	    <result column="IN_DATE" property="inDate" javaType="java.sql.Timestamp" />
+	    <result column="IN_NAME" property="inName" javaType="java.lang.String" />
+	    <result column="IN_PRINCIPAL" property="inPrincipal" javaType="java.lang.String" />
+	    <result column="IN_PHONE" property="inPhone" javaType="java.lang.String" />
+	</resultMap>
+	<resultMap id="BaseResultMap_SPZS_Pass" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+		<result column="IN_OPERATION_ID" property="inOperationId" javaType="java.lang.Integer" nullValue="0" />
+	    <result column="OUT_DATE" property="outDate" javaType="java.sql.Timestamp" />
+	    <result column="AGENCY_ID" property="agencyId" javaType="java.lang.Integer" nullValue="0" />
+	    <result column="IN_DATE" property="inDate" javaType="java.sql.Timestamp" />
+	    <result column="IN_NAME" property="inName" javaType="java.lang.String" />
+	    <result column="IN_PRINCIPAL" property="inPrincipal" javaType="java.lang.String" />
+	    <result column="IN_PHONE" property="inPhone" javaType="java.lang.String" />
+	</resultMap>
+	<resultMap id="BaseResultMap_SPZS_Produce" class="com.bdx.rainbow.spsy.dal.ibatis.model.SelfTrace" >
+	    <result column="AGENCY_ID" property="agencyId" javaType="java.lang.Integer" nullValue="0" />
+		<result column="OUT_DATE" property="outDate" javaType="java.sql.Timestamp" />
+		<result column="PRODUCTION_DATE" property="productionDate" javaType="java.sql.Timestamp" />
+	    <result column="IN_NAME" property="inName" javaType="java.lang.String" />
+	    <result column="IN_PRINCIPAL" property="inPrincipal" javaType="java.lang.String" />
+	    <result column="IN_PHONE" property="inPhone" javaType="java.lang.String" />
+	    <result column="PRODUCT_DETECTION_ID" property="productDetectionId" javaType="java.lang.Integer" />
+	</resultMap>
+    <!-- 零售信息 -->
+    <select id="selectSPZS_Sale" parameterClass="java.util.Map" resultMap="BaseResultMap_SPZS_Sale">
+    	SELECT  d.*,
+		c.OPERATION_DATE as IN_DATE
+		FROM 
+		( SELECT
+			a.ENTERPRISE_ID as AGENCY_ID,
+			a.SALE_DATE as OUT_DATE,
+			cy.AGENCY_NAME as IN_NAME,
+			cy.AGENCY_RESPONSIBLE_PERSON as IN_PRINCIPAL,
+			cy.LINK_PHONE as IN_PHONE,
+			a.SKU_ID as SKU_ID,
+			a.SKU_BAR_CODE as SKU_BAR_CODE,
+			a.SKU_BATCH as SKU_BATCH
+		FROM T_ORIGIN_MERCHANT_STOCK_OUT a,
+			 T_ORIGIN_AGENCY_COMPANY cy
+		where a.ENTERPRISE_ID = cy.AGENCY_ID
+			<isParameterPresent >
+	            <include refid="Where_Clause" />
+	        </isParameterPresent>
+		) d 
+		left join T_ORIGIN_GOODS_STOCK c on 
+		d.SKU_ID = c.SKU_ID AND d.SKU_BATCH = c.SKU_BATCH
+		and c.OPERATION_TYPE = '01'
+    </select>
+    <!-- 流通信息 -->
+    <select id="selectSPZS_Pass" parameterClass="java.util.Map" resultMap="BaseResultMap_SPZS_Pass">
+    	SELECT
+		c.* ,
+		b.OPERATION_ID as OUT_OPERATION_ID,
+		b.OPERATION_DATE as OUT_DATE
+		from
+		( SELECT 	
+			a.OPERATION_ID as IN_OPERATION_ID,
+			a.BUY_AGENCY_ID as AGENCY_ID,
+			a.SUPPLY_AGENCY_ID as SUPPLY_AGENCY_ID,
+	        a.OPERATION_DATE as IN_DATE,
+	        a.SKU_ID as SKU_ID,
+	        a.SKU_BATCH as SKU_BATCH,
+	        cy.AGENCY_NAME as IN_NAME,
+	        cy.AGENCY_RESPONSIBLE_PERSON as IN_PRINCIPAL,
+	        cy.LINK_PHONE as IN_PHONE
+	     FROM
+	        t_origin_goods_stock a
+	        LEFT JOIN t_origin_agency_company cy ON a.BUY_AGENCY_ID = cy.AGENCY_ID 
+	        where
+	        a.OPERATION_TYPE != '02'
+	        <isParameterPresent >
+	            <include refid="Where_Clause" />
+	        </isParameterPresent> 
+	        ORDER BY cy.AGENCY_NAME asc,a.OPERATION_DATE desc
+	     ) c
+	        LEFT JOIN t_origin_goods_stock b ON 
+	        c.AGENCY_ID = b.BUY_AGENCY_ID and
+	        c.SUPPLY_AGENCY_ID = b.SUPPLY_AGENCY_ID and
+	        c.SKU_ID = b.SKU_ID and c.SKU_BATCH = b.SKU_BATCH and
+	        b.OPERATION_TYPE = '02'
+    </select>
+    
+    <!-- 生产信息 出库时间不等于创建时间 -->
+    <select id="selectSPZS_Produce" parameterClass="java.util.Map" resultMap="BaseResultMap_SPZS_Produce">
+    	select c.*,
+			   b.OPERATION_DATE as OUT_DATE
+		from
+		  ( select 
+				a.ENTERPRISE_ID as AGENCY_ID,
+				a.PRODUCTION_DATE as PRODUCTION_DATE,
+				a.PRODUCT_DETECTION_ID as PRODUCT_DETECTION_ID,
+				cy.AGENCY_NAME as IN_NAME,
+				cy.AGENCY_RESPONSIBLE_PERSON as IN_PRINCIPAL,
+				cy.LINK_PHONE as IN_PHONE,
+				a.SKU_ID as SKU_ID,
+				a.SKU_BAR_CODE as SKU_BAR_CODE,
+				a.SKU_BATCH as SKU_BATCH
+			from 
+			t_origin_producer_stock_in a left join t_origin_agency_company cy 
+			on a.ENTERPRISE_ID = cy.AGENCY_ID where 1=1 
+			<isParameterPresent >
+	            <include refid="Where_Clause" />
+	        </isParameterPresent> 
+		)c left join t_origin_producer_stock_out b on 
+		c.SKU_ID = b.SKU_ID AND c.SKU_BATCH = b.SKU_BATCH
+    	ORDER BY IN_NAME asc,OUT_DATE desc
+    </select>
+    
+    <!-- 对于未有销售记录的，但已存在于零售店的零售店ID查询 -->
+    <select id="selectLastAgency" parameterClass="java.util.Map" resultClass="java.lang.String">
+        select group_concat( distinct a.BUY_AGENCY_ID ) as AGENCY_ID 
+        from 
+			t_origin_goods_stock a left join t_origin_agency_company cy 
+			on a.BUY_AGENCY_ID = cy.AGENCY_ID where a.OPERATION_TYPE = '03'
+		<isParameterPresent >
+            <include refid="Where_Clause" />
+        </isParameterPresent>
+    </select>
+    
+    <!-- 供应链追溯查询 select traceFromOut( 11, '1234343342', '20160228' )   结果：$,11,9,10,4-->
+    <select id="selectTraceFromOut" parameterClass="java.util.Map" resultClass="java.lang.String">
+        select traceFromOut( #buyAgencyIdsStr# , #skuBarCode# , #skuBatch# )
+    </select>
+    
+</sqlMap>

@@ -1,0 +1,88 @@
+#parse("sys_param.vm")
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height:134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="roleCreateForm"  action="$!{CONTEXT_PATH}/sys/role/${nextAction}" method="post" >
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs" >
+            <i class="star">*</i>  角色名称：
+        </label>
+        <div class="col-sm-8 regcon_mb" >
+            <input type="text" id="roleName" class="form-control" name="roleName" value="$!{role.roleName}" notnull="true" >
+            <input type="hidden" name="roleId"  class="form-control" value="$!{role.roleId}">
+        </div>
+
+    </div>
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs" >
+            <i class="star">*</i> 平台：
+        </label>
+        <div class="col-sm-8 regcon_mb">
+            <select name="platId" class="form-control" id="platId" PLAT="true"  onchange="getRolePid(this.value)">
+                #if(${nextAction}=='create')
+                    <option >请选择</option>
+                    #foreach($plat in $plats)
+                        <option value="$!{plat.platId}">$!{plat.platName}</option>
+                    #end
+                #else
+                    <option value="$!{role.platId}">$!cache.getCachedName("SYS_PLAT", "$!{role.platId}", "")</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs" >
+            上级角色：
+        </label>
+        <div class="col-sm-8 regcon_mb">
+            <select name="rolePid" id="rolePid" notnull="true" class="form-control" >
+                #if(${nextAction}=='create')
+                    <option value="0">父节点</option>
+                #else
+                    #if($!{role.rolePid}==0)
+                        <option value="0">父节点</option>
+                    #else
+                        <option value="$!{role.rolePid}">$!cache.getCachedName("SYS_ROLE", "$!{role.rolePid}", "")</option>
+                    #end
+
+                #end
+            </select>
+        </div>
+
+
+    </div>
+
+</form>
+<!--脚部-->
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="saveInfo('roleQry','roleCreateForm','cancel')"><i class="iconfont icon-baocun"></i>保存</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消</button>
+</div>
+
+<script>
+
+    function getRolePid(value){
+        if(!isNaN(value)){
+            $.ajax({
+                url:"$!{CONTEXT_PATH}/sys/role/getRolePid?platId="+value,
+                type:"get",
+                success:function(data){
+                    setOptions(data,"rolePid");
+                }
+            });
+        }
+
+    }
+
+</script>

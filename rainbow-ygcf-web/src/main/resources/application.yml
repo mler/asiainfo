@@ -1,0 +1,38 @@
+jdbc:
+#  driver: oracle.jdbc.driver.OracleDriver
+#  url: jdbc:oracle:thin:@60.194.3.163:1521:SYJ
+#  username: orgi
+#  password: orgi
+
+  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://60.194.3.163:3306/wisdomcloud?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8
+  url: jdbc:mysql://10.1.234.158:3306/wisdomcloud?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8
+  username: syj
+  password: syj
+  maxActive: 3
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 3000
+  validationQuery: /* ping */ select 1
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1
+
+vfsjdbc:
+  driver: com.mysql.jdbc.Driver
+#  url: jdbc:mysql://60.194.3.163:3306/file_sys
+  url: jdbc:mysql://10.1.234.158:3306/file_sys
+  username: syj
+  password: syj
+  maxActive: 3
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 3000
+  validationQuery: /* ping */ select 1
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1

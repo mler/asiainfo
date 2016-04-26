@@ -1,0 +1,116 @@
+#parse("/sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    #parse("head.vm")
+    <link rel="stylesheet" href="$RESOURCE_PATH/css/paper.css" />
+</head>
+
+<body>
+
+
+
+<div class="SecondLevelMenu"id="subMenu">
+    <a href="$!{CONTEXT_PATH}/monitor/init?checkPlanType=0">日常巡检任务</a>
+    <a href="$!{CONTEXT_PATH}/monitor/init?checkPlanType=1" class="active">专项任务</a>
+    <a href="$!{CONTEXT_PATH}/monitor/init?checkPlanType=2">突击抽查任务</a>
+    <a href="$!{CONTEXT_PATH}/monitor/init?checkPlanType=3">抽验任务</a>
+</div>
+
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12 paginationDiv">
+            <div class="searchArea">
+               <form  class="conditionForm" id="monitorQry" method="post" action="$!{CONTEXT_PATH}/monitor/list?checkPlanType=1">
+                <div class="form-group">
+
+                    <label>巡检单位：</label>
+                    <div class="inputbox form-control">
+                        <select name="checkExecuteDepId" class="form-control"  >
+                            <option value="">请选择</option>
+                            #foreach($dept in $depts)
+                                <option value="${dept.deptId}">$!{dept.deptName} </option>
+                            #end
+                        </select>
+                    </div>
+                    <label>任务计划执行时间：</label>
+                    <div class="inputbox form-control" style="margin-right:0px;">
+                        <input type="text" name="beginDate"class="date1 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                        <i class="iconfont icon-date"></i>
+                    </div>
+
+                    <div class="inputbox form-control">
+                        <input type="text" name="endDate"class="date2 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                        <i class="iconfont icon-date"></i>
+                    </div>
+                    <label>执行状态：</label>
+                    <div class="inputbox form-control">
+                        <select name="checkPlanStatus" class="form-control">
+                            <option value="0">请选择</option>
+                            <option value="1">执行中</option>
+                            <option value="2">待执行</option>
+                            <option value="3">已执行</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary search"onclick="submitForm('monitorQry')"><i class="iconfont icon-sousuo"></i>查询</button>
+                </form>
+            </div>
+
+            <div class="search_area clearfix">
+                <div class="col-sm-12">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#addPro"onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/monitor/create?checkPlanType=1', '新增日常巡检') "><i class="iconfont icon-jia"></i>添加</button>
+                    <button class="btn btn-blue" onclick="deleteParam('moList','moplanIds','monitorQry','$!{CONTEXT_PATH}/monitor/delete')"><i class="iconfont icon-shanchu"></i>删除</button>
+                </div>
+            </div>
+            <div class="table_area m-t-sm TableControl queryResultList">
+
+            </div>
+            <div class="pageBar clearfix">
+                <span id="pager" class="pager pagination"></span>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">新增专项任务</h4>
+                </div>
+                <div class="modal-body addinfo" id="editContext">
+
+
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- end -->
+
+            <script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+            <script src="$RESOURCE_PATH/js/bootstrap/js/bootstrap.min.js"></script>
+            <script src="$RESOURCE_PATH/js/self.js"></script>
+            <script src="$RESOURCE_PATH/js/jquery.pager.js"></script>
+            <script type="text/javascript" src="$!{RESOURCE_PATH}/js/pagination_m.js"></script>
+            <script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+</body>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $(".conditionForm").each(function(){
+            $(this).append('<input type="text" value="不要删除这个input，只有在form里不只有一个input的情况下，在input里按回车才不会提交表单" style="display:none" />')
+        })
+        submitForm('monitorQry');
+
+    });
+
+</script>
+
+</html>

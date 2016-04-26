@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  #set($RESOURCE_PATH=$!{request.ContextPath}+'/statics')
+  <head>
+    <title>模板下载</title>
+    #parse('/layout/head.vm')
+  </head>
+  <body>
+    <div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+        		<div class="modal_list panel-body">
+        			<ul>
+        				<li>
+        					<input type="checkbox" /><span>全选</span>
+        					<button class="btn btn-warning"><i class="iconfont icon-xiazai"></i>批量下载</button>
+        				</li>
+        				<li>
+        					<input type="checkbox" />
+        					<a href="#modal_detail" data-toggle="modal" class="modal_name"><i class="iconfont icon-excel"></i>产品基本信息模板.xls</a>
+        					<a href="#"><i class="iconfont icon-xiazai blue"></i></a>
+        				</li>
+        				<li>
+        					<input type="checkbox" />
+        					<a href="#modal_detail" data-toggle="modal" class="modal_name"><i class="iconfont icon-excel"></i>生产企业采购数据模板.xls</a>
+        					<a href="#"><i class="iconfont icon-xiazai blue"></i></a>
+        				</li>
+        				<li>
+        					<input type="checkbox" />
+        					<a href="#modal_detail" data-toggle="modal" class="modal_name"><i class="iconfont icon-excel"></i>产品基本信息模板.xls</a>
+        					<a href="#"><i class="iconfont icon-xiazai blue"></i></a>
+        				</li>
+        				<li>
+        					<input type="checkbox" />
+        					<a href="#modal_detail" data-toggle="modal" class="modal_name"><i class="iconfont icon-excel"></i>生产企业采购数据模板.xls</a>
+        					<a href="#"><i class="iconfont icon-xiazai blue"></i></a>
+        				</li>
+        			</ul>
+        		</div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog">
+	      <div class="modal-content">
+	         <div class="modal-header">
+	            <button type="button" class="close"data-dismiss="modal" aria-hidden="true">&times;</button>
+	            <h4 class="modal-title" id="myModalLabel">
+	               产品基本数据模板
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	           <article class="modal_detail">
+	           	<p>产品基本数据模板，是企业批量上传产品信息的时候使用的模板，模板中
+				包含一些必须填写的信息（比如：产品名称、产品条码、产品规格及保持期等），
+				以及选填的信息（比如：营养成分、主要配料等），信息的越完善，展现给消费
+				者的信息也会越丰富。所传的数据会有统一校验的过程，包括数据本身格式和内
+				容的校验及数据真伪的校验，还请参照我们的样式数据进行上传！</p>
+	           </article>
+	         </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-success" data-dismiss="modal"><i class="iconfont icon-xiazai"></i>下载</button>
+	            <button type="button" class="btn btn-default"><i class="iconfont icon-cuowu"></i>取消</button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+	</div>
+    #parse("/layout/sys_js.vm")
+  </body>
+</html>
+

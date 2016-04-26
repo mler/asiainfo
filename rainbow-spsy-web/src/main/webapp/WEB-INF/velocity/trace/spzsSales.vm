@@ -1,0 +1,98 @@
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#sale" data-toggle="tab">
+            <p class="ic_box"><i class="iconfont icon-lingshouguanli"></i></p>
+            <p>销售信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+    <li>
+        <a href="#circulate" data-toggle="tab" url="$!{rc.ContextPath}/trace/spzsPasses.do">
+            <p class="ic_box"><i class="iconfont icon-liutongxinxi"></i></p>
+            <p>流通信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+    <li >
+        <a href="#produce" data-toggle="tab" url="$!{rc.ContextPath}/trace/spzsProduces.do">
+            <p class="ic_box"><i class="iconfont icon-shengchan"></i></p>
+            <p>生产信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade in active" id="sale">
+        <div class="table_area">
+            <form id="">
+				<table class="table table-bordered table-striped table-hover">
+                	<thead>
+                		<tr>
+                    		<th>销售时间</th>
+                    		<th>销售单位</th>
+                    		<th>销售单位负责人</th>
+							<th>联系方式</th>
+                    		<th>入库时间</th>
+                    	</tr>
+                    </thead>
+                	<tbody>
+					#if($sales && $!{sales.size} != 0) 
+						#foreach($sale in $sales)
+                            <tr>
+                                <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{sale.outDate})</td>
+                                <td>$!{sale.inName}</td>
+                                <td>$!{sale.inPrincipal}$!{sale.inPhone}</td>
+    							<td>$!{sale.inPhone}</td>
+                                <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{sale.inDate})</td>
+                            </tr>
+    					#end
+					#else
+						<tr>
+                            <td colspan="5" class="noinfo">没有数据记录</td>
+                        </tr>
+					#end		
+                    </tbody>
+                </table>
+			</form>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="circulate" >
+
+    </div>
+    <div class="tab-pane fade" id="produce">
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#myTab li').on('shown.bs.tab', function (e) {
+            var href=$(this).children("a").attr("href");
+            var url=$(this).children("a").attr("url");
+            var id=href.substr(1,href.length);
+            if(id!="sale"){
+                if($("#"+id).attr('load')!='load'){
+                    $("#"+id).attr('load','load');
+                    var ret=false;
+                    $(":input", $("#trace")).each(function(i){
+                        if($(this).val()!=''){
+                            ret=true;
+                        }
+                    });
+                    if(ret){
+                        $("#"+id).load(url,$("#trace").serialize());
+                    }else{
+                        alert("商品查询条件为空，请填写");
+                    }
+
+                }
+
+            }
+
+        })
+    })
+
+
+</script>
+
+ 
+

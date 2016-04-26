@@ -1,0 +1,42 @@
+#set($layout = "layout.vm")
+#parse("sys_param.vm")
+
+<div class="container content cardManage">
+    <div class="row">
+        <div class="col-sm-12">
+            <!--card list-->
+            <div class="panel panel-default clearfix">
+                <div class="col-sm-3 blue btn-link" type="1">
+                    已办健康证人数：<span>$!{map.get("health1")}</span>
+                </div>
+                <div class="col-sm-3 black btn-link" type="2">
+                    未办健康证人数：<span>$!{map.get("health2")}</span>
+                </div>
+                <div class="col-sm-3 yellow btn-link" type="3">
+                    健康证到期预警人数：<span>$!{map.get("health3")}</span>
+                </div>
+                <div class="col-sm-3 gray btn-link" type="4">
+                    健康证过期人数：<span>$!{map.get("health4")}</span>
+                </div>
+            </div>
+            <div class="gride">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        var url = base + '/employee/statList';
+        $('.gride').load(url+'?type=1');
+
+        // 统计类型选择
+        $('.btn-link').click(function() {
+            $('.gride').load(url+'?type=' + $(this).attr('type'));
+        });
+
+        $('.btn-link').each(function() {
+            $(this).css('cursor', 'pointer');
+        });
+    });
+</script>

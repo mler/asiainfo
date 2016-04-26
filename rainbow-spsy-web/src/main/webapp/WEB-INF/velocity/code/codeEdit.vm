@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>产品表示码生成</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+	<form id="codeEditForm" name="codeEditForm" method="POST" onsubmit="return false">
+    <div class="container content">
+      <div class="row">
+      	<div class="tab_cont col-sm-6 col-sm-offset-3">
+			<input type="hidden" id="codeType" name="codeType" value="1"/>
+			<input type="hidden" id="skuIdCodeType" name="skuIdCodeType" value="01"/>
+	      	<ul id="myTab" class="nav nav-tabs">
+			   <li class="active">
+			   	<a href="javascript:void(0)" onclick="selectCode(1)" data-toggle="tab">
+				   	<p class="ic_box"><i class="iconfont icon-chanpinbiaoshima"></i></p>
+				   	<p>产品标识码</p>
+			   	</a>
+			   	<i class="iconfont icon-top"></i>
+			   </li>
+			   <li>
+			   	<a href="javascript:void(0)" onclick="selectCode(2)" data-toggle="tab">
+				   	<p class="ic_box"><i class="iconfont icon-zhuangxiangbiaoshima"></i></p>
+				   	<p>装箱标识码</p>
+			   	</a>
+			   	<i class="iconfont icon-top"></i>
+			   </li>
+			</ul>
+			<div id="myTabContent" class="tab-content">
+			   <div class="tab-pane fade in active" id="product_code">
+			   		<div class="form-group">
+			   			<label class="control-label col-sm-2">产品名称：</label>
+			   			<div class="searInput col-sm-10">
+							<input type="hidden" id="skuId" name="skuId"/>
+							<input type="hidden" id="skuBarcode" name="skuBarcode"/>
+							<input type="hidden" id="oldSkuName" name="oldSkuName"/>
+			   				<input type="text" class="form-control" id="skuName" name="skuName" placeholder="输入产品名称查询">
+							<a href="javascript:void(0)" class="btn btn-default" onclick="selctSku()"><i class="iconfont icon-sousuo"></i></a>
+			   			</div>
+			   		</div>
+					<div id="skuList" class="form-group search_result"></div>
+			   		<div id="skucodetype" class="form-group radio_area">
+			   			<div class="col-sm-6"><input type="radio" id="buildType" name="buildType" checked onclick="selectBuildType('01')"/>一批一码</div>
+			   			<div class="col-sm-6"><input type="radio" id="buildType" name="buildType" onclick="selectBuildType('02')"/>一品一码</div>
+			   		</div>
+			   		<div class="form-group">
+			   			<label class="control-label col-sm-2">生成数量：</label>
+			   			<div class="col-sm-10">
+			   				<input type="text" class="form-control" id="codeQuantity" name="codeQuantity" value="1" readonly/>
+			   			</div>
+			   		</div>
+			   		<div class="form-group">
+			   			<label class="control-label col-sm-2">产品批次号：</label>
+			   			<div class="col-sm-10">
+			   				<input type="text" class="form-control" id="skuBatch" name="skuBatch"/>
+			   			</div>
+			   		</div>
+			   		<div class="form-group m-t-lg">
+			   			<button class="btn btn-success" onclick="saveCode()"><i class="iconfont icon-zhengque"></i>确认生成</button>
+			   			<button class="btn btn-blue" onclick="selectHistory()"></i>查看历史记录</button>
+			   		</div>
+			   </div>
+			</div>
+		</div>
+      </div>
+    </div>
+  </form>
+  #parse("/layout/sys_js.vm")
+	<script>
+	function selectCode(type){
+	   $("#codeType").val(type);
+	   if(type==1){
+	      $("#skuIdCodeType").val("01");
+	   	  $("#skucodetype").css("display","block");
+		  $("#codeQuantity").val("1"); 
+		  $("#codeQuantity").attr("readonly","readonly");
+		  $("input[name='buildType']").eq(0).attr("checked","checked");
+	   }else{
+	      $("#skuIdCodeType").val("03");
+	      $("#skucodetype").css("display","none");
+		  $("#codeQuantity").val(""); 
+		  $("#codeQuantity").removeAttr("readonly");
+	   }
+	}
+	
+	function selectBuildType(type){
+	   if(type=='01'){
+	     $("#codeQuantity").val(1);
+		 $("#codeQuantity").attr("readonly","readonly")
+	   }else{
+	     $("#codeQuantity").val(""); 
+		 $("#codeQuantity").removeAttr("readonly");
+	   }
+	   $("#skuIdCodeType").val(type);
+	}
+	
+    function saveCode(){
+	   var ret = true;
+	   var skuId=$('#skuId').val();
+	   var codeQuantity = $('#codeQuantity').val();
+	   var skuBatch = $('#skuBatch').val();
+	   var oldSkuName = $('#oldSkuName').val();
+	   var skuName= $('#skuName').val();
+	   if(skuId==null || skuId==""){
+	      alert("请先选择产品");
+		  selctSku();
+		  ret = false;
+		  return false;
+	   }
+	  if(oldSkuName!=""){
+	     if(oldSkuName.indexOf(skuName)>=0){
+		    $('#skuName').val(oldSkuName);
+		 }else{
+		    alert("请先选择产品");
+		  	selctSku();
+		  	ret = false;
+		  	return false;
+		 }
+	  }
+	   if(codeQuantity==""){
+	   		alert("生成数量不能为空");
+			$('#codeQuantity').focus();
+			ret = false;
+			return false;
+	   }
+	   if(skuBatch==""){
+	      alert("产品批次不能为空");
+		  $('#skuBatch').focus();
+		  ret = false;
+		  return false;
+	   }
+	   
+	   if(ret){
+    	    jQuery.ajax({
+    				url: "${rc.ContextPath}/code/create.do",
+    				data:$("#codeEditForm").serialize(),
+    				type:'POST',
+    				success: function(result){
+    					if(result.success){
+    					  alert(result.message);						
+    					  resetFormValue('codeEditForm');
+    					  if(result.data==1){
+    					  	$("input[name='buildType']").eq(0).attr("checked","checked");
+    					  }
+    					  selectCode(result.data);
+    					}else{
+    					    alert(result.message);
+    					}
+                     }
+    		});
+		}
+	 }
+	 
+	 function selctSku(){
+	  var skuName = $("#skuName").val();
+	  if(skuName!=""){
+	     var skuurl = '${rc.ContextPath}/sku/selectlist.do?skuName='+encodeURI(encodeURI(skuName))
+	     $("#skuList").load(skuurl,function(){
+  		 	$('.search_result>div').slideDown();
+         });
+	  }else{
+	     alert("请输入产品名称进行查询");
+		 return false;
+	  }
+	}
+	
+	function selectHistory(){
+	   window.location.href="${rc.ContextPath}/code/init.do";
+	}
+</script>
+  </body>
+</html>

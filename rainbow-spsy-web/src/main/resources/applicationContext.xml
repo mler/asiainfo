@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd 
+    http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
+ 
+    <!-- <import resource="provider.xml" /> -->
+<!--     <import resource="applicationContext-mybatis.xml" /> -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath*:application.properties</value>
+			</list>
+		</property>
+	</bean>
+<!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->  
+<!-- 	<cache:annotation-driven cache-manager="cacheManager"/>  
+	cacheManager工厂类，指定ehcache.xml的位置   
+	<bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"   
+    		p:configLocation="classpath:/cache/ehcache.xml" />
+  
+	声明cacheManager  
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"  p:cacheManager-ref="cacheManagerFactory" /> 
+	 -->
+	<context:annotation-config />
+	
+	<aop:aspectj-autoproxy/>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />	
+		<!-- Connection Pooling Info -->
+		<property name="maxActive" value="${dbcp.maxActive}" />
+		<property name="maxIdle" value="${dbcp.maxIdle}" />
+		<property name="defaultAutoCommit" value="false" />
+		<!-- 连接Idle一个小时后超时 -->
+		<property name="removeAbandonedTimeout" value="120" />
+		<property name="removeAbandoned" value="true" />
+		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
+		<property name="minEvictableIdleTimeMillis" value="3600000" />
+	</bean>
+	<bean class="com.bdx.rainbow.util.BeanFactory" scope="singleton" lazy-init="false"/>
+	
+    <import resource="classpath*:applicationContext-service.xml"></import>
+<!--     <import resource="classpath:dubbo-urs-consumer.xml"/>
+ -->    <import resource="classpath*:dubbo-consumer-demo.xml" />
+<!--     <import resource="classpath:dubbo-vfs-consumer.xml" />
+ --><!--     <import resource="dubbo-provider-demo.xml" /> -->
+</beans>

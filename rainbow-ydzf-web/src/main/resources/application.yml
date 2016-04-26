@@ -1,0 +1,30 @@
+jdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://10.1.234.158:3306/wisdomcloud?useUnicode=true&characterEncoding=utf-8
+  username: syj
+  password: syj
+  maxActive: 20
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 60000
+  validationQuery: SELECT 'x'
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1
+vfsjdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://10.1.234.158:3306/file_sys?useUnicode=true&characterEncoding=utf-8
+  username: syj
+  password: syj
+  maxActive: 3
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 3000
+  validationQuery: /* ping */ select 1
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1

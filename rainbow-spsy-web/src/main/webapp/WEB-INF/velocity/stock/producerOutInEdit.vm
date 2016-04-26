@@ -1,0 +1,304 @@
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+#set($X=('updateout' == ${nextAction}))
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<script src="${RESOURCE_PATH}/js/common.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">$!{action}</h4>
+</div>
+<div class="modal-body">
+	#if($X)
+		<input type="hidden" name="operationOutId" id="operationOutId" value="${stock.operationOutId}"/>
+		<div class="form-group">
+            <label class="control-label col-sm-2">产品名称</label>
+            <div class="col-sm-4">
+                <input type="text" name="skuName" id="skuName" class="form-control" value="$!{stock.skuName}" readonly />
+            </div>
+            <label class="control-label col-sm-2">产品批次</label>
+            <div class="col-sm-4">
+                <input type="text" name="skuBatch" id="skuBatch" value="$!{stock.skuBatch}" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">生产日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" id="productionTime" name="productionTime" value="$!date.format('yyyy-MM-dd',$!{stock.productionDate})" class="form-control" readonly/>
+            </div>
+            <label class="control-label col-sm-2">检测信息</label >
+            <div class="col-sm-4">
+                #if(${stock.productDetectionId})
+                    <input type="text" class="form-control" id="reportName" name="reportName" value="$!{stock.skuName}$!{stock.skuBatch}报告" readonly/>
+                    #else
+                        <input type="text" class="form-control" id="reportName" name="reportName" readonly/>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">原料信息</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="materialshow" name="materialshow" value="$!{materialshow}" readonly/>
+            </div>
+        </div>
+        #if(${stock.outStorageType}=='01')
+            <div class="form-group">
+                <label class="col-sm-2 control-label">装箱编号</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="packingStartNumber" name="packingStartNumber" value="$!{stock.packingStartNumber}" readonly/>
+                </div>
+                <label class="col-sm-2 control-label">每箱数量</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="boxQuantity" name="boxQuantity" value="$!{stock.boxQuantity}" readonly/>
+                </div>
+            </div>
+            #else
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">单件数量</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="singleQuantity" name="singleQuantity" value="$!{stock.singleQuantity}" readonly/>
+                    </div>
+                </div>
+        #end
+	#else
+    <div class="form-group outinput">
+        <div class="col-sm-10">
+			<div class="col-sm-3">
+				<select name="conditionType" id="conditionType" class="form-control" onchange="goSelectType(this.value)">
+    				<option value="01">请输入批次号</option>
+					<option value="02">请输入产品名称</option>
+					<option value="03">请输入条形码</option>
+					<option value="04">请选择生产日期</option>
+				</select>
+			</div>
+			<div id="nameinput" class="col-sm-9 ">
+                <input type="text" class="form-control" id="keyword" name="keyword" />
+            </div>
+			<div id="dateinput" class="inputbox col-sm-9" style="display:none">
+				<input type="text" class="Wdate form-control" id="productionTime" name="productionTime" onclick="WdatePicker({lang:'zh-cn'})"/>
+				<i class="iconfont icon-date" onclick="javascript:document.getElementById('productionTime').click();"></i>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-blue" onclick="goProducer()"><i class="iconfont icon-sousuo"></i>查询</button>
+        </div>
+    </div>
+    <div id="operationInlist" class="form-group">
+		#parse("/stock/producerSelectIn.vm")
+	</div>
+	#end
+	<div class="form-group">
+    	<label class="control-label col-sm-2">购买经销商</label>
+		<div class="searInput col-sm-4">
+			<input type="hidden" name="agencyId" id="supplierId" value="$!{stock.agencyId}"/>
+			<input type="hidden" name="oldSupplierName" id="oldSupplierName" value="$!{stock.agencyName}"/>
+            <input type="text" name="agencyName" id="supplierName" class="form-control" placeholder="输入经销商名称查询" value="$!{stock.agencyName}">                
+            <a href="javascript:void(0)" class="btn btn-default" onclick="selectAgency()"><i class="iconfont icon-sousuo"></i></a>
+        </div>
+		<label class="control-label col-sm-2">经办人</label>
+		<div class="col-sm-4">
+            <input type="text" name="managePerson" id="managePerson" class="form-control" value="$!{stock.managePerson}">                
+        </div>
+	</div>
+	<div id="agecyList" class="form-group search_result"></div>
+	<div id="agencyInfo" class="form-group" style="display:none">
+         <label class="control-label col-sm-2">经销商负责人</label>
+         <div class="searInput col-sm-4">
+             <input type="text" class="form-control" name="agencyManagePerson" id="agencyManagePerson">
+         </div>
+         <label class="control-label col-sm-2">负责人联系电话</label>
+         <div class="col-sm-4">
+             <input type="text" class="form-control" name="agencyLinkPhone" id="agencyLinkPhone"/>
+         </div>
+     </div>	
+</div>
+<div class="modal-footer">
+#if($X)
+	<button type="button" class="btn btn-success" onclick="updateOutInfo()"><i class="iconfont icon-baocun"></i>保存</button>
+#else    
+    <button type="button" class="btn btn-blue fr m-l-sm" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>取消</button>
+    <button type="button" class="btn btn-success fr" onclick="saveOutInfo()"><i class="iconfont icon-zhengque"></i>确认导入</button>
+#end
+</div>
+<script>
+     $(function(){
+	   #if(!$X)
+         goProducer();
+	   #end
+	 })
+	 
+	 function goSelectType(conditionType){
+	    if(conditionType=='04'){
+		   $('#productionTime').val('');
+		   $('#nameinput').css("display","none");
+		   $('#dateinput').css("display","block");
+		}else{
+		   $('#keyword').val('');
+		   $('#nameinput').css("display","block");
+		   $('#dateinput').css("display","none");
+		}
+	 }
+	 
+     function goProducer(){
+	   var keyword = $('#keyword').val();
+	   var conditionType = $('#conditionType').val();
+	   var data;
+	   if(conditionType=='01'){
+	      data = {skuBatch:keyword};
+	   }else if(conditionType=='02'){
+	   	  data = {skuName:keyword};
+	   }else if(conditionType=='03'){
+	   	  data = {skuBarCode:keyword};
+	   }else{
+	      var productionTime = $('#productionTime').val();
+		  data = {productionTime:productionTime};
+	   }
+	   $('#operationInlist').load("${rc.ContextPath}/stock/producer/selectlist.do",data);
+	 }
+	 
+	 function selectAgency(){
+	  var agencyName = $('#supplierName').val();
+	  if(agencyName!=""){
+	     var agencyurl = '${rc.ContextPath}/agency/shoplist.do?agencyName='+encodeURI(encodeURI(agencyName))
+	     $("#agecyList").load(agencyurl,function(){
+  		 	$('#agecyList>div').slideDown();
+         });
+	  }else{
+	     alert("请输入商户名称进行查询");
+		 return false;
+	  }
+	}
+	
+	function saveOutInfo(){	   
+	   if(checkSelect('producerinIds','stockintable')==0){
+	      alert("请至少选择一条数据");
+		  return false;
+	   }else{
+	     var agencyId = $('#supplierId').val();
+		 var agencyName = $('#supplierName').val();
+		 var managePerson = $('#managePerson').val();
+		 var agencyManagePerson = $('#agencyManagePerson').val();
+		 var agencyLinkPhone = $('#agencyLinkPhone').val();
+		 var agencydisplay = $('#agencyInfo').css("display");
+		 var ret = true;
+		 if(agencyId==""){
+			 if(agencydisplay=='none'){
+			    alert('请选择商户');
+				selectAgency();
+				ret = false;
+				return false;
+			 }else{
+    			 if(agencyName==""){
+    			    alert('购买经销商不能为空！');
+    				$('#supplierName').focus();
+    				ret = false;
+    				return false;
+    			 }
+    			 if(agencyManagePerson==""){
+    			    alert('商户负责人不能为空！');
+    				$('#agencyManagePerson').focus();
+    				ret = false;
+    				return false;
+    			 }
+    			 if(agencyLinkPhone==""){
+    			    alert('商户联系电话不能为空！');
+    				$('#agencyLinkPhone').focus();
+    				ret = false;
+    				return false;
+    			 }else{
+    			    if(!checkPhone(agencyLinkPhone)){
+        				alert('请输入正确的电话号码')
+        				$('#agencyLinkPhone').focus();
+        				ret = false; 
+        				return false;
+    			 	}
+    			 }
+			   }
+			 }else{
+			    var oldSupplierName = $('#oldSupplierName').val();
+				if(oldSupplierName.indexOf(agencyName)>=0){
+        		  $('#supplierName').val(oldSupplierName);
+        	   }else{
+            	  alert("请选择商户");
+				  $('#supplierId').val('');
+            	  selectAgency();
+            	  ret = false;
+            	  return false;
+               }
+			 }
+		 }
+		 
+		 var stockIdins = "";
+		 $("input:checked",$("#stockintable")).each(function (){
+    	   stockIdins = stockIdins + $(this).val()+";";
+         });
+		 
+		 var data ={agencyId:agencyId,agencyName:agencyName,managePerson:managePerson,agencyManagePerson:agencyManagePerson,agencyLinkPhone:agencyLinkPhone,oprationIds:stockIdins};
+		 if(ret){
+    	     jQuery.ajax({
+                url: "${rc.ContextPath}/stock/producer/createout.do",
+                data:data,
+                type:'POST',
+                success: function(result){
+                    if(result.success){
+                        alert(result.message);
+                        $('#ingress').modal('hide');
+                        window.location.reload();
+                    }else{
+                    	alert(result.message);
+    					return false;
+                    }
+                }
+             }); 
+	   }
+	}
+	
+	function updateOutInfo(){
+         var operaId = $('#operationOutId').val();
+	     var agencyId = $('#supplierId').val();
+		 var agencyName = $('#supplierName').val();
+		 var managePerson = $('#managePerson').val();
+		 var agencyManagePerson = $('#agencyManagePerson').val();
+		 var agencyLinkPhone = $('#agencyLinkPhone').val();
+		 var ret = true;
+		 if(agencyId==""){
+		     if(agencyName==""){
+			    alert('购买经销商不能为空！');
+				$('#supplierName').focus();
+				ret = false;
+				return false;
+			 }
+			 if(agencyManagePerson==""){
+			    alert('商户负责人不能为空！');
+				$('#agencyManagePerson').focus();
+				ret = false;
+				return false;
+			 }
+			 if(agencyLinkPhone==""){
+			    alert('商户联系电话不能为空！');
+				$('#agencyLinkPhone').focus();
+				ret = false;
+				return false;
+			 }
+		 }
+		 
+		 var data ={agencyId:agencyId,agencyName:agencyName,managePerson:managePerson,agencyManagePerson:agencyManagePerson,agencyLinkPhone:agencyLinkPhone,operationOutId:operaId};
+		 if(ret){
+    	     jQuery.ajax({
+                url: "${rc.ContextPath}/stock/producer/updateout.do",
+                data:data,
+                type:'POST',
+                success: function(result){
+                    if(result.success){
+                        alert(result.message);
+                        $('#ingress').modal('hide');
+                        window.location.reload();
+                    }else{
+                    	alert(result.message);
+    					return false;
+                    }
+                }
+             }); 
+		 }
+	}
+</script>

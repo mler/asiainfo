@@ -1,0 +1,5 @@
+<link rel="stylesheet" href="$!{CONTEXT_PATH}/js/h5/weChat/bootstrap/3.0.1/css/bootstrap.min.css">
+<script src="$!{CONTEXT_PATH}/js/h5/weChat/bootstrap/jquery/jquery-1.7.2.min.js"></script>
+<script src="$!{CONTEXT_PATH}/js/h5/weChat/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<script src="$!{CONTEXT_PATH}/js/h5/weChat/util.js"></script>
+<link rel="stylesheet" href="$!{CONTEXT_PATH}/css/h5/weChat/css.css?_=2"/>

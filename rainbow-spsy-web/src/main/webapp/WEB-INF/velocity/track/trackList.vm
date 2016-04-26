@@ -1,0 +1,101 @@
+<ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+        <a href="#produce" data-toggle="tab">
+            <p class="ic_box"><i class="iconfont icon-shengchan"></i></p>
+            <p>生产信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+    <li>
+        <a href="#circulate" data-toggle="tab" url="$!{rc.ContextPath}/track/agencyList.do">
+            <p class="ic_box"><i class="iconfont icon-liutongxinxi"></i></p>
+            <p>流通信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+    <li >
+        <a href="#sale" data-toggle="tab" url="$!{rc.ContextPath}/track/saleList.do">
+            <p class="ic_box"><i class="iconfont icon-lingshouguanli"></i></p>
+            <p>销售信息</p>
+        </a>
+        <i class="iconfont icon-top"></i>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade in active" id="produce">
+        <div class="table_area">
+            <form id="">
+                <table class="table table-bordered table-striped table-hover">
+                    <tbody>
+                    <tr>
+                        <th>企业名称</th>
+                        <th>企业负责人</th>
+                        <th>联系方式</th>
+                        <th>商品名称</th>
+                        <th>商品生产日期</th>
+                        <th>商品出库时间</th>
+                        <th>检测报告</th>
+                    </tr>
+                    #if($rows && $!{rows.size} != 0)
+                    #foreach($obj in $rows)
+                    <tr>
+                        <td>$obj.get("enterpriseName")</td>
+                        <td>$obj.get("principal")</td>
+                        <td>$obj.get("phone")</td>
+                        <td>$!obj.get("skuName")</td>
+                        <td>$!date.format('yyyy-MM-dd ',$!obj.get("productionDate"))</td>
+                        <td>$!date.format('yyyy-MM-dd ',$!obj.get("createTime"))</td>
+                        <td><a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{rc.ContextPath}/track/showInspection.do?productDetectionId=$!obj.get("detectionId")&skuName=$!obj.get("skuName")', '检测信息')" class="modify">查看</a></td>
+                    </tr>
+                    #end
+                    #else
+                    <tr>
+                        <td colspan="7" class="noinfo">没有数据记录</td>
+                    </tr>
+                    #end
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="circulate" >
+
+    </div>
+    <div class="tab-pane fade" id="sale">
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#myTab li').on('shown.bs.tab', function (e) {
+            if($rows.size()>0){
+                var href=$(this).children("a").attr("href");
+                var url=$(this).children("a").attr("url");
+                var id=href.substr(1,href.length);
+                if(id!="produce"){
+                    if($("#"+id).attr('load')!='load'){
+                        $("#"+id).attr('load','load');
+                        var ret=false;
+                        var date='';
+                        if($("#productIdCode").val()!=''){
+                            ret=true;
+                        }else if($("#skuBarCode").val()!=''&&$("#skuBatch").val()!=''){
+                            ret=true;
+                        }
+                        if(ret){
+                            $("#"+id).load(url,$("#track").serialize());
+                        }else{
+                            alert("请输入追溯码或产品编号和产品批次");
+                        }
+
+                    }
+
+                }
+            }else{
+                alert("请输入追溯码或产品编号和产品批次");
+            }
+        })
+    })
+
+
+</script>

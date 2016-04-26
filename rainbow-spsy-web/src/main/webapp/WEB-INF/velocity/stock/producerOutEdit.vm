@@ -1,0 +1,116 @@
+#set($X=('/updateout' == ${nextAction}))
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<form name="stockEditForm" id="stockEditForm" method="POST" onsubmit="return false">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">$!{action}</h4>
+    </div>
+    <div class="modal-body">
+        <!--
+        <div class="form-group">
+        <a href="#" class="fr">从入库信息选取</a>
+        </div>
+        -->
+		#if($X)
+			<input type="hidden" name="operationOutId" id="operationOutId" value="${stock.operationOutId}"/>
+		#end
+        <div class="form-group">
+            <label class="control-label col-sm-2">产品名称</label>
+            <div class="col-sm-4">
+                <input type="text" name="skuName" id="skuName" class="form-control" value="$!{stock.skuName}" readonly />
+            </div>
+            <label class="control-label col-sm-2">产品批次</label>
+            <div class="col-sm-4">
+                <input type="text" name="skuBatch" id="skuBatch" value="$!{stock.skuBatch}" class="form-control" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">生产日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" id="productionTime" name="productionTime" value="$!date.format('yyyy-MM-dd',$!{stock.productionDate})" class="form-control" readonly/>
+            </div>
+            <label class="control-label col-sm-2">检测信息</label >
+            <div class="col-sm-4">
+                #if(${stock.productDetectionId})
+                    <input type="text" class="form-control" id="reportName" name="reportName" value="$!{stock.skuName}$!{stock.skuBatch}报告" readonly/>
+                    #else
+                        <input type="text" class="form-control" id="reportName" name="reportName" readonly/>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">原料信息</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="materialshow" name="materialshow" value="$!{materialshow}" readonly/>
+            </div>
+        </div>
+        #if(${stock.outStorageType}=='01')
+            <div class="form-group">
+                <label class="col-sm-2 control-label">装箱编号</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="packingStartNumber" name="packingStartNumber" value="$!{stock.packingStartNumber}" readonly/>
+                </div>
+                <label class="col-sm-2 control-label">每箱数量</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="boxQuantity" name="boxQuantity" value="$!{stock.boxQuantity}" readonly/>
+                </div>
+            </div>
+            #else
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">单件数量</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="singleQuantity" name="singleQuantity" value="$!{stock.singleQuantity}" readonly/>
+                    </div>
+                </div>
+        #end		
+        <div class="form-group">
+            <label class="control-label col-sm-2">采购单位</label>
+            <div class="searInput col-sm-4">
+                <input type="hidden" name="supplierId" id="supplierId" value="$!{stock.agencyId}"/>
+                <input type="text" class="form-control" name="supplierName" id="supplierName" value="$!{stock.agencyName}" placeholder="输入经销商名称查询"/>
+				<a href="javascript:void(0)" class="btn btn-default" onclick="selectAgencyOther()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="col-sm-2 control-label">经办人</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="managePersonO" name="managePersonO" value="$!{stock.managePerson}"/>
+            </div>
+        </div>
+		<div id="agencyOtherList" class="form-group search_result"></div>
+		<div id="agencyInfoOther" class="form-group" style="display:none">
+        <label class="control-label col-sm-2">经销商负责人</label>
+        <div class="searInput col-sm-4">
+             <input type="text" class="form-control" name="agencyPerson" id="agencyPerson" value="$!{purchaseInfo.managePerson}">
+        </div>
+        <label class="control-label col-sm-2">负责人联系电话</label>
+        <div class="col-sm-4">
+             <input type="text" class="form-control" name="agencyPhone" id="agencyPhone" value="$!{purchaseInfo.linkPhone}"/>
+         </div>
+     </div>	
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="iconfont icon-baocun"></i>保存</button>
+            <!--<button type="button" class="btn btn-blue">
+            <i class="iconfont icon-shuaxin"></i>
+            保存并继续</button>
+            -->
+    </div>
+</div>
+<script>
+    function selectAgencyOther(){
+	  var agencyName = $('#supplierName').val();
+	  if(agencyName!=""){
+	     var agencyurl = '${rc.ContextPath}/agency/shoplist.do?agencyName='+encodeURI(encodeURI(agencyName))
+	     $("#agencyOtherList").load(agencyurl,function(){
+  		 	$('#agencyOtherList>div').slideDown();
+         });
+	  }else{
+	     alert("请输入商户名称进行查询");
+		 return false;
+	  }
+	}
+	
+</script>
+</form>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.bdx</groupId>
+    <artifactId>rainbow</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>rainbow-vfs</artifactId>
+  <version>0.0.2-SNAPSHOT</version>
+  <name>rainbow-vfs</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+  	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-velocity</artifactId>
+	</dependency>
+    <!-- mybatis -->
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.2.8</version>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.2.2</version>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-data-jpa</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.bdx</groupId>
+		<artifactId>rainbow-common</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>com.bdx</groupId>
+		<artifactId>rainbow-vfs-dubbo</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+		<groupId>org.bouncycastle</groupId>
+		<artifactId>bcprov-jdk16</artifactId>
+		<version>1.45</version>
+	</dependency>
+	<!-- jdbc -->
+<!-- 	<dependency> -->
+<!-- 		<groupId>mysql</groupId> -->
+<!-- 		<artifactId>mysql-connector-java</artifactId> -->
+<!-- 	</dependency> -->
+	<dependency>
+	    <groupId>com.alibaba</groupId>
+	    <artifactId>druid</artifactId>
+	    <version>1.0.9</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+		<version>16.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-vfs2</artifactId>
+		<version>2.0</version>
+	</dependency>
+	<dependency> 
+		<groupId>commons-net</groupId>
+		<artifactId>commons-net</artifactId>
+		<version>3.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-io</groupId>
+		<artifactId>commons-io</artifactId>
+		<version>2.4</version>
+	</dependency>
+	<dependency>
+		<groupId>com.jcraft</groupId>
+		<artifactId>jsch</artifactId>
+		<version>0.1.52</version>
+	</dependency>
+
+	  <!-- 新增openOffice包-->
+	  <!--<dependency>-->
+		  <!--<groupId>com.artofsolving</groupId>-->
+		  <!--<artifactId>jodconverter-maven-plugin</artifactId>-->
+		  <!--<version>2.2.1</version>-->
+		  <!--<exclusions>-->
+			  <!--<exclusion>-->
+				  <!--<groupId>org.slf4j</groupId>-->
+				  <!--<artifactId>slf4j-jdk14</artifactId>-->
+			  <!--</exclusion>-->
+		  <!--</exclusions>-->
+	  <!--</dependency>-->
+	  <!--<dependency>-->
+		  <!--<groupId>com.artofsolving</groupId>-->
+		  <!--<artifactId>jodconverter</artifactId>-->
+		  <!--<version>2.2.1</version>-->
+	  <!--</dependency>-->
+
+	  <dependency>
+		  <groupId>org.artofsolving.jodconverter</groupId>
+		  <artifactId>jodconverter-core</artifactId>
+		  <version>3.0</version>
+	  </dependency>
+
+  </dependencies>
+</project>

@@ -1,0 +1,30 @@
+.infotable>tbody>tr>td:nth-child(odd), 
+.infotable>tbody>tr>th:nth-child(odd){
+	text-align: right;
+}
+.infotable+.btn-block{
+	text-align: center;
+	padding: 30px;
+}
+.infotable+.btn-block button{
+	margin: 10px;
+}
+body{
+	height: auto;
+}
+.materialList .table>tbody>tr>td, .materialList .table>tbody>tr>th, 
+.materialList .table>tfoot>tr>td, .materialList .table>tfoot>tr>th, 
+.materialList .table>thead>tr>td, .materialList .table>thead>tr>th{
+	padding: 5px;
+}
+.materialList{
+	display: none;
+}
+.materialList .cont_wrap{
+	border:1px solid #ddd;
+	padding: 10px 0px;
+	box-shadow: inset 0px 0px 13px -2px #ddd;
+}
+#error>div{
+    display: inline-block;
+}

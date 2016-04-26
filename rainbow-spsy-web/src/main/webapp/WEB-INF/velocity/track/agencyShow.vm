@@ -1,0 +1,27 @@
+<table class="table report_table">
+    <tr>
+        <td>经销商名称：</td>
+        <td>$!{agency.agencyName}</td>
+        <td>负责人：</td>
+        <td>$!{agency.agencyResponsiblePerson}</td>
+        <td>联系方式：</td>
+        <td>$!{agency.linkPhone}</td>
+    </tr>
+    <tr>
+        <td>经销主体：</td>
+        <td>#if($!{agency.linkPhone}=='01')
+            产品
+            #elseif($!{agency.linkPhone}=='02')
+                原材料
+            #end</td>
+        <td>经销商类型：</td>
+        <td>    #if($!{agency.agencyType}=='10')
+            个人
+        #elseif($!{agency.agencyType}=='20')
+            企业
+        #end</td>
+        <td>经销商地址：</td>
+        <td>$!{agency.agencyAddress}</td>
+
+    </tr>
+</table>

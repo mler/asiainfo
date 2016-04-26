@@ -1,0 +1,149 @@
+<form action="$!{CONTEXT_PATH}/templet/${type}/${nextAction}" id="templetEdit" onsubmit="return false">
+<div class="form-group">
+    <label class="control-label col-sm-2">文书名称</label>
+    <div class="col-sm-4">
+            <input class="inputbox form-control" type="text" #if(${type}=='inspectCase') name="ydzfInspectCaseTemplet.inspectCaseTempletName" value="$!{obj.inspectCaseTempletName}" #else name="ydzfMonitorTemplet.monitorTempletName" value="$!{obj.monitorTempletName}" #end class="FormGroupInput">
+        <input type="hidden"  #if($type=='inspectCase')name="ydzfInspectCaseTemplet.${type}TempletId" value="$!{obj.inspectCaseTempletId}" #else name="ydzfMonitorTemplet.${type}TempletId" value="$!{obj.monitorTempletId}"
+        #end />
+    </div>
+    <label class="control-label col-sm-2">企业类型</label>
+    <div class="col-sm-4">
+        <div class="inputbox form-control">
+            <select #if(${type}=='inspectCase') name="ydzfInspectCaseTemplet.inspectEnterpriseType" #else name="ydzfMonitorTemplet.checkEnterpriseType" #end class="form-control">
+                <option value="">请选择</option>
+                <option value="001" >食品生产</option>
+                <option value="002"  >食品流通</option>
+                <option value="003" >餐饮服务</option>
+                <option value="004" >药品器械生产</option>
+                <option value="005" >药品器械经营</option>
+                <option value="006" >医疗机构</option>
+                <option value="007" >化妆品经营</option>
+            </select>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">合格分数线</label>
+    <div class="col-sm-4">
+        <input type="text"  class="inputbox form-control" value="$!{obj.passValue}" #if(${type}=='inspectCase') name="ydzfInspectCaseTemplet.passValue" #else name="ydzfMonitorTemplet.passValue" #end class="FormGroupInput" NUMBER="true">
+    </div>
+    <label class="control-label col-sm-2">内容</label>
+    <div class="col-sm-4">
+        #if(${type}=='inspectCase')
+                    <input type="text" class="inputbox form-control" name="ydzfInspectCaseTemplet.inspectCaseTempletContent" value="$!{obj.inspectCaseTempletContent}">
+        #else
+            <input type="text" name="ydzfMonitorTemplet.monitorTempletContent" class="inputbox form-control" value="$!{obj.monitorTempletContent}">
+        #end
+
+    </div>
+</div>
+    #if(${type}=='monitor')
+        <div class="form-group">
+
+            <label class="control-label col-sm-2">巡检类型</label>
+            <div class="col-sm-4">
+                <div class="inputbox form-control">
+                    <select name="ydzfMonitorTemplet.checkPlanType" class="form-control">
+                        <option value="" >全部</option>
+                        <option value="1"  >日常</option>
+                        <option value="2" >专项</option>
+                        <option value="3" >抽查</option>
+                        <option value="4" >抽验</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+    #end
+<div class="dailypatrol_info">
+    <h1>文书条目内容</h1>
+    <div class="table_area m-t-sm ">
+        <table id="content" class="table table-bordered table-striped table-hover">
+            <tbody>
+            <tr>
+                <th>序号</th>
+                <th>考核内容</th>
+                <th>说明</th>
+                <th>分值</th>
+                <th>操作</th>
+            </tr>
+                #if($type=='inspectCase')
+                    #set($listName='ydzfInspectCaseTempletContentList')
+                #else
+                    #set($listName='ydzfMonitorTempletContentList')
+                #end
+            #if($nextAction=='update')
+                #foreach($content in $lists)
+                <tr>
+                    <td>${velocityCount}</td>
+                    #set($index=$math.sub(${velocityCount},1))
+                    <td><textarea rows="3" cols="30" name="${listName}[$index].itemContent}">$!{content.itemContent}</textarea> </td>
+                    <td><textarea rows="3" cols="30" name="${listName}[$index].itemRemark">$!{content.itemRemark}</textarea></td>
+                    <td><select name="${listName}[$index].itemValue" class="form-control">
+                        <option value="5" #if($!{content.itemValue}==5) selected #end>5</option>
+                        <option value="4" #if($!{content.itemValue}==4) selected #end>4</option>
+                        <option value="3" #if($!{content.itemValue}==3) selected #end>3</option>
+                        <option value="2" #if($!{content.itemValue}==2) selected #end>2</option>
+                        <option value="1" #if($!{content.itemValue}==1) selected #end>1</option>
+                    </select>
+                        <input type="hidden" name="${listName}[$index].${type}TempletContentId" #if(${type}=='inspectCase') value="$!{content.inspectCaseTempletContentId}" #else value="$!{content.monitorTempletContentId}" #end/></td>
+                    <td><a href="javascript:void(0)" class="iconfont icon-shanchu" onclick="delContent()"></a></td>
+                </tr>
+                #end
+            #else
+            <tr>
+                <td>1</td>
+                <td><textarea rows="3" cols="30" name="${listName}[0].itemContent"></textarea></td>
+                <td><textarea rows="3" cols="30" name="${listName}[0].itemRemark"></textarea></td>
+                <td>
+                    <select name="${listName}[0].itemValue" class="form-control">
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                </td>
+                <td><a href="javascript:void(0)" class="iconfont icon-shanchu" onclick="delContent()"></a></td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+        <div class="dailypatrol_addbtn"><a href="javascript:void(0)" onclick="addContent()">新增一行</a></div>
+        </div>
+</div>
+ </form>
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="commit('templetEdit','templetQry','cancelId')"><i class="iconfont icon-baocun"></i>提交</button>
+    <button type="button" class="btn btn-default" id="cancelId" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+</div>
+<script>
+    function addContent(){
+        var index= $("#content").find("tr").last().find("td").first().html();
+        if(index==undefined){
+            index=0;
+        }
+
+        var id= parseInt(index)+1;
+        var name="$listName"+"["+index+"]";
+        var html="<tr> <td>"+id+"</td>"+
+        "<td><textarea rows='3' cols='30' name='"+name+".itemContent'></textarea></td>"+
+        " <td><textarea rows='3' cols='30'' name='"+name+".itemRemark'></textarea></td>"+
+        "<td>"+
+        " <select name='"+name+".itemValue' class='form-control'>"+
+        " <option value='5'>5</option>"+
+        " <option value='4'>4</option>"+
+        " <option value='3'>3</option>"+
+        " <option value='2'>2</option>"+
+        "<option value='1'>1</option>"+
+        "</select>"+
+        " </td>"+
+        "<td><a href='javascript:void(0)' class='iconfont icon-shanchu' onclick='delContent()' ></a></td>"+
+        "</tr>";
+//        html=$("#content").find("tr").last().html();
+        $("#content").append(html);
+    }
+    function delContent(){
+        $("#content").find("tr").last().remove();
+    }
+</script>

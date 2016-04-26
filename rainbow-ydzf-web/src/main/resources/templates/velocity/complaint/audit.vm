@@ -1,0 +1,92 @@
+##  Created by core on 16/4/15.
+#parse("sys_param.vm")
+##<link rel="stylesheet" href="$RESOURCE_PATH/css/jquery-ui.css" />
+<link rel="stylesheet" href="$RESOURCE_PATH/css/autocomplete.css" />
+<from method="POST" action="$!{CONTEXT_PATH}/complaint/${nextAction}" id="complaintAudit" >
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉编号</label>
+        <div class="col-sm-4">
+            ${obj.complaintCode}
+            <input type="hidden" name="complaintId" value="${obj.complaintId}"/>
+        </div>
+        <label class="control-label col-sm-2">投诉创建部门</label>
+        <div class="col-sm-4">
+             $!cache.getCachedName("SYS_DEPT", "$!{obj.complaintCreatDepId}", "", "urs")
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉创建人</label>
+        <div class="col-sm-4">
+            $!cache.getCachedName("SYS_USER_NAME", "$!{obj.complaintCreatUserId}", "", "urs")
+        </div>
+        <label class="control-label col-sm-2">投诉创建时间</label >
+        <div class="col-sm-4">
+            $!date.format('yyyy-MM-dd ',$!{obj.complaintCreatDate})
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉单位</label>
+        <div class="col-sm-4">
+           $!{obj.complaintUnit}
+        </div>
+        <label class="control-label col-sm-2">投诉举报人</label >
+        <div class="col-sm-4">
+           $!{obj.complaintInformer}
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">投诉渠道</label>
+        <div class="col-sm-10 inputbox form-control">
+            $!{obj.complaintChannel}
+        </div>
+    </div>
+    <div class="AuditObject">
+        <h1>投诉内容</h1>
+        <div class="AuditObjectList">
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <i class="iconfont icon-tousu orange"></i><h2>$!{obj.complaintUnit}</h2>－<span>餐饮业</span>
+                </div>
+                <div class="col-sm-4 textaling_r" >
+                    <span> $!date.format('yyyy-MM-dd ',$!{obj.complaintCreatDate})</span>
+                </div>
+            </div>
+            <div class="form-group AuditObjectInfo infocolor">
+                <label class="col-sm-2 textaling_r">被投诉举报产品:</label>
+                <div class="col-sm-2">$!{obj.complaintUnit}</div>
+                <label class="col-sm-2 textaling_r">投诉渠道:</label>
+                <div class="col-sm-2">$!{obj.complaintChannel}</div>
+            </div>
+            <div class="form-group AuditObjectListInfo">$!{obj.complaintContent}</div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top:20px;">
+        <label class="control-label col-sm-2">审核结果</label>
+        <div class="col-sm-10 CaseReviewRadio">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="complaintStatus"  value="1">
+                    通过
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="complaintStatus"  value="2" >
+                    不通过
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">审核意见</label >
+        <div class="col-sm-10">
+            <textarea name="complaintAuditAdvice" title="请输入投诉单位" rows="4" placeholder="请输入您的意见"></textarea>
+        </div>
+    </div>
+
+</from>
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="commit('complaintAudit','complaintQry','cancelId')"><i class="iconfont icon-baocun"></i>提交</button>
+    <button type="button" class="btn btn-default" id="cancelId" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+</div>

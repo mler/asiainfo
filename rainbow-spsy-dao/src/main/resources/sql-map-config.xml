@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMapConfig
+PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+"http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" maxRequests="32" maxSessions="10"
+		maxTransactions="5" useStatementNamespaces="true" />
+	
+	<!-- 业务 start-->
+	<sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_agency_company_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_goods_stock_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_identification_code_detail_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_identification_code_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_inspection_info_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_material_info_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_merchant_stock_out_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_producer_stock_detail_in_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_producer_stock_in_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_producer_stock_out_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_purchase_info_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/self/self_trace_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/t_origin_sku_agency_relation_SqlMap.xml" />
+    <sqlMap resource="com/bdx/rainbow/spsy/dal/ibatis/sql/self/self_track_SqlMap.xml" />
+    
+ </sqlMapConfig>

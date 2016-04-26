@@ -1,0 +1,39 @@
+#pagination()
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+  		<th>序号</th>
+        <th>原料名称</th>
+        <th>原料类型</th>
+        <th>采购日期</th>
+        <th>批次号</th>
+        <th>采购数量/单位</th>
+        <th>供应商</th>
+        <th>操作</th>
+    </tr>
+	#set($num = 1)
+    #foreach($info in $purchaseInfos)
+        <tr>
+			<td>$!{num}</td>
+            <td>$!{info.materialName}</td>
+            <td>$!cache.getCachedName("MATERIAL_TYPE","$!{info.materialType}","")</td>
+            <td>$!date.format('yyyy-MM-dd',${info.purchaseTime})</td>
+            <td>$!{info.purchaseBatch}</td>
+            <td>$!{info.purchaseNumber}/${info.purchaseUnit}</td>
+            <td>$!{info.supplierName}</td>
+            <td>
+                <a href="javascript:void(0)" class="modify" data-toggle="modal" onclick="editInfo('${rc.ContextPath}/material/update.do?purchaseId=${info.purchaseId}')"><i class="iconfont icon-bianji"></i>修改</a>
+            </td>			
+        </tr>
+		#set($num = $num + 1)
+    #end
+</table>
+<div class="pageBar clearfix">
+	 <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+		#end
+     </ul>
+</div>

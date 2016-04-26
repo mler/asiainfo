@@ -1,0 +1,33 @@
+#pagination()
+
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		<th>企业名称</th>
+		<th>企业法人</th>
+		<th>联系电话</th>
+		<th>产品数量</th>
+		<th>可追溯产品数量</th>
+		<!--<th>追溯信息</th>-->
+	</tr>
+    #foreach($corp in $corps)
+        <tr ondblclick="qyjg_openChart($!{corp.enterpriseId},'$!{corp.inName}')" title="双击查看【$!{corp.inName}】的产品追溯信息">
+            <td>$!{corp.inName}</td>
+			<td>$!{corp.inPrincipal}</td>
+			<td>$!{corp.inPhone}</td>
+			<td>$!{corp.skuNum}</td>
+            <td>$!{corp.tracedSkuNum}</td>
+           <!-- <td>
+                <a href="javascript:void(0)" onclick="alert(1)">查看</a>
+            </td>-->
+        </tr>
+    #end
+</table> 
+<div class="pageBar clearfix">
+    <div class="fl dataCount">
+        <span>总共收录追溯数据<b class="orange">$!{totalQyjgTrace}</b>条</span>
+    </div>
+	 <ul class="pagination">
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+     </ul>
+</div>

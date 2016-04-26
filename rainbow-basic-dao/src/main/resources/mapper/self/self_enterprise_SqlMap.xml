@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.mapper.basic.mysql.SelfEnterpriseMapper" >
+   <resultMap id="BaseResultMap" type="com.bdx.rainbow.entity.basic.mysql.SelfEnterpriseLicense" >
+    <result column="ENTERPRISE_ID" property="enterpriseId" jdbcType="INTEGER" />
+    <result column="ENTERPRISE_NAME" property="enterpriseName" jdbcType="VARCHAR" />
+    <result column="LEGAL_PERSON" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="LEGAL_PERSON_CERT" property="legalPersonCert" jdbcType="VARCHAR" />
+    <result column="LEGAL_PERSON_PHONE" property="legalPersonPhone" jdbcType="VARCHAR" />
+    <result column="ORGANIZATION_CODE" property="organizationCode" jdbcType="VARCHAR" />
+    <result column="ORGANIZATION_TYPE" property="organizationType" jdbcType="VARCHAR" />
+    <result column="REGI_ADDRESS" property="regiAddress" jdbcType="VARCHAR" />
+    <result column="BUSINESS_LICENCE" property="businessLicence" jdbcType="VARCHAR" />
+    <result column="REGI_CAPITAL" property="regiCapital" jdbcType="VARCHAR" />
+    <result column="BUSINESS_SCOPE" property="businessScope" jdbcType="VARCHAR" />
+ 
+    <result column="LICENSE_ID" property="licenseId" jdbcType="INTEGER" />
+    <result column="LICENSE_CODE" property="licenseCode" jdbcType="VARCHAR" />
+    <result column="LICENSE_TYPE" property="licenseType" jdbcType="VARCHAR" />
+    <result column="LICENSE_NAME" property="licenseName" jdbcType="VARCHAR" />
+
+    <result column="LICENSE_ADDRESS" property="licenseAddress" jdbcType="VARCHAR" />
+    <result column="LICENSE_SCOPE" property="licenseScope" jdbcType="VARCHAR" />
+    <result column="VALID_DATE" property="validDate" jdbcType="DATE" />
+    <result column="INVALID_DATE" property="invalidDate" jdbcType="DATE" />
+    <result column="LICENSE_AUTHORITY" property="licenseAuthority" jdbcType="VARCHAR" />
+    <result column="LICENSE_TIME" property="licenseTime" jdbcType="DATE" />
+    <result column="VALID_PERIOD" property="validPeriod" jdbcType="VARCHAR" />
+    <result column="APPROVE_EXTEND_DATE" property="approveExtendDate" jdbcType="DATE" />
+    <result column="EXTEND_EXPIREDATE" property="extendExpiredate" jdbcType="DATE" />
+    <result column="VERSION_FROM" property="versionFrom" jdbcType="CHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <trim>  
+      	<if test="licenseCode != null and licenseCode != '' " >
+		 and b.LICENSE_CODE like #{ licenseCode }  
+	    </if>
+	    <if test="organizationCode != null and organizationCode != '' " >
+		 and a.ORGANIZATION_CODE = #{ organizationCode } 
+	    </if>
+	    <if test="status != null and status != '' " >
+		 and b.STATUS = #{ status } 
+	    </if>
+	    <if test="enterpriseName != null and enterpriseName != '' " >
+		 and a.ENTERPRISE_NAME like #{ enterpriseName }
+	    </if>
+	    <if test="validDate != null" >
+	    	<![CDATA[ and b.VALID_DATE >= #{ validDate } ]]>
+	    </if>
+	    
+	    <if test="validDateStart != null" >
+	    	<![CDATA[ and b.VALID_DATE >= #{ validDateStart } ]]>
+	    </if>
+	    
+	    <if test="validDateEnd != null" >
+	    	<![CDATA[ and b.VALID_DATE <= #{ validDateEnd } ]]>
+	    </if>
+	    
+	    <if test="invalidDate != null" >
+	    	<![CDATA[ and b.INVALID_DATE >= #{ invalidDate } ]]>
+	    </if>
+	    
+	    <if test="invalidDateStart != null" >
+	    	<![CDATA[ and b.INVALID_DATE >= #{ invalidDateStart } ]]>
+	    </if>
+	    
+	    <if test="invalidDateEnd != null" >
+	    	<![CDATA[ and b.INVALID_DATE <= #{ invalidDateEnd } ]]>
+	    </if>
+	    
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    a.ENTERPRISE_ID, a.ENTERPRISE_NAME, a.LEGAL_PERSON, a.LEGAL_PERSON_CERT, a.LEGAL_PERSON_PHONE, 
+    a.ORGANIZATION_CODE, a.ORGANIZATION_TYPE, a.REGI_ADDRESS, a.BUSINESS_LICENCE, 
+    a.REGI_CAPITAL, a.BUSINESS_SCOPE, b.LICENSE_ID, b.ENTERPRISE_ID, b.LICENSE_CODE, b.LICENSE_TYPE, b.LICENSE_NAME, 
+    b.LICENSE_ADDRESS, b.LICENSE_SCOPE, b.VALID_DATE, b.INVALID_DATE, b.LICENSE_AUTHORITY, b.LICENSE_TIME, 
+    b.VALID_PERIOD, b.APPROVE_EXTEND_DATE, b.EXTEND_EXPIREDATE, b.VERSION_FROM, b.STATUS
+  </sql>
+  <select id="getEnterpriseLicenses" resultMap="BaseResultMap" parameterType="Map" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    	<include refid="Base_Column_List" />
+    from t_basic_enterprise_info a,t_basic_license b where a.ENTERPRISE_ID = b.ENTERPRISE_ID 
+    
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <select id="countEnterpriseLicenses" parameterType="Map" resultType="java.lang.Integer" >
+    select count(*) from t_basic_enterprise_info a,t_basic_license b where a.ENTERPRISE_ID = b.ENTERPRISE_ID 
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,54 @@
+<table class="table table-bordered table-striped table-hover">
+
+    <tr>
+        <th>企业名称</th>
+        <th>组织机构代码</th>
+        <th>法人</th>
+        <th>联系方式</th>
+        <th>许可证类型</th>
+        <th>许可证编号</th>
+        <th>发证日期</th>
+        <th>当前状态</th>
+    </tr>
+
+    #foreach($obj in $rows)
+        <tr>
+            <td>$!{obj.enterpriseName}</td>
+            <td>$!{obj.organizationCode}</td>
+            <td>$!{obj.legalPerson}</td>
+            <td>$!{obj.legalPersonPhone}</td>
+            <td>#if($!{obj.licenseType}=='001')
+                    生产
+                #elseif($!{obj.licenseType}=='002')
+                    经营
+                #elseif($!{obj.licenseType}=='003')
+                    销售
+                #elseif($!{obj.licenseType}=='004')
+                    流通
+                #end
+            </td>
+            <td>$!{obj.licenseCode}</td>
+            <td>$!date.format('yyyy-MM-dd',$!{obj.licenseTime})</td>
+            #if($!myTool.dateDiff("$!date.format('yyyy-MM-dd',$!{obj.invalidDate})")=="1")
+                <td>正常</td>
+            #elseif($!myTool.dateDiff("$!date.format('yyyy-MM-dd',$!{obj.invalidDate})")=="-1")
+                <td class="red">过期</td>
+            #elseif($!myTool.dateDiff("$!date.format('yyyy-MM-dd',$!{obj.invalidDate})")=="0")
+                <td class="orange">一个月过期</td>
+            #else
+                <td >&nbsp;</td>
+            #end
+
+        </tr>
+        #end
+</table>
+<div class="pageBar clearfix">
+    <button type="button" onclick="exportExcel()" class="btn btn-warning"><i class="iconfont icon-shangchuan"></i>导出为excel表格</button>
+    <ul class="pagination">
+        <input type="hidden" id="pageNumber" value="$!{pageinfo.pageNumber}"/>
+        <input type="hidden" id="totalCount" value="$!{pageinfo.totalCount}"/>
+        <input type="hidden" id="pageCount" value="$!{pageinfo.pageCount}"/>
+        <li class="previous" ><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+        <li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+    </ul>
+</div>

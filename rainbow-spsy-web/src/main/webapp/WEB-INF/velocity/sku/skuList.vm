@@ -1,0 +1,48 @@
+#pagination()
+<form id="skuListForm" name="skuListForm">
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>
+            <input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('skuListForm', this.checked, 'skuIds')"/>
+        </th>
+        <th>序号</th>
+        <th>产品名称</th>
+        <th>产品条形码</th>
+        <th>产品规格</th>
+        <th>保质期</th>
+        <th>是否赋码</th>
+        <th>操作</th>
+    </tr>	
+	#set($num = 1)
+    #foreach($sku in $skus)
+        <tr>
+			<td><input type="checkbox" id="skuIds" name="skuIds" value="$!{sku.skuId}"></td>
+            <td>$num</td>
+            <td>$!{sku.skuName}</td>
+            <td>$!{sku.skuBarcode}</td>
+            <td>$!{sku.spec}</td>
+            <td>$!{sku.lifeTime}</td>
+			<td>$!cache.getCachedName("FLAG_EXIST","$!{sku.flag}","")</td>
+            <td>
+                <a href="javascript:void(0)" class="modify" onclick="editInfo('${rc.ContextPath}/sku/update.do?skuId=${sku.skuId}')"><i class="iconfont icon-bianji"></i>修改</a>
+            </td>
+        </tr>
+		#set($num = $num + 1)
+    #end					
+</table>
+</form>
+<!-- 分页信息 -->
+<div class="pageBar clearfix">
+    <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+        <li class="previous">
+            <a href="javascript:void(0)" onclick="goPage(-1)">上一页</a>
+        </li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+            <li class="next">
+                <a href="javascript:void(0)" onclick="goPage(1)">下一页</a>
+            </li>
+		#end
+    </ul>
+</div>

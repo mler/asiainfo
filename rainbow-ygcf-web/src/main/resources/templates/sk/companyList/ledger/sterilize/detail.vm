@@ -1,0 +1,56 @@
+#parse("sys_param.vm")
+
+##<div class="container content">
+##    <div class="row paginationDiv">
+##        <div class="col-sm-12">
+##            <div class="page-nav">
+##                <a href="$!{CONTEXT_PATH}/ledgerPurchase/list#ledger-sterilize">消毒记录台账</a>
+##                &gt;
+##                <a href="javascript:void(0)" class="last">消毒记录台账明细</a>
+##
+##                <button class="reback" onclick="goBack()"><i class="iconfont icon-left"></i>返回</button>
+##            </div>
+            <!--search  area-->
+            <div class="searchArea">
+                <form id="sterilizeForm" action="$!{CONTEXT_PATH}/company/ledgerSterilizeDetailList?ledgerId=$!{request.getParameter("lid")}" method="post">
+
+                </form>
+                <button class="btn btn-primary search" onclick="qryData('sterilizeForm')"><i class="iconfont icon-sousuo"></i>查询</button>
+                <button class="btn btn-success reset" onclick="reset('sterilizeForm')"><i class="iconfont icon-shuaxin"></i>重置</button>
+
+                <button class="btn btn-default btn-xs pull-right" onclick="loadLedger('sterilizeTab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=14')"><i class="iconfont icon-left"></i>返回</button>
+            </div>
+            <!--table area-->
+            <div class="table_area">
+                <input type="hidden" id="p_number" value="">
+
+                <div class="queryResultList" id="queryResultList">
+                </div>
+
+                #paginationDiv()
+            </div>
+##        </div>
+##    </div>
+##</div>
+<script type="text/javascript">
+    $(function() {
+
+//        if(sessionStorage.getItem('s_s_from') == 'b') {
+//            $('#p_number').val(sessionStorage.getItem('s_s_number'));
+//        }
+//
+//        sessionStorage.removeItem('s_s_from');
+//        sessionStorage.removeItem('s_s_number');
+
+        qryData('sterilizeForm');
+    });
+
+    function reset(form) {
+        $('#sterilizeForm')[0].reset();
+    }
+
+##    function goBack() {
+##        sessionStorage.setItem('s_f_from', 'b');
+##        load('$!{CONTEXT_PATH}/ledgerSterilize/list');
+##    }
+</script>

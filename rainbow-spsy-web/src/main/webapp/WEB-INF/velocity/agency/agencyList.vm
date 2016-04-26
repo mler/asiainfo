@@ -1,0 +1,39 @@
+#pagination()
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+		<th>序号</th>
+        <th>商户名称</th>
+        <th>负责人</th>
+        <th>联系电话</th>
+        <th>商户类型</th>
+        <th>商户地址</th>
+        <th>经销主体</th>
+        <th>操作</th>
+    </tr>
+	#set($num = 1)
+    #foreach($agency in $agencys)
+        <tr>
+		    <td>$!{num}</td>
+            <td>$!{agency.agencyName}</td>
+            <td>$!{agency.agencyResponsiblePerson}</td>
+            <td>$!{agency.linkPhone}</td>
+            <td>$!cache.getCachedName("AGENCY_TYPE","$!{agency.agencyType}","")</td>
+            <td>$!{agency.agencyAddress}</td>
+            <td>$!cache.getCachedName("DETECTION_OBJECT_TYPE","$!{agency.agencySaleMain}","")</td>
+            <td>
+                <a href="javascript:void(0)" class="modify" onclick="editInfo('${rc.ContextPath}/agency/update.do?agencyId=${agency.agencyId}')"><i class="iconfont icon-bianji"></i>修改</a>
+            </td>
+        </tr>
+		#set($num = $num + 1)
+    #end
+</table>
+<div class="pageBar clearfix">
+	 <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+		#end
+     </ul>
+</div>

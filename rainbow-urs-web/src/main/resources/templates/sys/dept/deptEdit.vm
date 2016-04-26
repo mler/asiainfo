@@ -1,0 +1,183 @@
+## Created by core on 16/2/25.
+#parse("sys_param.vm")
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height: 134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="deptCreateForm" action="$!{CONTEXT_PATH}/sys/dept/${nextAction}"
+      method="post">
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            部门名称：
+        </label>
+
+        <div class="col-sm-6 regcon_mb">
+            <input type="text" id="deptName" class="form-control" name="deptName" value="$!{dept.deptName}"
+                   notnull="true">
+            <input type="hidden" name="deptId" class="form-control" value="$!{dept.deptId}">
+        </div>
+
+    </div>
+#if(${nextAction}=='create')
+
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            部门类型：
+        </label>
+
+        <div class="col-sm-6 regcon_mb">
+            <select name="deptType" class="form-control" id="deptType" notnull="true" value="$!{dept.deptType}">
+
+                <option value="">请选择</option>
+                <option value="0">电商平台</option>
+                <option value="1">加盟渠道</option>
+                <option value="2">个人</option>
+
+            </select>
+        </div>
+
+    </div>
+#end
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            管理员账号：
+        </label>
+
+        <div class="col-sm-6 regcon_mb">
+            <select name="admin" class="form-control" id="admin" onchange="getDeptPid(this.value)">
+                #if(${nextAction}=='create')
+                    <option>请选择</option>
+                    #foreach($user in $users)
+
+                        <option value="$!{user.userName}">$!{user.userName}</option>
+
+                    #end
+
+
+                #else
+##                    <option value="$!{dept.admin}">$!cache.getCachedName("SYS_DEPT", "$!{dept.admin}", "")</option>
+                             <option value="$!{dept.admin}">$!{dept.admin}</option>
+
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            部门上级：
+        </label>
+
+        <div class="col-sm-6 regcon_mb">
+            <select name="deptPid" id="deptPid" notnull="true" class="form-control">
+                #if(${nextAction}=='create')
+                    <option value="0">父节点</option>
+                #else
+                    #if($!{dept.deptPid}==0)
+                        <option value="0">父节点</option>
+                    #else
+                        <option value="$!{dept.deptPid}">  $!cache.getCachedName("SYS_DEPT", "${dept.deptId}", "")</option>
+                    #end
+
+                #end
+            </select>
+        </div>
+
+
+    </div>
+##    <div class="form-group ga-m-b">
+##        <!-- 根据类目获取详细输入信息 -->
+##        <label class="col-sm-4 control-label m-t-xs">
+##            所在省：
+##        </label>
+##
+##        <div class="col-sm-8 regcon_mb">
+##            <select name="province" id="province" class="form-control" notnull="true">
+##                <option value="">请选择</option>
+##                <option value="sc">四川</option>
+##                <option value="zj">浙江</option>
+##            </select>
+##
+##        </div>
+##
+##    </div>
+##    <div class="form-group ga-m-b">
+##        <!-- 根据类目获取详细输入信息 -->
+##        <label class="col-sm-4 control-label m-t-xs">
+##            所在市：
+##        </label>
+##
+##        <div class="col-sm-8 regcon_mb">
+##
+##            <select name="areaid" id="areaid" class="form-control" notnull="true">
+##                <option value="">请选择</option>
+##                <option value="gy">广元市</option>
+##                <option value="hz">杭州市</option>
+##            </select>
+##
+##
+##        </div>
+##
+##    </div>
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            所在地区：
+        </label>
+        <div class="col-sm-10">
+            <select class="col-sm-4" name="province" id="province"dict='PROVINCEN' url='$!{CONTEXT_PATH}/cache' linkSelect='city' notnull="true">
+            </select>
+            <select class="col-sm-4" name="areaid" id="city"  dict='CITY' url='$!{CONTEXT_PATH}/cache' linkSelect='county' notnull="true">
+            </select>
+            <select class="col-sm-4" name="countyid" id="county"  dict='COUNTY' style="margin-right:0px;" notnull="true">
+            </select>
+        </div>
+
+    </div>
+
+</form>
+<!--脚部-->
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="saveInfo('deptQry','deptCreateForm','cancel')"><i
+            class="iconfont icon-baocun"></i>保存
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消
+    </button>
+</div>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/jquery.select.js"></script>
+<script>
+    $(function(){
+
+        $("#province").selectBDX({dict:'PROVINCE',nullText:'请选择省', parentValue:'', linkSelect:'city',url:'$!{CONTEXT_PATH}/cache',selected:('$!{dept.province}'==''?'330000':'$!{dept.province}')});
+        $("#city").selectBDX({dict:'CITY',nullText:'请选择市',parentValue:('$!{dept.province}'==''?'330000':'$!{dept.province}'),linkSelect:'county',url:'$!{CONTEXT_PATH}/cache',selected:('$!{dept.areaid}'==''?'330100':'$!{dept.areaid}')});
+        $("#county").selectBDX({dict:'COUNTY', nullText:'请选择区',parentValue:('$!{dept.city}'==''?'330100':'$!{dept.areaid}'), url:'$!{CONTEXT_PATH}/cache',selected:'$!{dept.countyid}'});
+
+    });
+</script>
+<script>
+
+    function getDeptPid(value) {
+        var value1 = $("#deptType").val();
+        if (isNaN(value)) {
+            $.ajax({
+                url: "$!{CONTEXT_PATH}/sys/dept/getDeptPid?deptType=" + value1 + "&admin=" + value,
+                type: "get",
+                success: function (data) {
+                    setOptions(data, "deptPid");
+                }
+            });
+        }
+
+    }
+
+</script>

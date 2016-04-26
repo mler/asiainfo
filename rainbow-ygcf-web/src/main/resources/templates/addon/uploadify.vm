@@ -1,0 +1,2 @@
+<link href="$!{CONTEXT_PATH}/addon/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+<script src="$!{CONTEXT_PATH}/addon/uploadify/jquery.uploadify.min.js"></script>

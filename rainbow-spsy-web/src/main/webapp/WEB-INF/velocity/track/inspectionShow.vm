@@ -1,0 +1,44 @@
+<table class="table report_table">
+    <tr>
+        <td>产品名称：</td>
+        <td>$!{inspectionInfo.detectionObjectName}</td>
+        <td>检测时间：</td>
+        <td>$date.format('yyyy-MM-dd ',$!{inspectionInfo.detectionDate})</td>
+        <td>生产时间：</td>
+        <td>$date.format('yyyy-MM-dd ',$!{inspectionInfo.productionDate})</td>
+    </tr>
+    <tr>
+        <td>检测标准：</td>
+        <td>$!{inspectionInfo.detectionStandards}</td>
+        <td>检测方式：</td>
+        <td>#if($!{inspectionInfo.detectionMode}=='10')
+            企业自检
+        #elseif($!{inspectionInfo.detectionMode}=='20')
+            监管局抽检
+        #elseif($!{inspectionInfo.detectionMode}=='30')
+            其他检测
+        #else
+            &nbsp;
+        #end</td>
+        <td>抽检基数：</td>
+            <td>$!{inspectionInfo.detectionBaseNum}</td>
+    </tr>
+    <tr>
+        <td>检测批次：</td>
+        <td>$!{inspectionInfo.detectionBatch} </td>
+        <td>检测结果：</td>
+        <td>#if($!{inspectionInfo.detectionResult}=='0')
+            合格
+          #else
+            不合格
+        #end</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+<div class="report_box">
+    #if($path)
+        <img src="$path" alt="检测报告"/>
+    #end
+
+</div>

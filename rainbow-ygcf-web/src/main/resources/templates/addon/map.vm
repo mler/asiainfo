@@ -1,0 +1,4 @@
+<link href="$!{CONTEXT_PATH}/addon/map/css/ED.css" rel="stylesheet" type="text/css" />
+##<link href="$!{CONTEXT_PATH}/addon/map/css/style.css" rel="stylesheet" type="text/css" />
+<script src="$!{CONTEXT_PATH}/addon/map/javascript/coordtransform.js?_=1"></script>
+<script src="$!{CONTEXT_PATH}/addon/map/javascript/map.js?_=1"></script>

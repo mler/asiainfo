@@ -1,0 +1,7 @@
+kafka:
+  broker:
+    address: 60.194.3.162:9090
+  zookeeper:
+    connect: 60.194.3.161:9090
+  topic: mler_si_1
+  messageKey: pkey

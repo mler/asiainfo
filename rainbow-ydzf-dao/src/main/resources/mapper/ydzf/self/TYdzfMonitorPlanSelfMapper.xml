@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.mapper.ydzf.self.TYdzfMonitorPlanSelfMapper" >
+  <resultMap id="MonitorPlanListNumResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfMonitorPlanListNumResultVO" >
+    <result column="CHECK_PLAN_TYPE" property="checkPlanType" jdbcType="VARCHAR" />
+    <result column="CHECK_PLAN_STATUS" property="checkPlanStatus" jdbcType="VARCHAR" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
+ <resultMap id="MonitorPlanListInfoResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfMonitorPlanListInfoResultVO" >
+	<association property="ydzfMonitorPlan" resultMap="com.bdx.rainbow.mapper.ydzf.TYdzfMonitorPlanMapper.BaseResultMap"/>
+	  <!-- 
+	<association property="ydzfMonitorTemplet" javaType="com.bdx.rainbow.entity.ydzf.TYdzfMonitorTemplet">  
+    <id column="MONITOR_TEMPLET_ID" property="monitorTempletId" jdbcType="INTEGER" />
+    <result column="MONITOR_TEMPLET_NAME" property="monitorTempletName" jdbcType="VARCHAR" />
+    <result column="CHECK_ENTERPRISE_TYPE" property="checkEnterpriseType" jdbcType="VARCHAR" />
+    <result column="CHECK_PLAN_TYPE" property="checkPlanType" jdbcType="VARCHAR" />
+    </association>  
+       -->
+	<collection property="enterpriseAllVOList" javaType="java.util.List"  ofType="com.bdx.rainbow.dto.ydzf.vo.YdzfMonitorPlanRelEnterpriseVO">
+	<id property="monitorPlanRelId" column="MONITOR_PLAN_REL_ID"/>
+    <result column="MANAGE_ENTERPRISE_ID" property="manageEnterpriseId" jdbcType="INTEGER" />
+    <result column="MANAGE_ITEM_STATUS" property="manageItemStatus" jdbcType="VARCHAR" />
+    <result column="planRelRemark" property="planRelRemark" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_STATUS" property="checkTaskStatus" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_RESULT" property="checkTaskResult" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_CHECK_DATE" property="checkTaskCheckDate" jdbcType="DATE" />
+    <result column="CHECK_TASK_USER_ID" property="checkTaskUserId" jdbcType="INTEGER" />
+    <result column="FILE_IDS" property="fileIds" jdbcType="VARCHAR" />
+    <result column="MONITOR_TEMPLET_ID" property="monitorTempletId" jdbcType="INTEGER" />
+    <result column="MONITOR_TEMPLET_VALUES" property="monitorTempletValues" jdbcType="VARCHAR" />
+    <result column="taskRemark" property="taskRemark" jdbcType="VARCHAR" />
+    <result column="CHECK_PLAN_CREAT_CREAT_DATE" property="checkPlanCreatCreatDate" jdbcType="DATE" />
+     <result column="CHECK_ADVICE" property="checkAdvice" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE_ADVICE" property="enterpriseAdvice" jdbcType="VARCHAR" />
+    <result column="CHECK_SIGN_FILE_IDS" property="checkSignFileIds" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE_SIGN_FILE_IDS" property="enterpriseSignFileIds" jdbcType="VARCHAR" />
+    </collection>
+    <!-- 
+    <collection property="ydzfMonitorTempletContentList" javaType="java.util.List"  ofType="com.bdx.rainbow.entity.ydzf.TYdzfMonitorTempletContent">  
+ 	<id column="MONITOR_TEMPLE_CONTENT_ID" property="monitorTempleContentId" jdbcType="INTEGER" />
+    <result column="ITEM_CONTENT" property="itemContent" jdbcType="VARCHAR" />
+    <result column="ITEM_VALUE" property="itemValue" jdbcType="INTEGER" />
+    <result column="ITEM_REMARK" property="itemRemark" jdbcType="VARCHAR" />
+    </collection>  
+    -->
+ </resultMap>
+  
+    <select id="queryPlanListNum" resultMap="MonitorPlanListNumResultMap"  parameterType="java.util.Map" >
+    select CHECK_PLAN_TYPE,CHECK_PLAN_STATUS,sum(1) num from T_YDZF_MONITOR_PLAN where 1=1
+     <if test="deptId!=null and deptId!='' and deptId!='0'">  
+	 AND CHECK_PLAN_CREAT_DEP_ID=#{deptId}
+	</if>  
+	 <if test="checkPlanType!=null and checkPlanType!=''">  
+    AND  CHECK_PLAN_TYPE=#{checkPlanType} 
+	</if>  
+	 <if test="checkPlanStatus!=null and checkPlanStatus!=''">  
+   	 AND CHECK_PLAN_STATUS=#{checkPlanStatus}  
+	</if>  
+	GROUP by CHECK_PLAN_TYPE,CHECK_PLAN_STATUS
+    </select>
+    
+    <select id="queryMonitorPlanListInfo" resultMap="MonitorPlanListInfoResultMap"  parameterType="java.util.Map">
+    select t1.*,
+    t2.MONITOR_PLAN_REL_ID,t2.MANAGE_ENTERPRISE_ID,t2.MANAGE_ITEM_STATUS,t2.remark as planRelRemark,
+    t3.CHECK_TASK_STATUS,t3.CHECK_TASK_RESULT,t3.CHECK_TASK_CHECK_DATE,t3.CHECK_TASK_USER_ID,t3.FILE_IDS,
+    t3.MONITOR_TEMPLET_ID,t3.MONITOR_TEMPLET_VALUES,t3.remark as taskRemark,
+    t3.CHECK_ADVICE,t3.ENTERPRISE_ADVICE,t3.CHECK_SIGN_FILE_IDS,t3.ENTERPRISE_SIGN_FILE_IDS 
+    <!--  
+    ,
+    t4.MONITOR_TEMPLET_ID,t4.MONITOR_TEMPLET_NAME,t4.CHECK_ENTERPRISE_TYPE,t4.CHECK_PLAN_TYPE,
+    t5.MONITOR_TEMPLE_CONTENT_ID,t5.ITEM_CONTENT,t5.ITEM_VALUE,t5.ITEM_REMARK
+    -->
+    from t_ydzf_monitor_plan t1
+	left JOIN t_ydzf_monitor_plan_rel t2 on t1.MONITOR_PLAN_ID =t2.MONITOR_PLAN_ID 
+ 	left JOIN t_ydzf_monitor_task_info t3 on t2.MONITOR_PLAN_REL_ID =t3.MONITOR_PLAN_REL_ID 
+ 	<!-- 
+ 	left JOIN t_ydzf_monitor_templet t4 on t1.MONITOR_TEMPLET_ID =t4.MONITOR_TEMPLET_ID 
+ 	left JOIN t_ydzf_monitor_templet_content t5 on t4.MONITOR_TEMPLET_ID =t5.MONITOR_TEMPLET_ID 
+ 	 -->
+	where t1.MONITOR_PLAN_ID=#{monitorPlanId}  and t1.CHECK_PLAN_TYPE=#{checkPlanType} 
+	<!--  
+	and t5.is_del=0
+	-->
+    </select>
+ 
+ <resultMap id="MonitorPlanTaskInfoResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfMonitorPlanTaskInfoResultVO" >
+ <association property="ydzfMonitorPlan" resultMap="com.bdx.rainbow.mapper.ydzf.TYdzfMonitorPlanMapper.BaseResultMap"/>
+ <association property="ydzfMonitorPlanRelEnterpriseVO" javaType="com.bdx.rainbow.dto.ydzf.vo.YdzfMonitorPlanRelEnterpriseVO">
+    <id property="monitorPlanRelId" column="MONITOR_PLAN_REL_ID"/>
+    <result column="MANAGE_ENTERPRISE_ID" property="manageEnterpriseId" jdbcType="INTEGER" />
+    <result column="MANAGE_ITEM_STATUS" property="manageItemStatus" jdbcType="VARCHAR" />
+    <result column="planRelRemark" property="planRelRemark" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_STATUS" property="checkTaskStatus" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_RESULT" property="checkTaskResult" jdbcType="VARCHAR" />
+    <result column="CHECK_TASK_CHECK_DATE" property="checkTaskCheckDate" jdbcType="DATE" />
+    <result column="CHECK_TASK_USER_ID" property="checkTaskUserId" jdbcType="INTEGER" />
+    <result column="FILE_IDS" property="fileIds" jdbcType="VARCHAR" />
+    <result column="MONITOR_TEMPLET_ID" property="monitorTempletId" jdbcType="INTEGER" />
+    <result column="MONITOR_TEMPLET_VALUES" property="monitorTempletValues" jdbcType="VARCHAR" />
+    <result column="taskRemark" property="taskRemark" jdbcType="VARCHAR" />
+    <result column="CHECK_PLAN_CREAT_CREAT_DATE" property="checkPlanCreatCreatDate" jdbcType="DATE" />
+    <result column="CHECK_ADVICE" property="checkAdvice" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE_ADVICE" property="enterpriseAdvice" jdbcType="VARCHAR" />
+    <result column="CHECK_SIGN_FILE_IDS" property="checkSignFileIds" jdbcType="VARCHAR" />
+    <result column="ENTERPRISE_SIGN_FILE_IDS" property="enterpriseSignFileIds" jdbcType="VARCHAR" />
+ </association>
+ </resultMap>
+
+    <select id="queryMonitorPlanTaskInfo" resultMap="MonitorPlanTaskInfoResultMap"  parameterType="java.util.Map">
+       select t1.*,
+    t2.MONITOR_PLAN_REL_ID,t2.MANAGE_ENTERPRISE_ID,t2.MANAGE_ITEM_STATUS,t2.remark as planRelRemark,
+    t3.CHECK_TASK_STATUS,t3.CHECK_TASK_RESULT,t3.CHECK_TASK_CHECK_DATE,t3.CHECK_TASK_USER_ID,t3.FILE_IDS,
+    t3.MONITOR_TEMPLET_ID,t3.MONITOR_TEMPLET_VALUES,t3.remark as taskRemark,
+    t3.CHECK_ADVICE,t3.ENTERPRISE_ADVICE,t3.CHECK_SIGN_FILE_IDS,t3.ENTERPRISE_SIGN_FILE_IDS 
+    from t_ydzf_monitor_plan t1,t_ydzf_monitor_plan_rel t2 , t_ydzf_monitor_task_info t3 
+	where t3.MONITOR_TASK_ID=#{monitorTaskId} and t3.MONITOR_PLAN_ID=t1.MONITOR_PLAN_ID and t3.MONITOR_PLAN_REL_ID=t2.MONITOR_PLAN_REL_ID 
+    </select>
+
+
+
+</mapper>

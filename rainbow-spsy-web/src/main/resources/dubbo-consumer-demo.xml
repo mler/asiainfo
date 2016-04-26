@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+ 	     
+     <!-- <dubbo:registry address="zookeeper://60.194.3.161:9090"/> -->
+	 <!-- <dubbo:registry address ="zookeeper://10.1.234.156:9090/> -->
+	 <dubbo:application name="rainbow-other-consumer"  />
+	 
+<!--      <dubbo:registry id="basicdubbo" address="zookeeper://10.10.32.82:2181"/>	 -->
+<!--           <dubbo:registry id="usedubbo" address="zookeeper://60.194.3.161:9090"/>--> 
+          <dubbo:registry id="otherdubbo" address="zookeeper://60.194.3.161:9090"/>
+	 <!-- 生成远程服务代理，可以和本地bean一样使用 -->
+     <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubUserService" id="userService" registry="otherdubbo"/> 
+	 <dubbo:reference interface="com.bdx.rainbow.urs.dubbo.IDubDicService" id="dicService" registry="otherdubbo"></dubbo:reference>
+	 <dubbo:reference interface="com.bdx.rainbow.vfs.dubbo.IFileDubboService" id="fileDubboService" registry="otherdubbo"/> 
+	 
+     <dubbo:reference interface="com.bdx.rainbow.basic.dubbo.service.IEnterpriseDubboService" id="enterpriseDubboService" registry="otherdubbo"/>
+     <dubbo:reference interface="com.bdx.rainbow.basic.dubbo.service.ISkuDubboService" id="skuDubboService" registry="otherdubbo"/>     
+</beans>

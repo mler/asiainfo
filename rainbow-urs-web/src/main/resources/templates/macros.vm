@@ -1,0 +1,110 @@
+#macro (demo $productList)   
+    #set ($rowCount = 1)               
+    #foreach($product in $productList)             
+    #if ($rowCount % 2 == 0)   
+        #set ($bgcolor = "#FFFFFF")   
+    #else   
+        #set ($bgcolor = "#CCCCCC")            
+    #end   
+        <tr>  
+            <td bgcolor="$bgcolor">$product</td>  
+            <td bgcolor="$bgcolor">$product</td>  
+        </tr>                          
+        #set ($rowCount = $rowCount + 1)   
+    #end   
+#end 
+
+#macro (cacheList $caches)   
+	#foreach($cache in $caches)  
+		<option value="$!{cache.pValue}">$!{cache.pDesc}</option>
+	#end
+#end
+
+
+
+#macro (pagination)
+	<form class="p_from">
+    		<input type='hidden' class='p_startRow'id="pageNumber"  name='pageStart' value='${pageinfo.pageStart}'/>
+    		<input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+    		<input type='hidden' class='p_total'id="pageSize"  name='totalCount' value='$!{pageinfo.totalCount}'/>
+		   <input type='hidden' class='p_size' id="pageCount"  value='$!{pageinfo.pageSize}'/>
+		   <input type='hidden' class='p_number' id="pageNumbers"  value='$!{pageinfo.pageNumber}'/>
+
+	</form>
+#end
+
+##macro(paginationDiv)
+##	<div id="pp" class="pageBar" style="background:#90d7ec;border:1px solid #ccc;" ppath="$!{CONTEXT_PATH}"></div>
+##end
+
+
+
+#macro(paginationDiv)
+	<div class="pagerBar" ppath="$!{CONTEXT_PATH}" >
+		<span id="pager" class="pager"></span>
+		##<div  style="position: relative;float: right;padding:4px;margin-right:10px;">
+			##共&nbsp;<b id="pageTotalCount"></b>&nbsp;条
+			##<select name="pageSizeSelect" id="pageSizeSelect" onchange="submitForm()" style="width:60px;">
+			##	<option value="5">5</option>
+			##	<option value="10">10</option>
+			##	<option value="20">20</option>
+			##	<option value="50">50</option>
+			##</select>
+		##</div>
+	</div>
+#end
+
+##报表配置添加
+##输入框
+#macro(text $name $value $placehold)
+	<input type="text" id="$!{name}" name="$!{name}" value="$!{value}" placeholder="$!{placehold}" style="height:30px"/>
+#end
+
+##表格化输入框
+#macro(formText $label $name $value $lineCellNum $placehold)
+	#cellbegin($lineCellNum)
+	#text( $name,$value,$placehold)
+	#cellend()
+#end
+
+#macro(cellbegin $lineCellNum)
+	#set($colspan='span'+(12/$lineCellNum))
+	<div class="form-horizontal ${colspan}">
+		<div class="control-group">
+			<label class="control-label" for="$!{name}">$!{label}</label>
+			<div class="controls">
+#end
+##表格化结束
+#macro(cellend)
+	</div>
+		</div>
+	</div>
+#end
+
+##选择框
+#macro(select $name $options $value)
+	<select id="$!{name}" name="$!{name}">
+		#options( $options, $value)
+	</select>
+#end
+
+#macro(options $optionList $value)
+	#foreach($option in $optionList)
+		<option value="${option.value}" #if($!{option.value} == $!{value}) selected #end>${option.text}</option>
+	#end
+#end
+
+#macro(formSelect $label $name $value $lineCellNum  $options)
+	#cellbegin($lineCellNum)
+	#select( $name,$options,$value)
+	#cellend()
+#end
+
+#macro(adjustTitle $goodsTitle $length)
+	#if($goodsTitle.length()>$length)
+		#set($str=$goodsTitle.substring(0,$length))
+		$str...
+	#else
+		$goodsTitle
+	#end
+#end

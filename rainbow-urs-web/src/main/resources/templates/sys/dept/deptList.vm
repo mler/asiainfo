@@ -1,0 +1,50 @@
+<div class="table_area">
+    <form class="deptList" id="deptList">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th><input name="all" id="all" type="checkbox" onclick="switchKeyBoxes('deptList', this.checked, 'deptIds')"></th>
+                <th>部门名称</th>
+                <th>部门状态</th>
+                <th>上级部门</th>
+                <th>部门类型</th>
+
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+                #foreach($dept in $depts)
+                <tr>
+                    <td class="C"><input name="deptIds" id="deptIds" value="${dept.deptId}" type="checkbox" #if(${dept.deptStatus}==2)
+                                         disabled
+                    #end
+                            /></td>
+                    <td>${dept.deptName}</td>
+                    <td>#if(${dept.deptStatus}==2) 禁用 #else 生效 #end</td>
+                    <td>#if(${dept.deptPid} == 0)
+                        根部门
+                    #else
+                        $!cache.getCachedName("SYS_DEPT", "${dept.deptPid}", "")
+                    #end</td>
+                    <td>#if(${dept.deptType}==0) 电商平台 #elseif(${dept.deptType}==1)加盟渠道 #elseif(${dept.deptType}==2)个人
+#end</td>
+                    <td>
+                        <a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/sys/dept/update?deptId=${dept.deptId}', '部门编辑') ">编辑</a>
+                        #if(${dept.deptStatus}==2)
+                            <a href="javascript:void(0)" onclick="changeStatu( 'deptQry', '$!{CONTEXT_PATH}/sys/dept/changeStatus?deptStatus=1','${dept.deptId}','deptIds') ">启用</a>
+                        #end
+
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </form>
+    <form class="p_from">
+        <input type='hidden' class='p_startRow'id="pageNumber"  name='pageStart' value='${pageinfo.pageStart}'/>
+        <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+        <input type='hidden' class='p_total'id="pageSize"  name='totalCount' value='$!{pageinfo.totalCount}'/>
+        <input type='hidden' class='p_size' id="pageCount"  value='$!{pageinfo.pageSize}'/>
+        <input type='hidden' class='p_number' id="pageNumbers"  value='$!{pageinfo.pageNumber}'/>
+
+    </form>

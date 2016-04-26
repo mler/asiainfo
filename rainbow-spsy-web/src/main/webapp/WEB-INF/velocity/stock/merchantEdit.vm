@@ -1,0 +1,134 @@
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+#set($X=('/merchant/update' == ${nextAction}))
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">${action}</h4>
+</div>
+<form name="stockEditForm" id="stockEditForm"  method="POST">
+    #if($X)
+		<input type="hidden" name="operationOutId" id="operationOutId" value="${stockout.operationOutId}"/>
+	#end
+	<div class="modal-body">
+		<div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品名称</label>
+            <div class="searInput col-sm-4">
+				 <input type="hidden" id="skuId" name="skuId"/>
+				 <input type="hidden" id="skuBarCode" name="skuBarCode"/>
+				 <input type="hidden" id="oldSkuName" name="oldSkuName"/>
+                 <input type="text" class="form-control" id="skuName" name="skuName" notnull="true" value="$!{stockout.skuName}" placeholder="输入产品名称查询"/>
+				 <a href="javascript:void(0)" class="btn btn-default" onclick="selectSku()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品批次号</label>
+            <div class="col-sm-4">
+                 <input type="text" class="form-control" id="skuBatch" name="skuBatch" notnull="true" value="$!{stockout.skuBatch}"/>
+            </div>
+        </div>
+		<div id="skudiv" class="form-group search_result"></div>
+		<div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>销售时间</label>
+            <div class="inputbox col-sm-4">
+                 <input type="text"  class="Wdate form-control" id="saleTime" name="saleTime" notnull="true" onclick="WdatePicker({lang:'zh-cn',dateFmt: 'yyyy-MM-dd HH:mm:ss'})" value="$!date.format('yyyy-MM-dd HH:mm:ss',$!{stockout.saleDate})"/>
+                 <i class="iconfont icon-date" onclick="javascript:document.getElementById('saleTime').click();"></i>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>销售数量</label>
+            <div class="col-sm-4">
+                 <div class="input-group">
+                      <input type="text" class="form-control" id="saleQuantity" name="saleQuantity" notnull="true" value="$!{stockout.saleQuantity}"/>
+                      <select name="saleUnit" id="saleUnit" notnull="true">
+                          #foreach($param in $params)
+							<option value="$!{param.pValue}">$!{param.pDesc}</option>
+						  #end
+                      </select>
+				</div>
+            </div>
+        </div>
+		<div class="form-group">
+            <label class="control-label col-sm-2">经办人</label>
+            <div class="col-sm-4">
+                 <input type="text"  class="form-control" id="managerPerson" name="managerPerson" value="$!{stockout.managerPerson}"/>
+            </div>
+        </div>
+		<div class="modal-footer">
+             <button type="button" onclick="saveStock(1)" class="btn btn-success"><i class="iconfont icon-baocun"></i>保存</button>
+             #if(!$X)
+				<button type="button" onclick="saveStock(2)" class="btn btn-blue"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+			#end
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+	   #if($X)
+	   	  $('#saleUnit').val('$!{stockout.saleUnit}');
+	   #end
+	});
+	
+	function selectSku(){
+	   var skuName = $('#skuName').val();
+       if(skuName!=""){
+		 var data={skuName:skuName};
+	     var skuurl = '${rc.ContextPath}/stock/goods/skulist.do';
+	     $("#skudiv").load(skuurl,data,function(){
+  		 	$('#skudiv>div').slideDown();
+         });
+	   }else{
+	     alert("请输入产品名称进行查询");
+		 return false;
+	   }
+	 }
+	 
+     function saveStock(type){
+	    var ret = true;
+        $("input,select", $("#stockEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}				
+        	 }
+        });
+		
+		if(ret){
+		   var skuId=$('#skuId').val();
+		   var skuName=$('#skuName').val();
+		   var oldSkuName=$('#oldSkuName').val();
+		   if(skuId==null || skuId==""){
+		      alert('请选择产品');
+			  selectSku();
+			  ret = false;
+			  return false;
+		   }else{
+		      if(oldSkuName.indexOf(skuName)>=0){
+			    $('#skuName').val(oldSkuName);
+			  }else{
+			    alert('请选择产品');
+			  	selectSku();
+			  	ret = false;
+			  	return false;
+			  }
+		   }
+		}
+		
+		if(ret){
+    	    jQuery.ajax({
+    				url: "${rc.ContextPath}/stock/${nextAction}.do",
+    				data:$("#stockEditForm").serialize(),
+    				type:'POST',
+    				success: function(result){
+    					if(result.success){
+    						alert(result.message);
+    						$('#addPro').modal('hide');
+                            window.location.reload();
+    					}else{
+    					    alert(result.message);
+    					}
+                     }
+    		});
+		}
+	 }
+</script>

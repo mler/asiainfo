@@ -1,0 +1,112 @@
+#set($layout = "/layout.vm")
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>基础数据</title>
+
+    #parse("common/sys_param.vm")
+    #parse("common/css.vm")
+
+    <link href="$!{CONTEXT_PATH}/css/login.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="login">
+            <div class="head">
+                <img src="$!{CONTEXT_PATH}/img/kitchen_logo.png" alt="" />
+                <span>基础数据后台系统</span>
+                <img src="$!{CONTEXT_PATH}img/logo2.png" alt="" class="fr"/>
+            </div>
+            <div class="login_wrap clearfix">
+                <div class="left"></div>
+                <div class="right">
+                    <div class="loginbox">
+                        <p class="wel">欢迎您登录</p>
+                        <form id="loginForm">
+                            <div class="login_item">
+                                <label for="username" class="name_label"></label>
+                                <input type="text" class="username" placeholder="请输入账号" name="userName"/>
+                            </div>
+                            <div class="login_item">
+                                <label for="password" class="pwd_label"></label>
+                                <input type="password" class="password" placeholder="请输入密码" name="password"/>
+                            </div>
+                        </form>
+                        <p class="clearfix">
+                            <a href="#">忘记密码？</a>
+                            <a href="#">免费注册</a>
+                        </p>
+                        <p class="errorMsg"></p>
+                        <button class="btn btn-login">登录</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="login_foot">
+            <ul>
+                <li><a href="#"><i class="iconfont icon-yijianfankui"></i>意见反馈</a></li>
+                <li><a href="#"><i class="iconfont icon-wenhao"></i>帮助中心</a></li>
+                <li><a href="#">北京亚信数据有限公司  版权所有©2016</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+    #parse("common/javascript.vm")
+</html>
+<script type="text/javascript">
+    $(function() {
+        // 登陆
+        $('.login_item').click(function(){
+            $(this).addClass('login_focus').siblings().removeClass('login_focus');
+        });
+        $('.btn-login').click(function() {
+            var form = $('#loginForm');
+            var userName = form.find('.username').val();
+            var password = form.find('.password').val();
+
+            if(userName == null || userName == '') {
+                showMsg('请输入用户名');
+                return;
+            }
+
+            if(password == null || password == '') {
+                showMsg('请输入密码');
+                return;
+            }
+
+            var url = base + '/login';
+            var data = $('#loginForm').serialize();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                data: data,
+                error : function (XMLHttpRequest, textStatus, errorThrown) {
+                    showMsg('');
+                },
+                success : function (data, textStatus) {
+                    var flag = data.flag;
+
+                    if(flag) {
+                        location.href = '$!{CONTEXT_PATH}/map#map'
+                    } else {
+                        showMsg(data.msg);
+                    }
+                }
+            });
+        });
+    });
+
+    function showMsg(msg){
+        $(".errorMsg").html("<i class='iconfont icon-cuowu'></i>"+msg);
+    }
+</script>

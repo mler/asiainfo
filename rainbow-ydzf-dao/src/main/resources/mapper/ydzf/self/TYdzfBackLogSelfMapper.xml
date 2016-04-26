@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.mapper.ydzf.self.TYdzfBackLogSelfMapper" >
+  
+  
+    <select id="queryBackLogListNum" resultType="java.lang.Integer"  parameterType="java.util.Map" >
+    select count(*) from 
+(
+select t1.UPDATE_DATE,'monitor' as type,
+t1.MONITOR_PLAN_ID as id,t1.MONITOR_TASK_ID as relId 
+from t_ydzf_monitor_task_info t1 
+where t1.CREATE_USERID=#{userId}
+	 <if test="taskStatus!=null and taskStatus!=''"> 
+   	 AND t1.CHECK_TASK_STATUS=#{taskStatus}  
+	</if>  
+union all
+select t2.UPDATE_DATE,'inspect' as type,
+t2.inspect_CASE_ID as id,t2.inspect_CASE_EXECUTE_PUNISH_ID as relId 
+from t_ydzf_inspect_case_execute_punish t2  
+where t2.CREATE_USERID=#{userId}
+	 <if test="punishStatus!=null and punishStatus!=''"> 
+   	 AND t2.EXECUTE_STATUS=#{punishStatus}  
+	</if>  
+ )
+aa  
+    </select>
+    
+    
+        <select id="queryBackLogListInfo" resultType="java.util.HashMap"  parameterType="java.util.Map" >
+    select id,relId,backLogType from 
+(
+select t1.UPDATE_DATE,'monitor' as backLogType,
+t1.MONITOR_PLAN_ID as id,t1.MONITOR_TASK_ID as relId 
+from t_ydzf_monitor_task_info t1 where t1.CREATE_USERID=#{userId}
+		 <if test="taskStatus!=null and taskStatus!=''"> 
+   	 AND t1.CHECK_TASK_STATUS=#{taskStatus}  
+	</if>  
+union all
+select t2.UPDATE_DATE,'inspect' as backLogType,
+t2.inspect_CASE_ID as id,t2.inspect_CASE_EXECUTE_PUNISH_ID as relId 
+from t_ydzf_inspect_case_execute_punish t2  
+where t2.CREATE_USERID=#{userId}
+	  <if test="punishStatus!=null and punishStatus!=''"> 
+   	 AND t2.EXECUTE_STATUS=#{punishStatus}  
+	</if>  
+ )
+aa  order by UPDATE_DATE desc 
+   <if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+    </if>
+    </select>
+ 
+
+
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+    		<th>企业名称</th>
+			<th>企业负责人</th>
+			<th>联系方式</th>
+			<th>商品生产日期</th>
+			<th>商品出库时间</th>
+			<th>检测报告</th>
+    	</tr>
+    </thead>
+	<tbody>
+		#if($produces && $!{produces.size} != 0) 
+			#foreach($produce in $produces)
+                <tr>
+                    <td>$!{produce.inName}</td>
+                    <td>$!{produce.inPrincipal}</td>
+        			<td>$!{produce.inPhone}</td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{produce.productionDate})</td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{produce.outDate})</td>
+                    <td>
+        				#if($null.isNull(${produce.productDetectionId}) || ${produce.productDetectionId} == '') 
+        					&nbsp;
+        				#else
+        					<a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{rc.ContextPath}/track/showInspection.do?productDetectionId=$!{produce.productDetectionId}', '检测信息')" class="modify">查看</a>
+        				#end
+        			</td>
+                </tr>
+        	#end
+		#else
+			<tr>
+                <td colspan="6" class="noinfo">没有数据记录</td>
+            </tr>
+		#end
+    </tbody>
+</table> 
+

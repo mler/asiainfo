@@ -1,0 +1,118 @@
+#parse("sys_param.vm")
+<link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/iconfont.css"/>
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height: 134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="platCreateForm" action="$!{CONTEXT_PATH}/sys/plat/${nextAction}"
+      method="post">
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            平台名称：
+        </label>
+
+        <div class="col-sm-8 regcon_mb">
+            <input type="text" id="platName" class="form-control" name="platName" value="$!{plat.platName}"
+                   notnull="true">
+            <input type="hidden" name="platId" class="form-control" value="$!{plat.platId}">
+        </div>
+    </div>
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            平台路径：
+        </label>
+
+        <div class="col-sm-8 regcon_mb">
+            <input type="text" name="platUrl" class="form-control" value="$!{plat.platUrl}">
+        </div>
+    </div>
+    </div>
+    #if(${nextAction}=='create')
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            用户类型：
+        </label>
+
+    <div class="col-sm-8 regcon_mb">
+    <select name="userType" class="form-control" id="userType">
+
+        <option>请选择</option>
+
+        <option value="9">平台管理员</option>
+        <option value="2">企业租户</option>
+        <option value="1">食药监租户</option>
+        <option value="0">普通用户</option>
+
+
+    #end
+</select>
+</div>
+</div>
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            平台类型：
+        </label>
+
+        <div class="col-sm-8 regcon_mb">
+            <select name="platType" notnull="true" class="form-control" value="$!{plat.platType}">
+                #if(${plat.platType}=="01")
+                    <option value="01" selected = "selected">平台</option>
+                    <option value="02">租户</option>
+                #elseif(${plat.platType}=="02")
+                    <option value="01">平台</option>
+                    <option value="02" selected = "selected">租户</option>
+                #else
+                    <option value="01">平台</option>
+                    <option value="02">租户</option>
+                #end
+            </select>
+        </div>
+
+
+    </div>
+
+
+</form>
+<!--脚部-->
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="saveInfo('platQry','platCreateForm','cancel')"><i
+            class="iconfont icon-baocun"></i>保存
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消
+    </button>
+</div>
+
+<script>
+    ##    function getMenuPid(value) {
+    ##        if (!isNaN(value)) {
+    ##            $.ajax({
+    ##                url: "$!{CONTEXT_PATH}/sys/menu/getMenuPid?platId=" + value,
+    ##                type: "get",
+    ##                success: function (data) {
+    ##                    setOptions(data, "menuPid");
+    ##                }
+    ##            });
+    ##        }
+    ##    }
+    //    $("li").on("click", function () {
+    //
+    //        $("#showMenuIcon").html($(this).html());
+    //        var menuName = $("#menuName").val();
+    //        if (menuName != "") {
+    //            $("#showMenuIcon").find("p").first().html(menuName);
+    //        }
+    //        var className = $(this).children("i").attr('class');
+    //        $("#menuIcon").val(className.substr(className.indexOf("icon-"), className.length));
+    //        $("#showMenuIcon").css("display", "block");
+    //    });
+</script>

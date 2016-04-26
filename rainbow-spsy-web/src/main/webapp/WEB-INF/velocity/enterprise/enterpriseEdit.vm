@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>企业信息管理</title>
+    #parse('/layout/head.vm')
+</head>
+<body>
+  <div class="container content">
+	<form id="enterpriseForm" name="enterpriseForm" action="${rc.ContextPath}/enterprise/saveEnterprise.do" method="post" onsubmit="return false">
+         <div class="row">
+             <div class="col-sm-12">
+				 <input type="hidden" name="enterpriseId" id="enterpriseId" value="$!{enterprise.enterpriseId}"/>
+                 <h1 class="middle-title">$!{enterprise.enterpriseName}<button class="btn btn-info fr" id="complete"><i class="iconfont icon-bianji"></i>编辑</button></h1>
+        		 <table class="table infotable conpanyInfo">
+        			<tr>
+        				<td><label class="control-label">企业名称：</label></td>
+        				<td><input type="text" class="form-control" name="enterpriseName" id="enterpriseName" value="$!{enterprise.enterpriseName}"></td>
+                        <td><label class="control-label">组织机构代码：</label></td>
+        				<td><input type="text" class="form-control" name="organizationCode" id="organizationCode" disabled value="$!{enterprise.organizationCode}"/></td>
+						<td><label class="control-label">企业类型：</label></td>
+        				<td>
+							<select name="businessType" id="businessType" class="form-control" disabled notnull="true">
+								#foreach($param in $params)
+									<option value="${param.pValue}">$!{param.pDesc}</option>
+								#end
+							</select>							
+						</td>
+					</tr>
+        			<tr>						
+						<td><label class="control-label">企业法人：</label></td>
+        				<td><input type="text" class="form-control" name="legalPerson" id="legalPerson" value="$!{enterprise.legalPerson}"/></td>
+                        <td><label class="control-label">法人联系方式：</label></td>
+        				<td><input type="text" class="form-control" name="legalPersonPhone" id="legalPersonPhone" value="$!{enterprise.legalPersonPhone}"/></td>							
+                        <td><label class="control-label">企业年份：</label></td>
+        				<td><input type="text" class="form-control" name="enterpriseYear" id="enterpriseYear" value="$!{enterprise.enterpriseYear}"/></td>
+					</tr>
+					<tr>
+                        <td><label class="control-label">企业生产许可证：</label></td>
+        				<td><input type="text" id="productionLicense" name="productionLicense" class="form-control" value="$!{enterprise.productionLicense}"/></td>
+                        <td><label class="control-label">企业经营许可证：</label></td>
+        				<td><input type="text" id="manageLincense" name="manageLincense" class="form-control" value="$!{enterprise.manageLincense}"/></td>
+						<td><label class="control-label">企业投诉电话：</label></td>
+        				<td><input type="text" class="form-control" name="enterpriseComplaintCall" id="enterpriseComplaintCall" value="$!{enterprise.enterpriseComplaintCall}"/></td>                        
+        			</tr>
+        			<tr>
+                        <td><label class="control-label">企业销售许可证：</label></td>
+        				<td><input type="text" id="saleLicense" name="saleLicense" class="form-control" value="$!{enterprise.saleLicense}"/></td>
+        				<td><label class="control-label">企业流通许可证：</label></td>
+        				<td><input type="text" id="circulationLicense" name="circulationLicense" class="form-control" value="$!{enterprise.circulationLicense}"/></td>
+						<td><label class="control-label">企业营业执照：</label></td>
+        				<td><input type="text" class="form-control" name="businessLicence" id="businessLicence" value="$!{enterprise.businessLicence}"/></td>
+        			</tr>
+        			<tr>
+                        <td><label class="control-label">企业经营范围：</label></td>
+        				<td><input type="text" class="form-control" name="businessScope" id="businessScope" value="$!{enterprise.businessScope}"/></td>       			
+                        <td><label class="control-label">注册地址：</label></td>
+        				<td><input type="text" class="form-control" name="regiAddress" id="regiAddress" value="$!{enterprise.regiAddress}"/></td>
+                        <td><label class="control-label">注册资本：</label></td>
+        				<td><input type="text" class="form-control" name="regiCapital" id="regiCapital" value="$!{enterprise.regiCapital}"/></td>       					
+        			</tr>
+        			<tr>
+                        <td><label class="control-label">企业规模：</label></td>
+        				<td><input type="text" class="form-control" name="enterpriseScale" id="enterpriseScale" value="$!{enterprise.enterpriseScale}"/></td>
+					</tr>
+        		</table>
+              <div id="btnupdate" class="btn-block" style="display:none">
+              		<button class="btn btn-success" onclick="updateEntp()"><i class="iconfont icon-baocun"></i>保存</button>
+              		<!--<button class="btn btn-default"><i class="iconfont icon-cuowu"></i>取消</button>-->
+              </div>
+          </div>
+        </div>
+	</form>	
+  </div>
+  #parse("/layout/sys_js.vm")
+  <script>
+	    function updateEntp(){
+		   document.forms[0].submit();
+		}
+		
+		$(function(){
+      		$('.conpanyInfo td input[type=text]').each(function(){
+    	  		$(this).attr('readonly','readonly');	  		
+      		});
+      		$('#complete').click(function(){
+      			$('.conpanyInfo td input[type=text]').removeAttr('readonly');
+      			$('.completePart').css('display','block');
+				$('#btnupdate').css('display','block');
+      		});
+			
+			$('#businessType').val('$!{enterprise.businessType}');
+  	   })
+   </script>
+</body>
+</html>

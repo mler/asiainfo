@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>食品追溯平台</title>
+    <link rel="stylesheet" href="${RESOURCE_PATH}/js/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${RESOURCE_PATH}/fonts/iconfont.css" />
+    <link rel="stylesheet" href="${RESOURCE_PATH}/css/global.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand sys_name" href="javascript:void(0)"><img src="${RESOURCE_PATH}/img/trace_logo.png" alt="logo" />食品质量追溯系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+      	<ul class="nav navbar-nav navbar-right">
+        		<li><img src="${RESOURCE_PATH}/img/user.png" class="img-circle"/></li>
+        		<li><a href="${rc.ContextPath}/enterprise/update.do" target="cont">$!{userName}，欢迎您！</a></li>
+        		<li><a href="javascript:void(0)" onclick="dologout()"><i class="iconfont icon-tuichu"></i>退出</a></li>
+      	</ul>
+        </div>
+      </div>
+	  
+	  <div class="col-sm-12 main_nav">
+		  <ul class="nav nav-pills">
+        	  #foreach($menu in $PNodes)
+    			 #if(${menu.object.menuType}=='1')
+    			    <li><a href="${request.ContextPath}$!{menu.object.menuUrl}" target="cont" ><span id="parent${menu.object.menuId}">
+                    <i class="iconfont $!{menu.object.menuIcon}"></i>${menu.object.menuName}</span></a></li>
+        		 #else
+    				<li data-target="#child${menu.object.menuId}"><a href="javascript:void(0)" target="cont" ><i class="iconfont $!{menu.object.menuIcon}"></i>${menu.object.menuName}</a></li>
+    			 #end
+    		  #end
+		  </ul>
+		  #foreach($menu in $PNodes)
+			#if(${menu.object.menuType}=='0')
+    			 <div class="sec_nav" id="child${menu.object.menuId}">
+					<ul>
+        				 #foreach($sNode in $SNodes)
+                    		 #if(${menu.object.menuId} == ${sNode.object.menuPid})
+                    			  <li><a href="$!{rc.ContextPath}$!{sNode.object.menuUrl}" target="cont">${sNode.object.menuName}</a></li>
+                    		 #end
+        				 #end
+					</ul>
+                 </div>
+			#end
+		  #end
+      </div>
+	  
+	  <!--
+      <div class="col-sm-12 main_nav">
+      		<ul class="nav nav-pills">
+##              enterprise manager
+			   <li><a href="${rc.ContextPath}/sku/init.do" target="cont"><i class="iconfont icon-chanp0101"></i>产品管理</a></li>
+			   <li data-target="#produce"><a href="javascript:void(0)" target="cont"><i class="iconfont icon-shengchan"></i>生产管理</a></li>
+			   <li data-target="#sell"><a href="javascript:void(0)" target="cont"><i class="iconfont icon-jingxiaoshang"></i>经销管理</a></li>
+			   <li data-target="#single_sell"><a href="javascript:void(0)" target="cont"><i class="iconfont icon-gouwuche"></i>零售管理</a></li>
+			   <li><a href="javascript:void(0)"><i class="iconfont icon-modal_download"></i>模板下载</a></li>
+
+##              goverment manager
+			   <li data-target="#trace"><a href="javascript:void(0)" target="cont"><i class="iconfont icon-zhuisujianguan"></i>追溯监管</a></li>
+    		   <li><a href="${rc.ContextPath}/trace/spzs.do" target="cont"><i class="iconfont icon-shangpinzhuisu"></i>商品追溯</a></li>
+    		   <li><a href="spzz/spzz.html" target="cont"><i class="iconfont icon-shangpinzhuizong"></i>商品追踪</a></li>
+    		   <li><a href="javascript:void(0)" target="cont"><i class="iconfont icon-gongzhonghudong"></i>公众互动</a></li>
+			</ul>
+			<div class="sec_nav" id="produce">
+				<ul>
+	               <li><a href="${rc.ContextPath}/material/init.do" target="cont">原材料采购</a></li>
+				   <li><a href="${rc.ContextPath}/inspe/init.do" target="cont">产品检测</a></li>
+	               <li><a href="${rc.ContextPath}/stock/producer/init.do?type=1" target="cont">产品入库</a></li>
+	               <li><a href="${rc.ContextPath}/stock/producer/init.do?type=2" target="cont">产品出库</a></li>
+	               <li><a href="${rc.ContextPath}/agency/init.do" target="cont">经销商</a></li>
+	               <li><a href="${rc.ContextPath}/code/create.do" target="cont">食品标识码</a></li>
+	            </ul>
+			</div>
+			<div class="sec_nav" id="sell">
+				<ul>
+	               <li><a href="${rc.ContextPath}/stock/goods/init.do?type=01" target="cont">经销商入库</a></li>
+	               <li><a href="${rc.ContextPath}/stock/goods/init.do?type=02" target="cont">经销商出库</a></li>
+	            </ul>
+			</div>
+			<div class="sec_nav" id="single_sell">
+				<ul>
+	               <li><a href="${rc.ContextPath}/stock/goods/init.do?type=03" target="cont">零售商入库</a></li>
+	               <li><a href="${rc.ContextPath}/stock/merchant/init.do" target="cont">零售商出库</a></li>
+	            </ul>
+			</div>
+			<div class="sec_nav" id="trace">
+			<ul>
+                <li><a href="${rc.ContextPath}/trace/spjg.do" target="cont">商品监管</a></li>
+                <li><a href="${rc.ContextPath}/trace/qyjg.do" target="cont">企业监管</a></li>
+            </ul>
+		</div>
+      	</div>
+		-->
+    </nav>
+	<iframe src="${rc.ContextPath}/enterprise/update.do" width="100%" height="99%" name="cont" frameborder="0"></iframe>
+	<script src="${RESOURCE_PATH}/js/jquery-1.11.1.js"></script>
+    <script src="${RESOURCE_PATH}/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${RESOURCE_PATH}/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="${RESOURCE_PATH}/js/self.js"></script>
+  </body>
+	<script>
+	   function dologout(){
+	      window.location.href = "${rc.ContextPath}/logout.do";
+	   }
+    </script>
+</html>

@@ -1,0 +1,199 @@
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+#set($X=('update' == ${nextAction}))
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<script src="${RESOURCE_PATH}/js/common.js"></script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title" id="myModalLabel">${action}</h4>
+</div>
+<form name="purchaseEditForm" id="purchaseEditForm"  method="POST" onsubmit="return false">
+    <div class="modal-body">
+        #if($X)
+            <input type="hidden" name="purchaseId" value="${purchaseInfo.purchaseId}"/>
+        #end
+        <div class="form-group">
+            <label class="control-label col-sm-2">
+                <font style="color:red">*</font>
+                原料名称</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="materialName" name="materialName" notnull="true" value="$!{purchaseInfo.materialName}"/>
+                </div>
+                <label class="control-label col-sm-2">
+                    <font style="color:red">*</font>
+                    采购日期</label>
+                    <div class="inputbox col-sm-4">
+                        <input type="text"  class="Wdate form-control" id="purchaseDate" name="purchaseDate" notnull="true" onclick="WdatePicker({lang:'zh-cn'})" value="$!date.format('yyyy-MM-dd',$!{purchaseInfo.purchaseTime})"/>
+                        <i class="iconfont icon-date" onclick="javascript:document.getElementById('purchaseDate').click();"></i>
+                    </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>采购批次</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" notnull="true" name="purchaseBatch" id="purchaseBatch" value="$!{purchaseInfo.purchaseBatch}">
+			</div>
+			<label class="control-label col-sm-2"><font style="color:red">*</font>原料类型</label >
+			<div class="col-sm-4">
+                <select class="form-control" notnull="true" id="materialType" name="materialType">                    
+					<option value="">请选择</option>
+					#foreach($param in $params)
+                        <option value="${param.pValue}">$!{param.pDesc}</option>
+					#end
+                </select>
+			</div>
+        </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2"><font style="color:red">*</font>供应商</label>
+                    <div class="searInput col-sm-4">
+						<input type="hidden" id="supplierId" name="supplierId" value="$!{purchaseInfo.supplierId}"/>
+						<input type="hidden" id="oldSupplierName" name="oldSupplierName" value="$!{purchaseInfo.supplierName}"/>
+                        <input type="text" class="form-control" notnull="true" name="supplierName" id="supplierName" value="$!{purchaseInfo.supplierName}" placeholder="输入商户名称查询"/>
+				        <a href="javascript:void(0)" class="btn btn-default" onclick="selctAgency()"><i class="iconfont icon-sousuo"></i></a>
+                    </div>
+                    <label class="col-sm-2 control-label"><font style="color:red">*</font>采购数量</label>
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="half half_left">
+                                <input type="text" notnull="true" class="form-control" name="purchaseNumber" id="purchaseNumber" value="$!{purchaseInfo.purchaseNumber}"/>
+                            </div>
+                            <span class="percent">/</span>
+                            <div class="half">
+                                <select class="form-control" notnull="true" id="purchaseUnit" name="purchaseUnit" value="$!{purchaseInfo.purchaseUnit}">
+                                    <option value="">请选择</option>
+                                    <option value="g">g</option>
+                                    <option value="kg">kg</option>
+                                    <option value="t">t</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>				
+				<div id="agecyList" class="form-group search_result"></div>				
+                <div id="agencyInfo" class="form-group" style="display:none">
+                    <label class="control-label col-sm-2">供应商负责人</label>
+                    <div class="searInput col-sm-4">
+                        <input type="text" class="form-control" name="managePerson" id="managePerson">
+                    </div>
+                    <label class="control-label col-sm-2">负责人联系电话</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" name="linkPhone" id="linkPhone"/>
+                    </div>
+                 </div>					
+                <div class="modal-footer">
+                    <button type="button" onclick="saveInfo(1)" class="btn btn-success"><i class="iconfont icon-baocun"></i>保存</button>
+                    #if(!$X)
+						<button type="button" onclick="saveInfo(2)" class="btn btn-blue"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+					#end
+                </div>
+          </div>
+</form>
+<script>
+    $(document).ready(function() { 
+        $("#purchaseUnit").val('$!{purchaseInfo.purchaseUnit}');
+        $("#materialType").val('$!{purchaseInfo.materialType}');
+    });
+
+    function saveInfo(type){
+		var ret = true;
+            $("input,select", $("#purchaseEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}				
+        	 }
+        });
+		
+		if(ret){
+    		var purchaseNumber = $('#purchaseNumber').val();
+    		if(isNaN(purchaseNumber.trim())) {
+    			alert("请输入正确的数值(如:1,2,3)!");
+    			$('#purchaseNumber').focus();
+    			ret = false;
+    			return false;
+    		}
+    		
+    		var supplierId = $('#supplierId').val();
+			var agencydisplay = $('#agencyInfo').css("display");
+			var oldsupplierName = $('#oldSupplierName').val();
+			var supplierName = $('#supplierName').val();
+    		if(supplierId==null || supplierId==""){
+    		   if(agencydisplay=="block"){
+    			   var managePerson = $('#managePerson').val();
+        		   var linkPhone = $('#linkPhone').val();
+        		   if(managePerson==""){
+        		      alert("商户负责人不能为空!");
+        			  $('#managePerson').focus();
+        			  ret = false;
+        			  return false;
+        		   }
+        		   if(linkPhone==""){
+        		      alert("负责人联系电话不能为空!");
+        			  $('#linkPhone').focus();
+        			  ret = false;
+        			  return false;
+        		   }else{
+        		      if(!checkPhone(linkPhone)){
+        				alert('请输入正确的电话号码')
+        				$('#linkPhone').focus();
+        				ret = false; 
+        				return false;
+        			 }
+        		   }
+			   }else{
+			      alert("请选择供应商");
+		  		  selctAgency();
+		  	      ret = false;
+		  	      return false;
+			   }
+    		}else{
+        	  if(oldsupplierName.indexOf(supplierName)>=0){
+        		  $('#supplierName').val(oldsupplierName);
+        	  }else{
+            	  alert("请选择供应商");
+				  $('#supplierId').val('');
+            	  selctAgency();
+            	  ret = false;
+            	  return false;
+              }			   
+			}
+		}
+		
+		if(ret){
+            jQuery.ajax({
+                url: "${rc.ContextPath}/material/${nextAction}.do",
+                data:$("#purchaseEditForm").serialize(),
+                type:'POST',
+                success: function(result){
+                if(result.success){
+                    alert(result.message);
+					if(type==1){
+                        $('#addPro').modal('hide');
+                        window.location.reload();
+					}else{
+					   resetFormValue('purchaseEditForm');
+					}
+                 }else{
+                    alert(result.message);
+                 }
+                }
+            });
+		}
+    }
+	
+	function selctAgency(){
+	  var supplierName = $("#supplierName").val();
+	  if(supplierName!=""){
+	     var agencyurl = '${rc.ContextPath}/agency/shoplist.do?agencyName='+encodeURI(encodeURI(supplierName))
+	     $("#agecyList").load(agencyurl,function(){
+  		 	$('.search_result>div').slideDown();
+         });
+	  }else{
+	     alert("请输入商户名称进行查询");
+		 return false;
+	  }
+	}
+</script>

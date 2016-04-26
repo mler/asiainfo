@@ -1,0 +1,94 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+    #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>商品追踪</title>
+    #parse('/layout/head.vm')
+</head>
+<body>
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="search_area clearfix">
+                <form action="" id="licenseForm">
+                <div class="col-sm-5 ser_group">
+                    <select name="type" class="form-control">
+                        <option value="">显示全部</option>
+                        <option value="-1">显示已过期</option>
+                       <option value="1">显示一个月后过期</option>
+                        <option value="0">显示正常使用</option>
+                    </select>
+                    <button type="button" class="btn btn-blue" onclick="goSearch(1)"><i class="iconfont icon-sousuo"></i>查询</button>
+                </div>
+                <div class="col-sm-2 col-sm-offset-5 ta_r">
+                    <button class="btn btn-blue" type="button" id="advance"><i class="iconfont icon-zhankai"></i>高级查询</button>
+                </div>
+                <div class="advance_search col-sm-12">
+                    <div class="form-group">
+                        <label class="control-label col-sm-1"  >企业名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="enterpriseName" />
+                        </div>
+                        <label class="control-label col-sm-1">组织机构代码</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="organizationCode" />
+                        </div>
+                        <label class="control-label col-sm-1">许可证编号</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" name="licenseCode" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-1">生效日期从</label>
+                        <div class="col-sm-9">
+                            <div class="col-sm-4">
+                                <input type="text" class=" Wdate form-control" onFocus="WdatePicker({lang:'zh-cn'})" name="validDateStart" />
+                            </div>
+                            <label class="control-label col-sm-1">到</label>
+                            <div class="col-sm-4">
+                                <input type="text" class=" Wdate form-control" onFocus="WdatePicker({lang:'zh-cn'})" name="validDateEnd" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div id="pagelist" class="table_area m-t-sm">
+
+
+
+            </div>
+    </div>
+    </div>
+    </div>
+</body>
+#parse("/layout/sys_js.vm")
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<script type="text/javascript">
+
+    function exportExcel(){
+        location.href="$!{rc.ContextPath}/supLicense/excelOut.do?"+$("#licenseForm").serialize();
+
+    }
+    function goSearch(page){
+            var agcname = $("#licenseForm").serialize();
+            var data = $("#licenseForm").serialize()+"&pageStart="+page;
+            $("#pagelist").load("${rc.ContextPath}/supLicense/list.do",data);
+        }
+
+        function goPage(page){
+            var currpage = $("#pageNumber").val();
+            var nextpage;
+            var pages=parseInt($("#totalCount").val()/$("#pageCount").val())+1;
+            if(page>0){
+                 nextpage = parseInt(currpage)+1;
+            }else{
+                nextpage = parseInt(currpage)-1;
+            }
+            if(nextpage<=pages){
+                goSearch(nextpage);
+            }
+        }
+    </script>
+</html>

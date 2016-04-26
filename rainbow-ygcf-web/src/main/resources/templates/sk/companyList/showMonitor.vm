@@ -1,0 +1,232 @@
+<html>
+<head>
+  <title>
+    显示单个视频监控
+  </title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+
+  #parse("sys_param.vm")
+  #parse("addon/javascript.vm")
+  #parse("addon/dhMonitor.vm")
+
+  <script type="text/javascript">
+
+    var setting = {
+      data: {
+        simpleData: {
+          enable: true
+        }
+      },
+      callback: {
+        onClick: onClick
+      }
+    };
+
+
+    function json2str(obj) {
+      var S = [];
+      for (var i in obj) {
+        obj[i] = typeof obj[i] == 'string' ? '"' + obj[i] + '"' : (typeof obj[i] == 'object' ? json2str(obj[i]) : obj[i]);
+        S.push(i + ':' + obj[i]);
+      }
+      return '{' + S.join(',') + '}';
+    }
+
+    function onClick(event, treeId, treeNode, clickFlag) {
+      $("#textCameraID").val(treeNode.deviceSn);
+      ButtonStartRealplayByWndNo(treeNode.deviceSn,'');
+    }
+  </script>
+
+
+  <script language="javascript" for="DPSDK_OCX" event="OnDownloadRecordProgress(szFileName,fProgress)">
+    document.getElementById("textDownloadProgress").innerText = fProgress;
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnDownloadRecordComplete(szFileName)">
+    document.getElementById("textDownloadProgress").innerText = 100;
+    alert("下载完成!");
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnAlarmEvent(szAlarmId, szCameraId, szDeviceName, szChannelName, nAlarmType, nEventType, nLevel, nTime)">
+
+    var str = ("OnAlarmEvent [szAlarmId=]" + szAlarmId + " [szCameraId=]" + szCameraId + "[szDeviceName=]" + szDeviceName
+    + "[szChannelName=]" + szChannelName + "[nAlarmType=]" + nAlarmType + "[nEventType=]" + nEventType + "[nLevel=]" + nLevel + "[nTime=]" + nTime);
+    document.getElementById("GlobalInfo").innerText = str;
+
+    if(8 == nAlarmType)
+    {
+      //alert(szChannelName);
+    }
+    else if((300 < nAlarmType)&&(nAlarmType < 1100))
+    {
+      //alert(szChannelName);
+    }
+    else
+    {
+      //alert(szCameraId);
+    }
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnDevStatusEvent(szDevId, nStatus)">
+    var str = "";
+    switch(nStatus)
+    {
+      case 1:
+        //alert("设备上线！" + szDevId);
+        str = "设备上线！" + szDevId;
+        break;
+      case 2:
+        //alert("设备离线！" + szDevId);
+        str = "设备离线！" + szDevId;
+        break;
+    }
+    document.getElementById("GlobalInfo").innerText = str;
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnGeneralJsonCallBack(Json)">
+    var str1 = "json返回结果：";
+    var str = str1 + Json;
+    document.getElementById("JsonResult").innerText = str;
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnServerStatusChangeEvent(nStatus)">
+    var str = "";
+    switch(nStatus)
+    {
+      case 1:
+        str = "服务上线！";
+        var obj = document.getElementById("DPSDK_OCX");
+        ShowCallRetInfo(obj.DPSDK_LoadDGroupInfo(), "加载组织结构");
+        break;
+      case 2:
+        str = "服务离线！";
+        break;
+    }
+    document.getElementById("GlobalInfo").innerText = str;
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnAsyncLoadDGroupInfoComplete(nRet, nGroupLen)">
+    var str = ("AsyncLoadDGroupInfoComplete [nRet=]" + nRet + " [nGroupLen=]" + nGroupLen);
+    document.getElementById("RetInfo").innerText = str;
+    var obj = document.getElementById("DPSDK_OCX");
+    //	document.getElementById("DGroupInfo").innerText = obj.DPSDK_GetDGroupStr();
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnWndLBtnClick(nWndId, nWndNo, xPos, yPos)">
+    var str = ("OnWndLBtnClick [nWndId=]" + nWndId + " [nWndNo=]" + nWndNo + " [xPos=]" + xPos + " [yPos=]" + yPos);
+    document.getElementById("GlobalInfo").innerText = str;
+  </script>
+
+  <script language="javascript" for="DPSDK_OCX" event="OnWndRBtnClick(nWndId, nWndNo, xPos, yPos)">
+    var str = ("OnWndRBtnClick [nWndId=]" + nWndId + " [nWndNo=]" + nWndNo + " [xPos=]" + xPos + " [yPos=]" + yPos);
+    document.getElementById("GlobalInfo").innerText = str;
+  </script>
+
+  <script type="text/javascript">
+      // 回放
+      function playBack(start, end) {
+          return ButtonStartTimePlaybackByWndNo_onclick(start, end);
+      }
+
+      // 暂停
+      function playPause() {
+          return ButtonPausePlaybackByWndNo_onclick();
+      }
+
+      // 播放
+      function playContinue() {
+          return ButtonResumePlaybackByWndNo_onclick();
+      }
+
+      // 截图
+      function pictureJt(url) {
+          ButtonCapturePictureByWndNo_onclick(url);
+          return false
+      }
+  </script>
+
+  <script>
+    $(function(){
+        var obj = document.getElementById("DPSDK_OCX");
+        //登陆，加载
+        AutoButtonLogin_onclick('113.200.12.82','9000','system','tmcf123456');
+
+        setTimeout('initPlayOne("$!{request.getParameter("deviceSn")}")', 1000); //必须延迟播放否则播放失败;
+    });
+  </script>
+
+</head>
+
+<body onload="init()" onunload="ButtonLogout_onclick()" style="overflow: hidden;">
+<div>
+  <div style="display:none;">
+  <div style="width: 90%;height: 30px;overflow: auto;" id="RetInfo">  </div>
+  <div style="width: 90%;height: 30px;overflow: auto;" id="GlobalInfo">  </div> </div>
+
+  <object id="DPSDK_OCX" classid="CLSID:D3E383B6-765D-448D-9476-DFD8B499926D" style="width:100%; height:100%;" codebase="DpsdkOcx.cab#version=1.0.0.0"></object>
+
+  <div class="ContentControl">
+    <div style="float:left;display:none;" >
+      <div style="width: 50%;height: 150px;overflow: auto; float: left;" id="DGroupInfo"></div>
+      初始设置窗口数量：
+      <input type="text" id="textWndNum" value="1" size="5"/>
+      <input type="button" id="buttonLogin" value="设置" class="button" onclick="return ButtonCreateWnd_onclick()" />
+      <input type="button" id="buttonStartRealplayByWndNo" value="播放视频" onclick="return ButtonStartRealplayByWndNo_onclick()" />
+      通道ID：<input type="text" id="textCameraID" value="" />
+      实时视频</br>
+      <select id="selectStreamType" >
+        <option value="1">主码流</option>
+        <option value="2">辅码流</option>
+      </select>
+      <select id="selectMediaType" >
+        <option value="1">视频</option>
+        <option value="2">音频</option>
+        <option value="3">视频 + 音频</option>
+      </select>
+      <select id="selectTransType" >
+        <option value="1">TCP</option>
+        <option value="0">UDP</option>
+      </select>
+      <table id="realplayHistory">
+        <thead>
+        <tr>
+          <th>历史通道ID</th>
+        </tr>
+        </thead>
+        <tbody id="historyContent">
+        <tr style="display: none" id="historySample">
+          <td class="cameraId"></td>
+          <td><button>播放<button></td>
+        </tr>
+        </tbody>
+      </table>
+      <div style="margin-left: 10px;">
+        设置定制化窗口数量：
+        <input type="text" id="textWndNum2" value="1" size="5"/>
+        <input type="button" id="buttonSetCustomizedWndCount" value="设置" class="button" onclick="return ButtonSetCustomizedWndCount_onclick()" />
+      </div>
+    </div>
+
+      <div style="display:none;">
+          来源：
+          <select id="selectRecordSource" >
+              <option value="3" >平台录像</option>
+              <option value="2" selected>设备录像</option>
+          </select>
+          类型：
+          <select id="selectRecordType" >
+              <option value="0" selected>全部录像</option>
+              <option value="1">手动录像</option>
+              <option value="2">报警录像</option>
+              <option value="3">移动侦测</option>
+              <option value="4">视频丢失</option>
+              <option value="5">视频遮挡</option>
+              <option value="6">定时录像</option>
+              <option value="7">全天录像</option>
+          </select>
+      </div>
+</body>
+</html>

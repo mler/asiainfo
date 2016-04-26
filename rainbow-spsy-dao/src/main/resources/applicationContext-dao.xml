@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd" 
+	default-autowire="byName" default-lazy-init="true">
+	
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:sql-map-config.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="originAgencyCompanyDAO" name="originAgencyCompanyDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginAgencyCompanyDAOImpl"></bean>
+	<bean id="originGoodsStockDAO" name="originGoodsStockDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginGoodsStockDAOImpl"></bean>	
+	<bean id="originIdentificationCodeDAO" name="originIdentificationCodeDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginIdentificationCodeDAOImpl"></bean>	
+	<bean id="originIdentificationCodeDetailDAO" name="originIdentificationCodeDetailDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginIdentificationCodeDetailDAOImpl"></bean>	
+	<bean id="originInspectionInfoDAO" name="originInspectionInfoDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginInspectionInfoDAOImpl"></bean>
+	<bean id="originMaterialInfoDAO" name="originMaterialInfoDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginMaterialInfoDAOImpl"></bean>	
+	<bean id="originMerchantStockOutDAO" name="originMerchantStockOutDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginMerchantStockOutDAOImpl"></bean>	
+	<bean id="originProducerStockDetailInDAO" name="originProducerStockDetailInDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginProducerStockDetailInDAOImpl"></bean>	
+	<bean id="originProducerStockInDAO" name="originProducerStockInDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginProducerStockInDAOImpl"></bean>	
+	<bean id="originProducerStockOutDAO" name="originProducerStockOutDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginProducerStockOutDAOImpl"></bean>
+	<bean id="originPurchaseInfoDAO" name="originPurchaseInfoDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginPurchaseInfoDAOImpl"></bean>
+	<bean id="queryDAO" name="queryDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.CommonQueryDAOImpl"	></bean>
+	<bean id="originSkuAgencyRelationDAO" name="originSkuAgencyRelationDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.TOriginSkuAgencyRelationDAOImpl"></bean>
+	<bean id="selfTraceDAO" name="selfTraceDAO" class="com.bdx.rainbow.spsy.dal.ibatis.dao.SelfTraceDAOImpl"></bean>
+ </beans>

@@ -1,0 +1,43 @@
+<div class="col-sm-10 col-sm-offset-2">
+	   #if($agencys.size() > 0)
+    	<table class="table table-bordered table-hover table-striped infotable">
+            <tr>
+                <td></td>
+                <td>商户名称</td>
+                <td>商户负责人</td>
+                <td>联系方式</td>
+            </tr>
+    		#foreach($agency in $agencys)
+            <tr>
+                <td><input type="radio" value="$!{agency.agencyId}" onclick="goSure('$!{agency.agencyName}','$!{agency.agencyId}')"/></td>
+                <td>$!{agency.agencyName}</td>
+                <td>$!{agency.agencyResponsiblePerson}</td>
+                <td>$!{agency.linkPhone}</td>
+            </tr>
+    		#end
+		</table>
+		#else
+			<font style="color:red">没查询到商户信息，请填写完整的商户名称以及商户负责人和联系方式！</font>
+			<button type="button" class="btn btn-default fr" onclick="goClose()"><i class="iconfont icon-cuowu"></i>关闭</button>
+		#end
+</div>
+<script>
+	   $(document).ready(function() { 
+          #if($agencys.size()==0) 
+		  	$("#agencyInfo").css("display","block");
+			$("#supplierId").val("");
+		  #end
+       });
+	   
+       function goSure(agencyName,agencyId){
+          $("#supplierId").val(agencyId);
+		  $("#supplierName").val(agencyName);
+		  $("#oldSupplierName").val(agencyName);
+		  $('#agecyList>div').slideUp();
+		  $("#agencyInfo").css("display","none");
+	   }
+	   
+	   function goClose(){
+	      $('#agecyList>div').slideUp();
+	   }
+</script>

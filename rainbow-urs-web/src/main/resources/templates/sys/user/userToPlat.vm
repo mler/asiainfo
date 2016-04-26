@@ -1,0 +1,134 @@
+#parse("sys_param.vm")
+<div class="viewNavMenu" id="userplatedit">
+    <form id="user2platForm" method="POST" action="$!{CONTEXT_PATH}/sys/user/ybmsaveuser2.do" onsubmit="return false;">
+        <input type="hidden" name="existids" id="existids" value="${userId}"/>
+
+        <div class="nav_menu">
+            <div id="myjd">
+                <h2>
+                    #if($operflag==1)
+                        <span class="navKeyword">
+##			 <input type="text" size="7" id="keyword" name="keyword"
+##                    style="height:15px;border:1px solid RGB(248,115,56);display: none;" placeholder="关键字" value=""
+##                    onkeydown="if(event.keyCode==13||event.which==13){goSelectMenu(${userId})}"/>
+		   </span>
+                    #end
+                </h2>
+            </div>
+            #foreach($plat in $plats)
+                <dl id="${plat.platId}" style="margin-bottom:0px">
+                    <dt>
+                        <input type="checkbox" id="platIds" name="platIds" class="commonCheck" value="${plat.platId}"  #if(${user2PlatsMap.get(${plat.platId})}) checked=true #end  #if($operflag==0) disabled #end/>
+                        <a href="javascript:void(0);"><span></span>${plat.platName}</a>
+                        <select id="platRole" name="platRole" class="form-control"#if($operflag==0) disabled  #end >
+                           <option value="" >选择角色</option>
+                            #foreach($role in ${roleMap.get(${plat})})
+                               <option value="$!{role.roleId}"   #if(${user2RoleMap.get(${role.roleId})}) selected="selected"#end >$!{role.roleName}</option>
+
+                            #end
+
+                        </select>
+                    </dt>
+
+                </dl>
+            #end
+
+
+        </div>
+    </form>
+    <div class="form-group">
+        #if($operflag==1)
+            <button type="button" class="btn btn-success" id="submit">提交
+            </button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i
+                    class="iconfont icon-cuowu"></i>关闭
+            </button>
+        #end
+    </div>
+</div>
+<script>
+$(function(){
+    $("input[type=checkbox][name=platIds]").each(function(){
+        if(!$(this).prop('checked')){
+            $(this).next().next().prop('disabled',true);
+        }else if($(this).prop('checked')){
+            $(this).next().next().prop('disabled',false);
+        }
+    });
+    $("input[type=checkbox][name=platIds]").click(function(){
+
+            if(!$(this).prop('checked')){
+                $(this).next().next().prop('disabled',true);
+            }else if($(this).prop('checked')){
+                $(this).next().next().prop('disabled',false);
+            }
+
+    });
+
+    var toBedeletedIds="";
+    $("input[type=checkbox][name=platIds]:checked").each(function(){
+        toBedeletedIds+=$(this).val()+';';
+
+    });
+    var oldroleIds="";
+//    $("#platRole option:selected").each(function(){
+    $("select[name=platRole]").each(function(){
+        if($(this).val()>0){
+            oldroleIds= oldroleIds+$(this).val()+';';
+        }
+
+    });
+$("#submit").click(function(){
+    var toBeinsertdIds="";
+    $("input[type=checkbox][name=platIds]:checked").each(function(){
+        toBeinsertdIds+=$(this).val()+';';
+    });
+
+
+    var newroleIds="";
+    $("select[name=platRole] option:selected").each(function(){
+        if($(this).val()>0){
+            newroleIds+=$(this).val()+';';
+        }
+
+    });
+    var userId=$("#existids").val();
+    $.ajax({
+                type: "post",
+                        url: "$!{CONTEXT_PATH}/sys/user/saveUser2",
+                        data: "userId=" + userId +"&newroleIds="+newroleIds+"&oldroleIds="+oldroleIds+ "&toBedeletedIds=" + toBedeletedIds+"&toBeinsertdIds="+toBeinsertdIds,
+                        success: function (msg) {
+                    if (msg.success) {
+                        alert(msg.message);
+                        $("#cancel").click();
+                    } else {
+                alert(msg.message);
+            }
+        }
+    });
+});
+
+});
+
+
+
+##    function goSaveRole2Menu(userid) {
+##
+##        var platId = $("#user2platForm").find("input:checked").val();
+##
+##
+##        $.ajax({
+##            type: "post",
+##            url: "$!{CONTEXT_PATH}/sys/user/saveUser2",
+##            data: "userId=" + userid + "&platId=" + platId,
+##            success: function (msg) {
+##                if (msg.success) {
+##                    alert(msg.message);
+##                    $("#cancel").click();
+##                } else {
+##                    alert(msg.message);
+##                }
+##            }
+##        });
+##    }
+</script>

@@ -1,0 +1,36 @@
+<div class="table_area">
+    <table class="table table-bordered table-striped table-hover">
+        <tbody>
+        <tr>
+            <th>销售单位</th>
+            <th>商品名称</th>
+            <th>入库数量</th>
+            <th>已销售数量</th>
+            <th>剩余数量</th>
+            <th>上级经销商</th>
+            <th>销售单位负责人</th>
+            <th>联系方式</th>
+            <th>入库时间</th>
+        </tr>
+#if($rows && $!{rows.size} != 0)
+            #foreach($obj in $rows)
+            <tr>
+                <td>$!obj.get("inName")</td>
+                <td>$!obj.get("skuName")</td>
+                <td>$!obj.get("inNumber")</td>
+                <td>$!obj.get("sums")</td>
+                <td>$!math.sub($!obj.get("inNumber"),$!obj.get("sums"))</td>
+                <td><a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{rc.ContextPath}/track/showAgency.do?agencyId=$obj.get("supAgencyId")', '上级经销商')" class="modify">$!obj.get("supName")</a></td></td>
+                <td>$!obj.get("inPrincipal")</td>
+                <td>$!obj.get("inPhone")</td>
+                <td>$!date.format('yyyy-MM-dd ',$!obj.get("inDate"))</td>
+            </tr>
+            #end
+            #else
+            <tr>
+                <td colspan="9" class="noinfo">没有数据记录</td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div>

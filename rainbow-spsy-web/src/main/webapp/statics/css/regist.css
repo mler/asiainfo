@@ -1,0 +1,77 @@
+body{
+	font-family: "microsoft yahei";
+}
+.header{
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+}
+.head{
+	margin: 0px auto;
+	height: 110px;
+	line-height: 110px;
+}
+.head span{
+	font-size: 40px;
+	vertical-align: middle;
+	color: #00A9F1;
+}
+.head span.oper_name{
+	border-left: 1px solid #ddd;
+	padding-left: 10px;
+	margin-left: 10px;
+	font-size: 30px;
+	display: inline-block;
+	height: 50px;
+	line-height: 50px;
+	color: #4e4e4e;
+}
+.right{
+	padding: 70px 30px;
+}
+.right .form-group{
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+.right .form-group .form-control{
+	border-radius: 0px;
+	/*-webkit-appearance: none;*/
+}
+.right .form-group .btn-reg{
+	width: 320px;
+	height: 45px;
+	background-color:#00a9f1;
+	color: #fff;
+	font-size: 22px;
+	border-radius:0px;
+	letter-spacing: 5px;
+	margin-top: 20px;
+}
+.C{
+	text-align: center;
+}
+.control-label{
+	padding: 7px 0px;
+  	margin-bottom: 0;
+  	text-align: right;
+  	white-space: nowrap;
+  	font-weight: normal;
+}
+.left{
+	text-align: center;
+}
+.left img{
+	width: 80%;
+	max-width: 440px;
+	display: inline-block;
+	margin: 35px auto;
+}
+.left p{
+	text-align: left;
+	text-indent: 30px;
+	color: #878787;
+	font-family: simsun;
+	font-size: 14px;
+	line-height: 25px;
+	margin:0px;
+}
+

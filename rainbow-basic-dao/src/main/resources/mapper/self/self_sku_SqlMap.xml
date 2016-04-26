@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.mapper.basic.mysql.SelfSkuMapper" >
+   <resultMap id="BaseResultMap" type="com.bdx.rainbow.entity.basic.mysql.TBasicSku" >
+    <id column="SKU_ID" property="skuId" jdbcType="INTEGER" />
+    <result column="SKU_NAME" property="skuName" jdbcType="VARCHAR" />
+    <result column="SKU_ENAME" property="skuEname" jdbcType="VARCHAR" />
+    <result column="SKU_BARCODE" property="skuBarcode" jdbcType="VARCHAR" />
+    <result column="APPROVAL_NUM" property="approvalNum" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+    <result column="MANUFACTORY_CODE" property="manufactoryCode" jdbcType="VARCHAR" />
+    <result column="COMPANY_NAME_EN" property="companyNameEn" jdbcType="VARCHAR" />
+    <result column="SPEC" property="spec" jdbcType="VARCHAR" />
+    <result column="DESCRI" property="descri" jdbcType="VARCHAR" />
+    <result column="REGISTER_ADDRESS" property="registerAddress" jdbcType="VARCHAR" />
+    <result column="REGISTER_ADDRESS_EN" property="registerAddressEn" jdbcType="VARCHAR" />
+    <result column="SKU_TYPE_ID" property="skuTypeId" jdbcType="INTEGER" />
+    <result column="LIFE_TIME" property="lifeTime" jdbcType="VARCHAR" />
+    <result column="PATENT_NUM" property="patentNum" jdbcType="VARCHAR" />
+    <result column="PRODUCTION_STATE_CODE" property="productionStateCode" jdbcType="VARCHAR" />
+    <result column="ORGI_COUNTRY" property="orgiCountry" jdbcType="VARCHAR" />
+    <result column="PRODUCTION_AREA_CODE" property="productionAreaCode" jdbcType="VARCHAR" />
+    <result column="PRODUCTION_AREA" property="productionArea" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="ICO_ID" property="icoId" jdbcType="VARCHAR" />
+    <result column="IS_IMPORT" property="isImport" jdbcType="VARCHAR" />
+    <result column="BRAND" property="brand" jdbcType="VARCHAR" />
+    <result column="UNSPSC" property="unspsc" jdbcType="VARCHAR" />
+    <result column="PRODUCT_ADDRESS" property="productAddress" jdbcType="VARCHAR" />
+    <result column="STAND_EXE_CODE" property="standExeCode" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="CREATER" property="creater" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATER" property="updater" jdbcType="VARCHAR" />
+    <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+    <result column="AUDITOR" property="auditor" jdbcType="VARCHAR" />
+    <result column="CHANGE_NOTE" property="changeNote" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <trim prefix="where" prefixOverrides="and | or">  
+      	<if test="queryCondition != null and queryCondition != '' " >
+		 and ( SKU_BARCODE like #{ queryCondition } or SKU_NAME like #{ queryCondition } )
+	    </if>
+	    <if test="enterpriseId != null" >
+		 and exists ( select 1 from t_basic_enterprise_sku b where a.SKU_ID = b.SKU_ID and b.ENTERPRISE_ID = #{ enterpriseId } )
+	    </if>
+	    <if test="skuBarcode != null and skuBarcode != '' " >
+		 and SKU_BARCODE = #{ skuBarcode } 
+	    </if>
+	    <if test="nStatus != null and nStatus != '' " >
+		 and STATUS != #{ nStatus } 
+	    </if>
+	    <if test="status != null and status != '' " >
+		 and STATUS = #{ status } 
+	    </if>
+	    <if test="skuName != null and skuName != '' " >
+		 and SKU_NAME like #{ skuName }
+	    </if>
+	    <if test="creater != null and creater != '' " >
+		 and CREATER = #{ creater } 
+	    </if>
+    </trim>
+  </sql>
+  <sql id="Base_Column_List" >
+    SKU_ID, SKU_NAME, SKU_ENAME, SKU_BARCODE, APPROVAL_NUM, COMPANY_NAME, MANUFACTORY_CODE, 
+    COMPANY_NAME_EN, SPEC, DESCRI, REGISTER_ADDRESS, REGISTER_ADDRESS_EN, SKU_TYPE_ID, 
+    LIFE_TIME, PATENT_NUM, PRODUCTION_STATE_CODE, ORGI_COUNTRY, PRODUCTION_AREA_CODE, 
+    PRODUCTION_AREA, STATUS, ICO_ID, IS_IMPORT, BRAND, UNSPSC, PRODUCT_ADDRESS, STAND_EXE_CODE, 
+    CREATE_TIME, CREATER, UPDATE_TIME, UPDATER, AUDIT_TIME, AUDITOR, CHANGE_NOTE
+  </sql>
+  <select id="getSkus" resultMap="BaseResultMap" parameterType="Map" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    	<include refid="Base_Column_List" />
+    from t_basic_sku a 
+    
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <select id="countSku" parameterType="Map" resultType="java.lang.Integer" >
+    select count(*) from t_basic_sku a 
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+</mapper>

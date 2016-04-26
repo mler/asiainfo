@@ -1,0 +1,36 @@
+<table id="stockintable" class="table table-bordered table-striped table-hover">
+    <tr>
+        <th>
+            <input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('stockintable', this.checked, 'operationIds')"/>
+        </th>
+        <th>产品名称</th>
+        <th>产品条码</th>
+        <th>生产日期</th>
+        <th>批次号</th>
+        <th>装箱编号</th>
+        <th>每箱数量</th>
+        <th>经办人</th>
+    </tr>
+	#if($stocks.size()==0)
+        <style>
+			.table-striped tr .noinfo{text-align:center; color:#e00; line-height:60px;}
+			.noinfo:hover{background:#fff;}
+		</style>
+		<tr>
+			<td colspan="8" class="noinfo">查询不到数据</td>
+		</tr>
+	#else
+    	#foreach($stock in $stocks)
+            <tr>
+                <th><input type="checkbox" id="operationIds" name="operationIds" value="$!{stock.operationId}"/></th>
+                <td>$!{stock.skuName}</td>
+        		<td>$!{stock.skuBarCode}</td>
+        		<td>$!date.format("yyyy-MM-dd",$!{stock.productionDate})</td>
+        		<td>$!{stock.skuBatch}</td>
+        		<td>$!{stock.packingNumber}</td>
+        		<td>$!{stock.packingQuantity}</td>
+        		<td>$!{stock.managerPerson}</td>
+            </tr>
+    	#end
+	#end
+</table>

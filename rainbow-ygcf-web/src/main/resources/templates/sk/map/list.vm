@@ -1,0 +1,35 @@
+#set($layout = "/sk/map/layout.vm")
+#parse("sys_param.vm")
+
+<ul class="p-l-single com_list">
+##    <li><a href="#"><span class="count">1</span>重庆川味观<span class="mon_ic"></span><span class="gr_a">A</span> </a></li>
+##    <li><a href="#"><span class="count">2</span>天源海鲜狮子楼<span class="mon_ic"></span><span class="gr_b">B</span> </a></li>
+##    <li><a href="#"><span class="count">3</span>麻辣家园<span class="mon_ic"></span><span class="gr_b">B</span> </a></li>
+##    <li><a href="#"><span class="count">4</span>千佳粗粮王<span class="mon_ic"></span><span class="gr_c">C</span> </a></li>
+##    <li><a href="#"><span class="count">5</span>秦皇膳食<span class="mon_ic"></span><span class="gr_c">C</span> </a></li>
+##    <li><a href="#"><span class="count">6</span>咸阳乐嘉饭店<span class="mon_ic"></span><span class="gr_c">C</span> </a></li>
+##    <li><a href="#"><span class="count">7</span>君子餐厅<span class="mon_ic"></span><span class="gr_c">C</span> </a></li>
+
+    #foreach($row in $pageInfo.list)
+        <li>
+            <a href="#">
+                <span class="count">$!{velocityCount}</span>$!{row.enterpriseName}
+                <span class="mon_ic"></span>
+##                <span class="gr_c">C</span>
+            </a
+        </li>
+    #end
+##    <div class="map_pagnation">
+##        <ul class="pagination pagination-sm">
+##            <li><a href="#">上一页</a></li>
+##            <li class="active"><a href="#">1</a></li>
+##            <li><a href="#">2</a></li>
+##            <li><a href="#">3</a></li>
+##            <li><a href="#">4</a></li>
+##            <li><a href="#">5</a></li>
+##            <li><a href="#">下一页</a></li>
+##        </ul>
+##    </div>
+</ul>
+
+#pagination()

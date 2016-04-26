@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.mapper.ydzf.self.TYdzfHistorySelfMapper" >
+  <resultMap id="YdzfEnterpriseHistoryListInfoNumResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfEnterpriseHistoryListInfoVO" >
+   <result column="id" property="id" jdbcType="INTEGER" />
+   <result column="relId" property="relId" jdbcType="INTEGER" />
+   <result column="type" property="type" jdbcType="VARCHAR" />  
+   <result column="appointDate" property="appointDate" jdbcType="TIMESTAMP" />
+   <result column="checkPlanType" property="checkPlanType" jdbcType="VARCHAR" />  
+   <result column="checkTaskResult" property="checkTaskResult" jdbcType="VARCHAR" />  
+   <result column="monitorTempletTotal" property="monitorTempletTotal" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="YdzfPunishAdviceHistoryVOResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfPunishAdviceHistoryVO">
+   <result column="inspectCaseIds" property="inspectCaseIds" jdbcType="VARCHAR" />  
+   <result column="PUNISH_ADVICE" property="punishAdvice" jdbcType="VARCHAR" />
+   <result column="LAW_IDS" property="lawIds" jdbcType="VARCHAR" />  
+  </resultMap>
+  
+   <resultMap id="YdzfPunishAdviceFinishHistoryVOResultMap" type="com.bdx.rainbow.dto.ydzf.vo.YdzfPunishAdviceFinishHistoryVO">
+   <result column="INSPECT_CASE_ID" property="inspectCaseId" jdbcType="INTEGER" />
+   <result column="INSPECT_CASE_FINISH_ID" property="inspectCaseFinishId" jdbcType="INTEGER" />  
+   <result column="INSPECT_CASE_NAME" property="inspectCaseName" jdbcType="VARCHAR" />
+   <result column="INSPECT_CASE_ENTERPRISE_ID" property="inspectCaseEnterpriseId" jdbcType="INTEGER" />
+   <result column="EVIDENCE_RESULT" property="evidenceResult" jdbcType="VARCHAR" />
+   <result column="PUNISH_ADVICE" property="punishAdvide" jdbcType="VARCHAR" />
+   <result column="FINISH_DATE" property="finishDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  
+  
+  
+  
+  
+<select id="queryMonitorEnterpriseHistoryCount" resultType="java.util.HashMap"  parameterType="java.util.Map" >
+select count(*) as num,t1.CHECK_PLAN_TYPE as checkType,t3.CHECK_TASK_RESULT as result from 
+t_ydzf_monitor_plan t1,t_ydzf_monitor_plan_rel t2,
+t_ydzf_monitor_task_info t3 
+where t1.MONITOR_PLAN_ID=t2.MONITOR_PLAN_ID AND 
+t3.MONITOR_PLAN_REL_ID=t2.MONITOR_PLAN_REL_ID AND  
+t3.CHECK_TASK_STATUS='9' 
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND t2.MANAGE_ENTERPRISE_ID=#{manageEnterpriseId} 
+ </if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND t3.CHECK_TASK_CHECK_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND t3.CHECK_TASK_CHECK_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+ <!--
+  <if test="checkPlanType!=null and checkPlanType!=''"> 
+ AND t1.CHECK_PLAN_TYPE=#{checkPlanType} 
+ </if>
+  -->
+group by t1.CHECK_PLAN_TYPE,t3.CHECK_TASK_RESULT
+</select>
+
+
+<select id="queryInspectEnterpriseHistoryCount" resultType="java.util.HashMap"  parameterType="java.util.Map" >
+select count(*) as num ,
+t2.PUNISH_ADVICE as punishAdvice
+from 
+t_ydzf_inspect_case t1, 
+t_ydzf_inspect_case_ready_punish t2, 
+t_ydzf_inspect_case_finish t3 
+where 
+t1.INSPECT_CASE_ID=t2.INSPECT_CASE_ID
+AND
+t2.INSPECT_CASE_ID=t3.INSPECT_CASE_ID 
+AND
+t1.INSPECT_CASE_STATUS='7'
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND t1.INSPECT_CASE_ENTERPRISE_ID =#{manageEnterpriseId} 
+</if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND t3.FINISH_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND  t3.FINISH_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+group by t2.PUNISH_ADVICE
+</select>
+    
+
+
+
+ <select id="queryEnterpriseHistoryListInfo" resultMap="YdzfEnterpriseHistoryListInfoNumResultMap"  parameterType="com.bdx.rainbow.dto.ydzf.form.YdzfEnterpriseHistoryQueryInfo" >
+ select type,id,relId,appointDate,checkPlanType,checkTaskResult,monitorTempletTotal,pubishAdvide from 
+(
+<if test="queryType==null or queryType=='' or queryType=='all' or queryType=='monitor'"> 
+select 'monitor' as type,
+m1.MONITOR_PLAN_ID as id,
+m3.MONITOR_TASK_ID as relId ,
+m3.CHECK_TASK_CHECK_DATE as appointDate,
+m1.CHECK_PLAN_TYPE as checkPlanType,
+m3.CHECK_TASK_RESULT as checkTaskResult,
+m3.MONITOR_TEMPLET_TOTAL as monitorTempletTotal,
+'' as pubishAdvide
+from t_ydzf_monitor_plan m1,
+t_ydzf_monitor_plan_rel m2,
+t_ydzf_monitor_task_info m3
+where 
+m1.MONITOR_PLAN_ID=m2.MONITOR_PLAN_ID AND 
+m3.MONITOR_PLAN_REL_ID=m2.MONITOR_PLAN_REL_ID AND  
+m3.CHECK_TASK_STATUS='9' 
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND m2.MANAGE_ENTERPRISE_ID=#{manageEnterpriseId} 
+ </if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND m3.CHECK_TASK_CHECK_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND m3.CHECK_TASK_CHECK_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+ <if test="checkPlanType!=null and checkPlanType!=''"> 
+ AND m1.CHECK_PLAN_TYPE=#{checkPlanType} 
+ </if>
+</if>
+<if test="queryType==null or queryType=='' or queryType=='all'"> 
+ union all
+</if>
+<if test="queryType==null or queryType=='' or queryType=='all' or queryType=='inspect'"> 
+select 'inspect' as type,
+i1.INSPECT_CASE_ID as id,
+i3.INSPECT_CASE_FINISH_ID as relId ,
+i3.FINISH_DATE as appointDate,
+'' as checkPlanType,
+'' as checkTaskResult,
+0 as monitorTempletTotal,
+i2.PUNISH_ADVICE as punishAdvice
+from 
+t_ydzf_inspect_case i1, 
+t_ydzf_inspect_case_ready_punish i2, 
+t_ydzf_inspect_case_finish i3
+where 
+i1.INSPECT_CASE_ID=i2.INSPECT_CASE_ID
+AND
+i2.INSPECT_CASE_ID=i3.INSPECT_CASE_ID 
+AND
+i1.INSPECT_CASE_STATUS='7'
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND i1.INSPECT_CASE_ENTERPRISE_ID =#{manageEnterpriseId} 
+</if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND i3.FINISH_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND  i3.FINISH_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+ </if>
+)
+aa  order by appointDate desc 
+ 
+   <if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+    </if>
+</select>
+
+
+ <select id="queryEnterpriseHistoryListInfoCount" resultType="java.lang.Integer"  parameterType="com.bdx.rainbow.dto.ydzf.form.YdzfEnterpriseHistoryQueryInfo" >
+ select count(*) from 
+(
+<if test="queryType==null or queryType=='' or queryType=='all' or queryType=='monitor'"> 
+select 'monitor' as type,
+m1.MONITOR_PLAN_ID as id,
+m3.MONITOR_TASK_ID as relId ,
+m3.CHECK_TASK_CHECK_DATE as appointDate,
+m1.CHECK_PLAN_TYPE as checkPlanType,
+m3.CHECK_TASK_RESULT as checkTaskResult,
+m3.MONITOR_TEMPLET_TOTAL as monitorTempletTotal,
+'' as pubishAdvide
+from t_ydzf_monitor_plan m1,
+t_ydzf_monitor_plan_rel m2,
+t_ydzf_monitor_task_info m3
+where 
+m1.MONITOR_PLAN_ID=m2.MONITOR_PLAN_ID AND 
+m3.MONITOR_PLAN_REL_ID=m2.MONITOR_PLAN_REL_ID AND  
+m3.CHECK_TASK_STATUS='9' 
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND m2.MANAGE_ENTERPRISE_ID=#{manageEnterpriseId} 
+ </if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND m3.CHECK_TASK_CHECK_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND m3.CHECK_TASK_CHECK_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+ <if test="checkPlanType!=null and checkPlanType!=''"> 
+ AND m1.CHECK_PLAN_TYPE=#{checkPlanType} 
+ </if>
+</if>
+<if test="queryType==null or queryType=='' or queryType=='all'"> 
+ union all
+</if>
+<if test="queryType==null or queryType=='' or queryType=='all' or queryType=='inspect'"> 
+select 'inspect' as type,
+i1.INSPECT_CASE_ID as id,
+i3.INSPECT_CASE_FINISH_ID as relId ,
+i3.FINISH_DATE as appointDate,
+'' as checkPlanType,
+'' as checkTaskResult,
+0 as monitorTempletTotal,
+i2.PUNISH_ADVICE as punishAdvice
+from 
+t_ydzf_inspect_case i1, 
+t_ydzf_inspect_case_ready_punish i2, 
+t_ydzf_inspect_case_finish i3
+where 
+i1.INSPECT_CASE_ID=i2.INSPECT_CASE_ID
+AND
+i2.INSPECT_CASE_ID=i3.INSPECT_CASE_ID 
+AND
+i1.INSPECT_CASE_STATUS='7'
+<if test="manageEnterpriseId!=null and manageEnterpriseId!=''"> 
+ AND i1.INSPECT_CASE_ENTERPRISE_ID =#{manageEnterpriseId} 
+</if>
+ <if test="startDate!=null"> 
+<![CDATA[ 
+ AND i3.FINISH_DATE >=#{startDate,jdbcType=DATE} 
+ ]]>
+ </if>
+  <if test="endDate!=null"> 
+<![CDATA[ 
+ AND  i3.FINISH_DATE <=#{endDatee,jdbcType=DATE} 
+ ]]>
+ </if>
+</if>
+)
+aa  
+</select>
+    
+
+<select id="queryPunishAdviceHistoryListInfoCount" resultType="java.lang.Integer"  parameterType="java.util.Map" >
+select count(*) as num from
+(
+select t1.PUNISH_ADVICE from t_ydzf_inspect_case_ready_punish t1
+where t1.INSPECT_CASE_ID in (
+select t2.INSPECT_CASE_ID
+from t_ydzf_inspect_case_evidence t2,
+t_ydzf_inspect_case_finish t3
+where 
+t2.INSPECT_CASE_ID=t3.INSPECT_CASE_ID 
+<if test="inspectCaseTempletId!=null and inspectCaseTempletId>=0"> 
+ and t2.INSPECT_CASE_TEMPLET_ID=#{inspectCaseTempletId}
+</if>
+<if test="inspectCaseTempletTotal!=null and inspectCaseTempletTotal>=0"> 
+<![CDATA[ 
+ and t2.INSPECT_CASE_TEMPLET_TOTAL<=#{inspectCaseTempletTotal}
+   ]]>
+</if>
+)
+group by t1.PUNISH_ADVICE,t1.LAW_IDS 
+) aa
+</select>  
+
+
+<select id="queryPunishAdviceHistoryListInfo" resultMap="YdzfPunishAdviceHistoryVOResultMap"  parameterType="java.util.Map" >
+select t1.PUNISH_ADVICE,t1.LAW_IDS,
+GROUP_CONCAT(t1.INSPECT_CASE_ID) as inspectCaseIds
+from t_ydzf_inspect_case_ready_punish t1
+where t1.INSPECT_CASE_ID in (
+select t2.INSPECT_CASE_ID
+from t_ydzf_inspect_case_evidence t2,
+t_ydzf_inspect_case_finish t3
+where
+t2.INSPECT_CASE_ID=t3.INSPECT_CASE_ID
+<if test="inspectCaseTempletId!=null and inspectCaseTempletId>=0"> 
+ and t2.INSPECT_CASE_TEMPLET_ID=#{inspectCaseTempletId}
+</if>
+<if test="inspectCaseTempletTotal!=null and inspectCaseTempletTotal>=0"> 
+<![CDATA[ 
+ and t2.INSPECT_CASE_TEMPLET_TOTAL<=#{inspectCaseTempletTotal}
+  ]]>
+</if>
+)
+group by t1.PUNISH_ADVICE,t1.LAW_IDS 
+ORDER BY t1.INSPECT_CASE_ID desc 
+<if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+</if>
+</select>  
+
+<select id="queryPunishAdviceFinishHistoryListInfo" resultMap="YdzfPunishAdviceFinishHistoryVOResultMap"  parameterType="java.util.Map" >
+select t1.INSPECT_CASE_ID,
+t4.INSPECT_CASE_FINISH_ID,
+t1.INSPECT_CASE_NAME,
+t1.INSPECT_CASE_ENTERPRISE_ID,
+t2.EVIDENCE_RESULT,
+t3.PUNISH_ADVICE,
+t4.FINISH_DATE
+from t_ydzf_inspect_case t1,
+t_ydzf_inspect_case_evidence t2,
+t_ydzf_inspect_case_ready_punish t3,
+t_ydzf_inspect_case_finish t4 
+where 
+t1.INSPECT_CASE_ID=t2.INSPECT_CASE_ID and 
+t2.INSPECT_CASE_ID=t3.INSPECT_CASE_ID and
+t3.INSPECT_CASE_ID=t4.INSPECT_CASE_ID 
+<if test="inspectCaseIds != null" >
+and t1.INSPECT_CASE_ID in 
+<foreach item="item" index="index" collection="inspectCaseIds" open="("  
+            separator="," close=")">  
+            #{item}  
+</foreach>  
+</if>
+<if test="limitClauseStart != null and limitClauseStart >= 0" >
+       limit #{limitClauseStart,jdbcType=INTEGER}, #{limitClauseCount,jdbcType=INTEGER}
+</if>
+</select> 
+
+
+
+</mapper>

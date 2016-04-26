@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="rainbow-spsy-web"
+  id="myeclipse.1458799440645"
+  context-root="/rainbow-spsy-web"
+  j2ee-spec="1.7"
+  archive="rainbow-spsy-web.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

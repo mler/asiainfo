@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>商品库存信息管理</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+	<div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+	        <div class="search_area clearfix">
+				<input type="hidden" id="type" name="type" value="${type}"/>
+	        	<div class="col-sm-12">
+					#if($type==1)
+						<button class="btn btn-success" data-toggle="modal" onclick="editInfo('${rc.ContextPath}/stock/producer/createin.do')"><i class="iconfont icon-jia"></i>添加</button>
+					#end
+		        	<!--<button class="btn btn-warning" data-toggle="modal" data-target="#upload"><i class="iconfont icon-shangchuan"></i>批量上传</button>-->				
+					#if($type==2)
+					<!--<button class="btn btn-success" data-toggle="modal" onclick="editInfo('${rc.ContextPath}/stock/producer/createout.do','')"><i class="iconfont icon-jia"></i>添加</button>-->
+					<button class="btn btn-violet" data-toggle="modal" onclick="editOutInfo('${rc.ContextPath}/stock/producer/createout.do')"><i class="iconfont icon-xiazai"></i>从入库信息导入</button>
+					#end
+	        	</div>
+	        </div>
+            <div id="pagelist" class="table_area m-t-sm"></div>
+        </div>
+	  </div>
+    </div>
+	#if($type==1)
+	<div class="modal fade" id="addPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+			 #parse("/stock/producerInEdit.vm")
+        </div>
+    </div>
+   </div>
+   #end
+   #if($type==2)
+   <div class="modal fade" id="ingress" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+			#parse("/stock/producerOutInEdit.vm")
+        </div>
+    </div>
+   </div>
+   #end
+	##parse("/layout/uploadfile.vm")
+	#parse("/layout/sys_js.vm")
+</body>
+<script type="text/javascript">
+    $(document).ready(function() { 
+	   goSearch(1);
+	   //移除数据，让模态框打开时重新加载数据
+	   $("#addPro").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+       });
+	   #if($type==2)
+    	   $("#ingress").on("hidden.bs.modal", function() {
+           	  $(this).removeData("bs.modal");
+           });
+	   #end
+    });
+	
+	function goSearch(page){
+	  var skuname = $("#skuName").val();
+	  var type = $("#type").val();
+	  var data ={skuName:skuname,pageStart:page,type:type};
+	  $("#pagelist").load("${rc.ContextPath}/stock/producer/list.do",data);
+	}
+	
+	function goPage(page){
+	   var currpage = $("#pageNumber").val();
+       var nextpage;
+       if(page>0){
+          nextpage = parseInt(currpage)+1;
+       }else{
+          nextpage = parseInt(currpage)-1;
+       }
+	   goSearch(nextpage);
+	}
+	
+	function editInfo(url){
+       $("#addPro").modal({
+    	  remote:url,
+		  backdrop:'static'
+       });
+	}
+	
+	function editOutInfo(url){
+	  $("#ingress").modal({
+    	  remote:url,
+		  backdrop:'static'
+      }); 
+	}
+</script>
+</html>

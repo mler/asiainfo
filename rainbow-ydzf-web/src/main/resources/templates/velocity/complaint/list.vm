@@ -1,0 +1,68 @@
+<form  id="compList">
+<table class="table table-bordered table-striped table-hover">
+    <tr>
+        <th><input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('compList', this.checked, 'compIds')" /></th>
+        <th>序号</th>
+        <th>案件编号</th>
+        <th>投诉举报单位</th>
+        <th>投诉举报人员</th>
+        <th>案件创建日期</th>
+        <th>来源渠道</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+
+        #foreach($obj in $rows)
+        <tr>
+            <td><input type="checkbox" name="compIds"  value="${obj.complaintId}" #if(${obj.complaintStatus}!=0)
+                       disabled
+            #end /></td>
+            <td>$velocityCount</td>
+            <td><a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/complaint/show?complaintId=${obj.complaintId}', '详情查看') ">${obj.complaintCode}</a></td>
+            <td>${obj.complaintUnit}</td>
+            <td>$!{obj.complaintInformer}</td>
+            <td>$!date.format('yyyy-MM-dd ',$!{obj.complaintCreatDate})</td>
+            <td>#if(${obj.complaintChannel}==1)
+                自建
+            #elseif(${obj.complaintChannel}==2)
+                惠民渠道
+            #else
+                其他
+            #end</td>
+            <td >#if(${obj.complaintStatus}==0)
+                待审核
+                #elseif(${obj.complaintStatus}==1)
+                    #if(${obj.complaintInspectStatus}==0)
+                        待立案
+                    #elseif(${obj.complaintInspectStatus}==1)
+                        立案通过
+                    #else
+                        立案不通过
+                    #end
+                #elseif(${obj.complaintStatus}==3)
+                立案通过
+                #elseif(${obj.complaintStatus}==4)
+                立案不通过
+                #else
+                审核不通过
+            #end</td>
+            <td>#if(${obj.complaintStatus}==0)<a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/complaint/update?complaintId=${obj.complaintId}', '举报投诉修改') " class="btn-ca">修改</a>
+                &nbsp;<a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/complaint/audit?complaintId=${obj.complaintId}', '举报投诉审核') " class="btn-ca">审核</a>#end &nbsp;
+            #if(${type}=='lian'&&${obj.complaintStatus}==1&&${obj.complaintInspectStatus}==0)
+                <a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/complaint/accreditation?complaintId=${obj.complaintId}', '举报投诉立案') " class="btn-ca">立案</a>
+            #end
+            </td>
+        </tr>
+        #end
+
+
+ </table>
+    </form>
+<form class="p_from">
+    <input type='hidden' class='p_startRow' id="pageNumber" name='pageStart' value='${pageinfo.pageStart}'/>
+    <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+    <input type='hidden' class='p_total' id="pageSize" name='totalCount' value='$!{pageinfo.totalCount}'/>
+    <input type='hidden' class='p_size' id="pageCount" value='$!{pageinfo.pageSize}'/>
+    <input type='hidden' class='p_number' id="pageNumbers" value='$!{pageinfo.pageNumber}'/>
+
+</form>

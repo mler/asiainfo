@@ -1,0 +1,179 @@
+#parse("sys_param.vm")
+##<link rel="stylesheet" href="$RESOURCE_PATH/css/jquery-ui.css" />
+<link rel="stylesheet" href="$RESOURCE_PATH/css/autocomplete.css" />
+<from method="POST" action="$!{CONTEXT_PATH}/complaint/${nextAction}" id="complaintEdit" onsubmit="return false" >
+     #if(${nextAction}!='create')
+         <div class="form-group">
+             <label class="control-label col-sm-2">投诉编号</label>
+             <div class="col-sm-4">
+                 ${obj.complaintCode}
+                 <input type="hidden" name="complaintId" value="${obj.complaintId}"/>
+             </div>
+             <label class="control-label col-sm-2">投诉创建部门</label>
+             <div class="col-sm-4">
+                 $!cache.getCachedName("SYS_DEPT", "$!{obj.complaintCreatDepId}", "","urs")
+             </div>
+         </div>
+             <div class="form-group">
+                 <label class="control-label col-sm-2">投诉创建人</label>
+                 <div class="col-sm-4">
+                     $!cache.getCachedName("SYS_USER_NAME", "$!{obj.complaintCreatUserId}", "","urs")
+                 </div>
+                 <label class="control-label col-sm-2">投诉创建时间</label >
+                 <div class="col-sm-4">
+                     $!date.format('yyyy-MM-dd ',$!{obj.complaintCreatDate})
+                 </div>
+             </div>
+     #end
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉企业类型</label>
+        <div class="col-sm-4">
+            #if(${nextAction}=='show')
+                $!cache.getCachedName("BUSINESS_TYPE", "$!{obj.enterpriseBusinessType}","", "urs")
+                #else
+             <select name="enterpriseBusinessType" class="col-sm-12" id="enterpriseBusinessType" notnull="true" >
+                #if(${nextAction}=='create')
+                     <option value="001">食品生产</option>
+                     <option value="002">食品流通</option>
+                     <option value="003">餐饮服务</option>
+                     <option value="004">药品器械生产</option>
+                     <option value="005">药品器械经营</option>
+                     <option value="006">医疗机构</option>
+                     <option value="007">化妆品经营</option>
+                 #else
+                     <option value="$!{obj.enterpriseBusinessType}">$!cache.getCachedName("BUSINESS_TYPE", "$!{obj.enterpriseBusinessType}","", "urs")</option>
+                #end
+             </select>
+            #end
+        </div>
+        <label class="control-label col-sm-2">投诉名称</label>
+        <div class="col-sm-4" >
+            #if(${nextAction}=='show')
+                $!{obj.complaintName}
+            #else
+                <input type="text" class="col-sm-12" value="$!{obj.complaintName}"  name="complaintName"/>
+            #end
+        </div>
+    </div>
+
+        #if(${nextAction}=='create')
+        <div class="form-group" style="overflow:inherit;">
+            <label class="control-label col-sm-2">投诉单位</label>
+        <style>
+            .autocomplete-container{z-index:999;}
+            .proposal-list li{height:auto;}
+            /* 清除浮动 */
+            .clear{ clear:both; height:0px!important;}
+            .proposal-box{background:#fff;}
+
+        </style>
+        <div class="col-sm-10" id="search-form">
+        <input type="hidden" name="complaintEnterpriseId" id="complaintEnterpriseId" CORP_ID="true"/>
+        </div>
+        <div class="clear"></div>
+        </div>
+        #elseif(${nextAction}=='show')
+            <div class="form-group" >
+                <label class="control-label col-sm-2">投诉单位</label>
+        <div class="col-sm-4" >
+          $!{obj.complaintUnit}
+          </div>
+            </div>
+        #else
+            <div class="form-group" >
+                <label class="control-label col-sm-2">投诉单位</label>
+            <div class="col-sm-10" >
+                <input type="text" readonly class="col-sm-12"  name="complaintUnit" value="$!{obj.complaintUnit}"/>
+            </div>
+            </div>
+        #end
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉举报人员</label>
+        #if(${nextAction}=='show')
+        <div class="col-sm-4">
+            $!{obj.complaintInformer}
+        </div>
+        #else
+        <div class="col-sm-10">
+            <input type="text" class="col-sm-12"  value="$!{obj.complaintInformer}" name="complaintInformer" notnull="true"/>
+        </div>
+        #end
+
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">投诉案件内容</label>
+
+        #if(${nextAction}=='show')
+        <div class="col-sm-4">
+            $!{obj.complaintContent}
+            </div>
+        #else
+        <div class="col-sm-10">
+            <textarea name="complaintContent" title="投诉案件内容" notnull="true"  rows="6" placeholder="投诉案件内容">$!{obj.complaintContent}</textarea>
+        </div>
+        #end
+    </div>
+    #if(${nextAction}=='show')
+        <div class="form-group" >
+            <label class="control-label col-sm-2">审核结果</label>
+            <div class="col-sm-4 CaseReviewRadio">
+                    #if(${obj.complaintStatus}==0)
+                    待审核
+                    #elseif(${obj.complaintStatus}==1)
+                        #if(${obj.complaintInspectStatus}==0)
+                        待立案
+                        #elseif(${obj.complaintInspectStatus}==1)
+                        立案通过
+                        #else
+                        立案不通过
+                        #end
+                    #elseif(${obj.complaintStatus}==3)
+                    立案通过
+                    #elseif(${obj.complaintStatus}==4)
+                    立案不通过
+                    #else
+                    审核不通过
+                    #end
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">审核意见</label >
+            <div class="col-sm-4">
+                $!{obj.complaintAuditAdvice}
+        </div>
+        </div>
+    #end
+
+
+</from>
+#if(${nextAction}!='show')
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="commit('complaintEdit','complaintQry','cancelId')"><i class="iconfont icon-baocun"></i>保存</button>
+    <button type="button" class="btn btn-default" id="cancelId" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+</div>
+#end
+
+
+##<script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+##<script type="text/javascript" src="$!{RESOURCE_PATH}/js/jquery-ui.js"></script>
+<script src="$RESOURCE_PATH/js/autocomplete.js"></script>
+<script>
+    var proposals =[];
+    $(function(){
+        $(document).ready(function(){
+
+            $('#search-form').autocomplete({
+                hints: proposals,
+                height: 25,
+                url:'$!{CONTEXT_PATH}/complaint/searchEnterprise',
+                onSubmit: function(text){
+                    $('#complaintEnterpriseId').val(text);
+                }
+            });
+
+        });
+    });
+
+</script>

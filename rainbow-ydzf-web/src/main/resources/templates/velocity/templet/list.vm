@@ -1,0 +1,49 @@
+<form  id="templetList">
+    #if(${type}=='inspectCase')
+        #foreach($obj in $rows)
+            <div class="MyAffairsList">
+                <div class="col-sm-6">
+                    <input type="checkbox" id="templetIds" name="templetIds"  value="${obj.inspectCaseTempletId}"><i class="iconfont icon-xinwenjian"></i><a href="javascript:void(0)" class="newfilelink" data-toggle="modal" data-target="#see_information">$!{obj.inspectCaseTempletName}</a><span>$!cache.getCachedName("BUSINESS_TYPE", "$!{obj.inspectEnterpriseType}","", "urs")</span>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <span>更新人：$!cache.getCachedName("SYS_USER_NAME", "$!{obj.updateUserid}", "","urs")</span>
+                    <span>发布时间：$!date.format('yyyy-MM-dd ',$!{obj.updateDate})</span>
+                </div>
+                <div class="col-sm-10 maflistinfo">
+                    ${obj.inspectCaseTempletContent}
+                </div>
+                <div class="col-sm-2 text-right">
+                    <span><i class="iconfont icon-biico"></i><a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/templet/${type}/update?templetId=$!{obj.inspectCaseTempletId}&type=${type}', '模版修改')"">修改</a></span>
+                </div>
+                <div class="clear"></div>
+            </div>
+        #end
+    #elseif(${type}=='monitor')
+        #foreach($obj in $rows)
+            <div class="MyAffairsList">
+                <div class="col-sm-6">
+                    <input type="checkbox" id="templetIds" name="templetIds" value="${obj.monitorTempletId}"><i class="iconfont icon-xinwenjian"></i><a href="javascript:void(0)" class="newfilelink" data-toggle="modal" data-target="#see_information">$!{obj.monitorTempletName}</a><span>$!cache.getCachedName("BUSINESS_TYPE", "$!{obj.checkEnterpriseType}","", "urs")</span>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <span>更新人：$!cache.getCachedName("SYS_USER_NAME", "$!{obj.updateUserid}", "","urs")</span>
+                    <span>发布时间：$!date.format('yyyy-MM-dd ',$!{obj.updateDate})</span>
+                </div>
+                <div class="col-sm-10 maflistinfo">
+                    $!{obj.monitorTempletContent}
+                </div>
+                <div class="col-sm-2 text-right">
+                    <span><i class="iconfont icon-biico"></i><a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/templet/${type}/update?templetId=$!{obj.monitorTempletId}&type=${type}', '模版修改')"" >修改</a></span>
+                </div>
+                <div class="clear"></div>
+            </div>
+        #end
+    #end
+</form>
+<form class="p_from">
+    <input type='hidden' class='p_startRow' id="pageNumber" name='pageStart' value='${pageinfo.pageStart}'/>
+    <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+    <input type='hidden' class='p_total' id="pageSize" name='totalCount' value='$!{pageinfo.totalCount}'/>
+    <input type='hidden' class='p_size' id="pageCount" value='$!{pageinfo.pageSize}'/>
+    <input type='hidden' class='p_number' id="pageNumbers" value='$!{pageinfo.pageNumber}'/>
+
+</form>

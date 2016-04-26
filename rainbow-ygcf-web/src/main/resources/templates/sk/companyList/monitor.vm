@@ -1,0 +1,187 @@
+#parse("sys_param.vm")
+#parse("addon/My97DatePicker.vm")
+
+<div class="container content monit">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-nav">
+                <a href="javascript:load('$!{CONTEXT_PATH}/company/index');">企业列表</a>
+                &gt;
+                <a href="javascript:void(0)" class="last">视频监控</a>
+                <button class="reback" onclick="goBack('$!{request.getParameter("from")}')"><i class="iconfont icon-left"></i>返回</button>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <div class="col-sm-8 col-md-9 video">
+                <iframe class="companyMonitor" style="width: 101%; height: 100%"></iframe>
+            </div>
+            <div class="col-sm-4 col-md-3 oper_panel">
+                <div class="row">
+                    <div class="col-sm-4 active">
+                        <i class="iconfont icon-shipinjiankong"></i>
+                        <p>实时监控</p>
+                    </div>
+                    <div class="col-sm-4" id="hf">
+                        <i class="iconfont icon-record"></i>
+                        <p>录像回放</p>
+                    </div>
+                    <div class="col-sm-4" id="jt">
+                        <i class="iconfont icon-jietu"></i>
+                        <p>视频截图</p>
+                    </div>
+                </div>
+
+                <div class="row contentDiv content-hf" style="display: none; margin-top: 5px;">
+                    <div class="col-sm-12">
+
+                        <label>录像回放时间：</label>
+                        <div class="form-group">
+                            <div class="inputbox form-control">
+                                <input type="text" id="textStartTime" class="" onclick="WdatePicker({el:'textStartTime', dateFmt:'yyyy-MM-dd HH:mm:ss', maxDate: '#F{$dp.$D(\'textEndTime\')}'})" readonly style="cursor: pointer;"/>
+                                <i class="iconfont icon-date" style="cursor: pointer;"></i>
+                            </div>
+                            ——
+                            <div class="inputbox form-control">
+                                <input type="text" id="textEndTime" class="" onclick="WdatePicker({el:'textEndTime', dateFmt:'yyyy-MM-dd HH:mm:ss', minDate: '#F{$dp.$D(\'textStartTime\')}'})" readonly style="cursor: pointer;"/>
+                                <i class="iconfont icon-date" style="cursor: pointer;"></i>
+                            </div>
+                            <div class="inputbox" style="margin-top: 5px;">
+                                <button class="btn btn-sm btn-blue" id="ButtonStartTimePlaybackByWndNo_onclick">播放</button>
+                                <button class="btn btn-sm btn-blue" id="ButtonPausePlaybackByWndNo_onclick">暂停</button>
+                                <button class="btn btn-sm btn-blue" id="ButtonResumePlaybackByWndNo_onclick">继续</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row contentDiv content-jt" style="display: none; margin-top: 5px;">
+                    <div class="col-sm-12">
+                        <div class="inputbox">
+                            <p>
+                                <input class="imagePath form-control" placeholder="请选择截图保存路径" id="imgfile" style="display: inline-block">
+##                                <span class="fileupload btn">
+##			            		    <span>选择文件</span>
+##			            		    <input type="file" id="uploadBtn" class="upload"/>
+##			                    </span>
+##                                <button class="btn btn-sm btn-blue" type="file">选择路径</button>
+                            </p>
+                        </div>
+                        <div class="inputbox" style="margin-top: 5px;">
+                            <button class="btn btn-sm btn-blue" id="ButtonCapturePictureByWndNo_onclick">截图</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="eq_list">
+                    <p>设备列表</p>
+                    <ul>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="iconfont icon-right"></i>
+                                <i class="iconfont icon-iconfontqiye cart"></i>
+                                $!{enterpriseInfo.enterpriseName}
+                            </a>
+                            <ul class="device">
+                                #foreach($device in $deviceList)
+                                    <li><a href="javascript:void(0)" key="$!{device.deviceKey}"><i class="cart iconfont icon-shipinjiankong"></i>$!{device.deviceName}</a></li>
+                                #end
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        // 计算监控台高度
+        $('.video').height($(window).height() - $('nav').height() - $('.page-nav').height() - 70);
+
+        $(".eq_list > ul > li > a").each(function() {
+            var sec=$(this).next("ul").css("display");
+            if(sec=="none"){
+                $(this).children("i:first").removeClass("icon-right").addClass("icon-down").parent().next("ul").slideDown();
+                $(this).parent().siblings().children("ul").slideUp().prev().children("i:first").removeClass("icon-down").addClass("icon-right");
+            }else{
+                $(this).children("i:first").removeClass("icon-down").addClass("icon-right").parent().next("ul").slideUp();
+            }
+        });
+
+        // 选择监控设备
+        $('.eq_list .device a').click(function() {
+            showMask();
+
+            $('.eq_list .active').removeClass('active');
+
+            var _this = $(this);
+
+            _this.parent().addClass('active');
+
+            $('.companyMonitor').attr('src', '$!{CONTEXT_PATH}/company/showMonitor?deviceSn=' + _this.attr('key'));
+        });
+
+        // 默认播放第一个视频
+        var deviceA = $('ul.device li:eq(0)>a');
+        if(deviceA) {
+            $(deviceA).click();
+        }
+
+        // 操作按钮事件监听
+        $('.oper_panel .col-sm-4').click(function() {
+            $('.oper_panel .active').removeClass('active');
+
+            $(this).addClass('active');
+
+            $('div .contentDiv').hide();
+            var id = $(this).attr('id');
+            if(id) {
+                $('div .content-' + id).show();
+            }
+        });
+
+        $('.oper_panel .col-sm-4').each(function() {
+            $(this).css('cursor', 'pointer');
+        });
+
+        $('#uploadBtn').change(function() {
+            var path = $(this).val();
+            var index = path.lastIndexOf('/');
+            if(index < 0) {
+                index = path.lastIndexOf('\\');
+            }
+
+            path = path.substr(0, index);
+
+            $('#imgfile').val(path);
+        });
+
+        // 回放
+        $('#ButtonStartTimePlaybackByWndNo_onclick').click(function() {
+            $('.companyMonitor')[0].contentWindow.playBack($('#textStartTime').val(), $('#textEndTime').val());
+        });
+
+        // 暂停
+        $('#ButtonPausePlaybackByWndNo_onclick').click(function() {
+            $('.companyMonitor')[0].contentWindow.playPause();
+        });
+
+        // 继续
+        $('#ButtonResumePlaybackByWndNo_onclick').click(function() {
+            $('.companyMonitor')[0].contentWindow.playContinue();
+        });
+
+        // 截图
+        $('#ButtonCapturePictureByWndNo_onclick').click(function() {
+            $('.companyMonitor')[0].contentWindow.pictureJt($('#imgfile').val());
+        });
+    });
+
+    function goBack(from) {
+        if(from == 'l') {
+            load('$!{CONTEXT_PATH}/company/index');
+        } else {
+            load('$!{CONTEXT_PATH}/company/companySimple?id=$!{request.getParameter("id")}')
+        }
+    }
+</script>

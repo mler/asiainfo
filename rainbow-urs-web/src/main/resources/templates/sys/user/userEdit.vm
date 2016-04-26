@@ -1,0 +1,132 @@
+#parse("sys_param.vm")
+<link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/iconfont.css"/>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/statics/js/sys.js"></script>
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height: 134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="userCreateForm" action="$!{CONTEXT_PATH}/sys/user/${nextAction}"
+      method="post">
+    <div class="form-group ga-m-b">
+        <!-- 根据类目获取详细输入信息 -->
+        <label class="col-sm-4 control-label m-t-xs">
+            用户姓名：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="userName" class="form-control" name="userName" #if(${nextAction}=='update')value="$!{user.userName}"#end
+                   notnull="true" onchange="checkUname('$!{CONTEXT_PATH}/sys/user/check')"><span id="uspan"></span>
+            <input type="hidden" name="userId" class="form-control" value="$!{user.userId}">
+        </div>
+    </div>
+    <div class="form-group ga-m-b">
+    <label class="col-sm-4 control-label m-t-xs">
+           登录昵称 ：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" id="userLoginName"name="userLoginName" class="form-control" #if(${nextAction}=='update')value="$!{user.userLoginName}"#end onchange="checkName()"><span id="Uspan"></span>
+        </div>
+    </div>
+#if(${nextAction}=='create')
+    <div class="form-group ga-m-b">
+    <label class="col-sm-4 control-label m-t-xs">
+        登录密码：
+    </label>
+
+    <div class="col-sm-4 regcon_mb">
+        <input type="password" name="loginPwd"id="loginPwd" class="form-control"  onkeyup="checkPwd()"><span id="passstrength"></span>
+    </div>
+    </div>
+#end
+
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            用户邮箱 ：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" name="email" id="email" class="form-control" value="$!{user.email}" notnull="true" onchange="checkSubmitEmail()"><span id="espan"></span>
+
+        </div>
+    </div>
+
+
+
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            手机号码：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <input type="text" name="mobilePhone"id="mobilePhone" class="form-control" notnull="true"value="$!{user.mobilePhone}" onchange="checkSubmitMobile()"><span id="mspan"></span>
+        </div>
+    </div>
+#if(${nextAction}=='create')
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs" >
+            所在部门：
+        </label>
+        <div class="col-sm-4 regcon_mb">
+            <select name="deptId" class="form-control" id="deptId" PLAT="true">
+                #if(${nextAction}=='create')
+                    <option >请选择</option>
+                    #foreach($dept in $depts)
+                        <option value="$!{dept.deptId}">$!{dept.deptName}</option>
+                    #end
+                #else
+                    <option value="$!{user.deptId}">$!cache.getCachedName("SYS_PLAT", "$!{user.deptId}", "")</option>
+                #end
+#end
+            </select>
+        </div>
+    </div>
+
+    #if(${nextAction}=='create')
+    <div class="form-group ga-m-b">
+        <label class="col-sm-4 control-label m-t-xs">
+            用户类型：
+        </label>
+
+        <div class="col-sm-4 regcon_mb">
+            <select name="userType" class="form-control" id="userType">
+
+                    <option>请选择</option>
+
+                    <option value="9">平台管理员</option>
+                    <option value="2">企业租户</option>
+                    <option value="1">食药监租户</option>
+                    <option value="0">普通用户</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+
+
+
+</form>
+<!--脚部-->
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="saveInfo('userQry','userCreateForm','cancel')"><i
+            class="iconfont icon-baocun"></i>保存
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消
+    </button>
+</div>
+
+<script>
+
+
+
+
+</script>

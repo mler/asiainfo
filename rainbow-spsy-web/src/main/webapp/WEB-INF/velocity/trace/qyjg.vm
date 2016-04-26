@@ -1,0 +1,152 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+    #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>企业监管</title>
+    #parse('/layout/head.vm')
+</head>
+<body>
+    <div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+	        	<div class="search_area clearfix">
+	        		<div class="col-sm-5 ser_group">
+	        			<input type="text" class="form-control" placeholder="输入企业名称" id="skuName"/>
+	        			<button type="button" class="btn btn-blue" onclick="searchQyjg()"><i class="iconfont icon-sousuo"></i>查询</button>
+	        		</div>
+	        	</div>
+        		<div id="pagelist" class="table_area m-t-sm"></div>
+        		<div class="chart">
+        			<div class="chart_name" id="chartParent" style="display:none;">
+        				<h1 id="qyjg_corpName"></h1>
+						<input type="hidden" value="" id="qyjg_corpId"/>
+						<select id="qyjg_months" class="form-control" onchange="changeChart()">
+							#foreach($month in $lastMonths)
+        					<option value="$month">$month</option>
+							#end
+        				</select>
+        			</div>
+        			<div class="chart_shape" id="chart" style="height:400px"></div>
+        		</div>
+        </div>
+    </div>
+  </div>
+    <!-- Placed at the end of the document so the pages load faster -->
+	#parse("/layout/sys_js.vm")
+    <script src="${RESOURCE_PATH}/js/echarts-2.2.7 2/build/dist/echarts.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() { 
+    	   searchQyjg();
+        });
+		var myChart;
+		// 路径配置
+        require.config({
+            paths: {
+                echarts: '$RESOURCE_PATH/js/echarts-2.2.7 2/build/dist'
+            }
+        });
+		var option = {
+		        		title :{
+		        			text:'企业追溯信息图形报表',
+						x:60		        			
+		        		},
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:['追溯信息数量']
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				        	name :'商品名称',
+				            type : 'category',
+				            data : []
+				        }
+				    ],
+				    yAxis : [
+				        	{
+							name : '单位：条',				        	
+				            type : 'value'
+				        }
+				    ],
+				    series : []
+				};
+				
+				
+		require(	[
+        		'echarts',
+        		'echarts/chart/bar'   // 使用柱状图就加载bar模块，按需加载
+        		],
+	        function	(ec){
+	        	// 基于准备好的dom，初始化echarts图表
+	        		myChart=ec.init(document.getElementById('chart'));
+		        	myChart.setOption(option);
+	        }
+        );
+		function searchQyjg(){
+           var corpName = $.trim($("#corpName").val());
+           var data = {corpName:corpName,pageStart:1};
+           $("#pagelist").load("${rc.ContextPath}/trace/qyjgList.do",data);
+        }
+		
+		function changeChart(){
+			var corpName = $("#qyjg_corpName").html();
+			var corpId = $("#qyjg_corpId").val();
+			qyjg_openChart(corpId,corpName);
+		}
+		
+		function qyjg_openChart(corpId,corpName){
+			$("#chartParent").show();
+			$("#qyjg_corpName").html(corpName);
+			$("#qyjg_corpId").val(corpId);
+			myChart.clear();  
+        	myChart.showLoading({text: '正在努力的读取数据中...'});  
+			
+			var yyyyMM = $("#qyjg_months").val();
+	 		$.ajax({
+    			url: '${rc.ContextPath}/trace/getQyjgChart.do',
+    			type:"post",
+    			data:{'enterpriseId':corpId,
+					   'yyyyMM':yyyyMM
+    				 },
+    			success:function(data){	
+    				if(data.success){
+						var jsData = eval("(" + data.data + ")");
+						if(jsData == null || jsData == '' || data.data == '{}'){
+							alert("没有相关数据");
+						}
+    					var xData = jsData['xAxis'];
+						var yData = jsData['yAxis'];
+						var seriesData=[];
+						seriesData.push({
+                                "name":option.legend["data"][0],
+                                "type":"bar",
+                                "data":yData
+                            });
+                        option.xAxis[0]["data"]=xData;
+						
+    					myChart.setOption(option);
+						myChart.setSeries(seriesData);
+						myChart.hideLoading(); 
+    				}else{
+						alert(data.msg);
+					}
+    			}
+    		});
+		}
+        
+		
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,317 @@
+#set($X=('updatein' == ${nextAction}))
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+<form name="stockEditForm" id="stockEditForm" method="POST" onsubmit="return false">
+    <input type="hidden" name="type" id="type" value="$!{type}"/>
+	<input type="hidden" name="storageType" id="storageType" value="$!{stock.storageType}"/>
+    #if($X)
+        <input type="hidden" name="operationInId" id="operationInId" value="${stock.operationInId}"/>
+    #end
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">${action}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品名称</label>
+            <div class="searInput col-sm-4">
+				<input type="hidden" id="skuId" name="skuId" value="$!{stock.skuId}"/>
+				<input type="hidden" id="skuBarcode" name="skuBarCode" value="$!{stock.skuBarCode}"/>
+                <input type="text" class="form-control" id="skuName" name="skuName" value="$!{stock.skuName}" placeholder="输入产品名称查询"/>
+				<a href="javascript:void(0)" class="btn btn-default" onblur="selectinspe()" onclick="selctSku()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品批次</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="skuBatch" name="skuBatch"  onblur="selectinspe()" value="$!{stock.skuBatch}" notnull="true"/>
+            </div>
+        </div>
+		<div id="skuList" class="form-group search_result"></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2 blue">产品附码</label>
+            <div searInput class="col-sm-8">
+                <input type="text" class="form-control" name="codelist" id="codelist" value='$!{codelist}' readonly placeholder="点击查看标识码获取产品附码"/>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-R" onclick="selctCode(1)"><i class="iconfont icon-R"></i>查看标识码</button>
+            </div>
+        </div>
+		<div id="skucodelist" class="form-group search_result"></div>
+        <div class="form-group">
+            <label class="control-label col-sm-2"><font style="color:red">*</font>生产日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" class="Wdate form-control" id="productionTime" name="productionTime" onclick="WdatePicker({lang:'zh-cn'})" value="$!date.format('yyyy-MM-dd',$!{stock.productionDate})"/>
+                <i class="iconfont icon-date" onclick="javascript:document.getElementById('productionTime').click();"></i>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>检测信息</label>
+            <div class="col-sm-4">				
+				<input type="hidden" id="productDetectionId" name="productDetectionId" value="$!{stock.productDetectionId}" notnull="true"/>
+				<input type="text" class="form-control" id="reportName" name="reportName" readonly/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label"><font style="color:red">*</font>原料信息</label>
+            <div class="col-sm-4">
+				<input type="hidden" class="form-control" id="materialInfo" name="materialInfo" value="$!{stock.materialInfo}" notnull="true"/>                
+				<input type="text" class="form-control" id="materialshow" name="materialshow" value='$!{materialshow}'/>				
+            </div>
+            <label class="col-sm-2 control-label">经办人</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="managePerson" name="managePerson" value="$!{stock.managePerson}"/>
+            </div>
+        </div>
+		<div class="form-group materialList" style="display: none;">
+	      		<div class="col-sm-10 col-sm-offset-2 cont_wrap">
+	      		<div class="col-sm-10">
+		      		<label class="col-sm-2 control-label"><div class="row">采购起始日期</div></label>
+		      		<div class="col-sm-4 inputbox">
+		      			<input type="text" class="Wdate form-control" id="startDate" name="startDate" onclick="WdatePicker({lang:'zh-cn'})"/>
+		      			<i class="iconfont icon-date" onclick="javascript:document.getElementById('startDate').click();"></i>
+		      		</div>
+		      		<label class="col-sm-2 control-label"><div class="row">采购截止日期</div></label>
+		      		<div class="col-sm-4 inputbox">
+		      			<input type="text" class="Wdate form-control" id="endDate" name="endDate" onclick="WdatePicker({lang:'zh-cn'})"/>
+		      			<i class="iconfont icon-date" onclick="javascript:document.getElementById('endDate').click();"></i>
+		      		</div>
+	      		</div>
+	      		<div class="col-sm-2">
+		      		<button class="btn btn-blue" onclick="searchMaterial()"><i class="iconfont icon-sousuo"></i>查询</button>
+		      	</div>
+		      	<div id="materialinfolist" class="col-sm-12">
+					#parse("/material/materialSelectList.vm")
+		      	</div>
+	      		<div class="col-sm-12 p-t-sm">
+	      			<button class="btn btn-default fr m-l-sm" onclick="goCloseMaterial()"><i class="iconfont icon-cuowu"></i>取消</button>
+	      			<button class="btn btn-success fr" onclick="goSureMaterial()"><i class="iconfont icon-zhengque"></i>确认</button>
+	      		</div>
+	      	</div>
+	     </div>		 
+        <div class="form-group radiobox">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-4">
+                <form>
+                    <input type="radio" name="intype" id="intype" onclick="selectintype('01')" checked="checked" value="01"/>
+                    装箱入库
+                    <input type="radio" name="intype" id="intype" onclick="selectintype('02')" class="no" value="02"/>
+                    单件入库
+                </form>
+            </div>
+        </div>
+		<div id="packin">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">装箱编号</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="packingNumber" name="packingNumber" value="$!{stock.packingNumber}"/>
+            </div>
+            <label class="col-sm-2 control-label">每箱数量</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="boxQuantity" name="boxQuantity" value="$!{stock.boxQuantity}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2">装箱附码</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="packingIdCode" name="packingIdCode" readonly value="$!{stock.packingIdCode}" placeholder="点击查看标识码获取装箱附码"/>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-R" onclick="selctCode(2)"><i class="iconfont icon-R"></i>查看标识码</button>
+            </div>
+        </div>
+		<div id="packcodelist" class="form-group search_result"></div>
+		</div>
+		<div id="singlein" class="form-group">
+	      	<label class="col-sm-2 control-label">单件数量</label>
+	      	<div class="col-sm-4">
+	      		<input type="text" class="form-control" id="singleQuantity" name="singleQuantity" value="$!{stock.singleQuantity}"/>
+	      	</div>
+	    </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="saveStock(1)"><i class="iconfont icon-baocun"></i>保存</button>
+		#if(!$X)
+			<button type="button" class="btn btn-blue" onclick="saveStock(2)"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+		#end
+    </div>
+</form>
+<script>
+   $(function(){
+  		$('#packin').slideDown();
+		$('#singlein').slideUp();
+		$('#materialshow').click(function(){  		  
+  			$('.materialList').slideDown();
+  		});
+		#if($X)
+    		var dectionId = $('#productDetectionId').val()
+    		if(dectionId!="" ){
+    		   $('#reportName').val('$!{stock.skuName}$!{stock.skuBatch}报告');
+    		}
+			var storageType = $('#storageType').val();
+			if(storageType==""){
+			   storageType = '01';
+			}
+			$("input[name='intype'][value='"+storageType+"']").attr("checked","checked");
+			selectintype(storageType);
+		#else
+		   $('#storageType').val('01');
+		#end
+  	})
+	
+    function selctSku(){
+	  var skuName = $("#skuName").val();
+	  if(skuName!=""){
+	     var skuurl = '${rc.ContextPath}/sku/selectlist.do?skuName='+encodeURI(encodeURI(skuName))
+	     $("#skuList").load(skuurl,function(){
+  		 	$('#selectskuId').slideDown();
+         });
+	  }else{
+	     alert("请输入产品名称进行查询");
+		 return false;
+	  }
+	}
+	
+	function selctCode(type){
+	  var skuId= $("#skuId").val();
+	  var skuBatch = $("#skuBatch").val();
+	  if(skuId!="" && skuBatch!=""){
+	     var skuurl = '${rc.ContextPath}/code/detaillist.do?skuId='+skuId+"&skuBatch="+skuBatch+"&codeType="+type;
+	     if(type==1){
+		 	$("#skucodelist").load(skuurl,function(){
+			  $("#skucodelist>div").slideDown();
+			});
+		 }else{
+		 	$("#packcodelist").load(skuurl,function(){
+			  $("#packcodelist>div").slideDown();
+			});
+		 }
+	  }else{
+	    if(skuId==null || skuId==""){
+		  alert('请先选择产品');
+		  selctSku();
+		  return false;
+		}
+		if(skuBatch==null || skuBatch==""){
+		    alert("批次不能为空！");
+			return false;
+		}	    
+	  }
+	}
+	
+	function searchMaterial(){
+	   var startDate = $('#startDate').val();
+	   var endDate = $('#endDate').val();
+	   var data = {startDate:startDate,endDate:endDate};
+	   var skuurl = '${rc.ContextPath}/material/selectlist.do';
+	   $("#materialinfolist").load(skuurl,data);
+	}
+	
+	function goSureMaterial(){
+	   var materialInfo = $('#materialInfo').val();
+	   var materialshow = $('#materialshow').val();
+	   $("input:checked",$("#materialtable")).each(function (){
+    	   var result = $(this).val().split("_");
+		   if(materialInfo.indexOf(result[0])<0){
+    		   materialInfo = materialInfo + result[0]+";";
+    		   materialshow = materialshow + result[1]+";";
+		   }
+        });
+	   $('#materialshow').val(materialshow);
+	   $('#materialInfo').val(materialInfo);
+	   $('.materialList').slideUp();
+	}
+	
+	function goCloseMaterial(){
+	  $('.materialList').slideUp();
+	}
+	
+	function selectintype(intype){
+	   $('#storageType').val(intype);
+	   if(intype=='01'){
+	      $('#packin').slideDown();
+		  $('#singlein').slideUp();
+	   }else{
+	     $('#singlein').slideDown();
+		 $('#packin').slideUp();
+	   }
+	}
+	
+	function selectinspe(){
+	   var skuId = $("#skuId").val();
+	   var skuBatch = $("#skuBatch").val();
+	   var skuName=$("#skuName").val();
+	   if(skuId!="" && skuBatch!=""){
+	      jQuery.ajax({
+            url: "${rc.ContextPath}/inspe/selectInspe.do",
+            data:{detectionObjectType:'01',detectionObject:skuId,detectionBatch:skuBatch},
+            type:'POST',
+            success: function(result){
+                if(result.success){
+				  if(result.data!=0){
+                     $("#reportName").val(skuName+skuBatch+"报告");
+					 $("#productDetectionId").val(result.data);
+				  }
+                }else{
+                	alert(result.message);
+                }
+            }
+         }); 
+	   }
+	}
+	
+    function saveStock(type){
+        var ret = true;
+        $("input,select", $("#stockEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}
+        	 }
+        });
+		if(ret){			
+			var storageType = $("#storageType").val();
+    		if(storageType=='01'){
+    		   var packnum = $("#packingNumber").val();
+    		   if(packnum==null || packnum==""){
+    		   	  alert("装箱入库时装箱编码不能为空");
+    			  $("#packingNumber").focus();
+    			  ret = false;
+    			  return false;
+    		   }
+    		   var boxq = $("#boxQuantity").val();
+    		   if(boxq==null || boxq==""){
+    		   	  alert("装箱入库时每箱数量不能为空");
+    			  $("#boxQuantity").focus();
+    			  ret = false;
+    			  return false;
+    		   }
+    		}else{
+    		   var sigq = $("#singleQuantity").val();
+    		   if(sigq==null || sigq==""){
+    		      alert("单件入库时入库数量不能为空");
+    			  $("#singleQuantity").focus();
+    			  ret = false;
+    			  return false;
+    		   }
+    		}
+		}
+		if(ret){
+    		jQuery.ajax({
+                url: "${rc.ContextPath}/stock/${nextAction}.do",
+                data:$("#stockEditForm").serialize(),
+                type:'POST',
+                success: function(result){
+                    if(result.success){
+                        alert(result.message);
+                        $('#addPro').modal('hide');
+                        window.location.reload();
+                    }else{
+                    	alert(result.message);
+                    }
+                }
+            });
+		}
+    }
+</script>

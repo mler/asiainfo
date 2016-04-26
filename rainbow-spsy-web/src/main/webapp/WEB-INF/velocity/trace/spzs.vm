@@ -1,0 +1,169 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+    #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>商品追溯</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+<div class="container content moni_trace">
+    <div class="row">
+        <div class="searchArea">
+            <div class="panel-body">
+                <ul id="myTab" class="nav nav-tabs">
+				   <li class="active"><a href="#double" data-toggle="tab">产品条码+产品批次</a></li>
+				   <li><a href="#single" data-toggle="tab">溯源码</a></li>
+				</ul>
+				<form action="" onsubmit="return false;" id="trace">
+				<div id="myTabContent" class="tab-content ssbtnbox">
+					<div class="tab-pane fade clearfix in active" id="double">
+						<style>
+							.ac_results{width:172px!important; border-radius:0px!important; margin-top:-2px!important; }
+							.ac_over{background:#0098D8!important; padding:5px 10px!important;}
+						</style>
+				   		<label class="control-label">*产品条码</label>
+	  				  		<div class="rows">
+	  							<input type="text" name="spzsSkuBarCode" id="spzsSkuBarCode" value="$!{spzsSkuBarCode}" class="form-control" />
+	  						</div>
+				   		<label class="control-label">*产品批次</label>
+      						<div class="rows">
+      							<input type="text" name="spzsSkuBatch" id="spzsSkuBatch" class="form-control" />
+      						</div>
+				   </div>
+				   <div class="tab-pane fade clearfix" id="single">
+					  	<label class="control-label">*追溯码</label>
+  						<div class="rows">
+  							<input type="text" name="spzsSkuIdCode" id="spzsSkuIdCode" class="form-control" />
+  						</div>
+				   </div>
+				  
+				   <div class="ssbtn">
+				   	 <label class="control-label">销售单位</label>
+  						<div class="rows">
+  							<input type="text" name="spzsInName" id="spzsInName" class="form-control" />
+  						</div>
+      				 <div class="rows">
+      					<button type="button" onclick="goSearch()" class="btn btn-blue"><i class="iconfont icon-shangpinzhuizong"></i>商品追踪</button>
+      				 </div>
+      			   </div>
+
+      			   <div class="clear"></div>
+				</div>
+               </form>
+            </div>
+        </div>
+        <div id="pagelist" class="tab_cont col-sm-12">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+
+                </h4>
+            </div>
+            <div class="modal-body" id="editContext">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+#parse("/layout/sys_js.vm")
+<script src="${RESOURCE_PATH}/js/sys/sys.js"></script>
+<script src="${RESOURCE_PATH}/js/cookie.js"></script>
+<script type="text/javascript" src="$!{RESOURCE_PATH}/autocomplete/jquery.autocomplete.min.js"></script>
+<link rel="stylesheet" type="text/css" href="$!{RESOURCE_PATH}/autocomplete/jquery.autocomplete.css">
+<script type="text/javascript">
+   var spzsSkuBarCode = getCookie('spzsSkuBarCode');
+   var spzsSkuBatch = getCookie('spzsSkuBatch');
+   var spzsSkuIdCode = getCookie('spzsSkuIdCode');
+   
+   function goSearch(){
+        var ret=true;
+		var skuBarCode = $.trim($("#spzsSkuBarCode").val());
+		var skuBatch = $.trim($("#spzsSkuBatch").val());
+		var skuIdCode = $.trim($("#spzsSkuIdCode").val());
+		
+		easySearch_doing(skuBarCode,skuBatch,skuIdCode);
+		
+		if($("#double").hasClass("active")){
+			if(skuBarCode == null || skuBarCode == '' || skuBatch == null || skuBatch == ''){
+            	ret=false;
+        	}
+		}
+		if($("#single").hasClass("active")){
+			if(skuIdCode == null || skuIdCode == ''){
+            	ret=false;
+        	}
+		}
+		
+        
+        if(ret){
+            var data = $("#trace").serialize();
+            $("#pagelist").load("${rc.ContextPath}/trace/spzsSales.do",data,easySearch_end);
+        }else{
+            alert("查询条件不能为空");
+        }
+
+    }
+	
+    $(document).ready(function () {
+		//clearCookie("spzsSkuIdCode");
+		//clearCookie("spzsSkuBarCode");
+		//clearCookie("spzsSkuBatch");
+		easySearch_start();
+    	easySearch_end();
+    });
+	
+	function easySearch_start(){
+		if(spzsSkuBarCode == null || spzsSkuBarCode == '' || spzsSkuBarCode == undefined || spzsSkuBarCode == '""'){
+			spzsSkuBarCode = "";
+		}
+		if(spzsSkuBatch == null || spzsSkuBatch == '' || spzsSkuBatch == undefined || spzsSkuBatch == '""'){
+			spzsSkuIdCode = "";
+		}
+		if(spzsSkuIdCode == null || spzsSkuIdCode == '' || spzsSkuIdCode == undefined || spzsSkuIdCode == '""'){
+			spzsSkuIdCode = "";
+		}
+		
+	}
+	
+	function easySearch_doing(skuBarCode,skuBatch,skuIdCode){
+		if((spzsSkuBarCode + ",").indexOf(",'" + skuBarCode + "',") == -1){
+			spzsSkuBarCode += ",'" + skuBarCode + "'";
+		}
+		if((spzsSkuBatch + ",").indexOf(",'" + skuBatch + "',") == -1){
+			spzsSkuBatch += ",'" + skuBatch + "'";
+		}
+		if((spzsSkuIdCode + ",").indexOf(",'" + skuIdCode + "',") == -1){
+			spzsSkuIdCode += ",'" + skuIdCode + "'";
+		}
+	
+		setCookie('spzsSkuBarCode',spzsSkuBarCode,30);
+		setCookie('spzsSkuBatch',spzsSkuBatch,30);
+		setCookie('spzsSkuIdCode',spzsSkuIdCode,30);
+	}
+	
+	function easySearch_end(){
+		var s1 = spzsSkuBarCode.substring(1);
+		var a1 = eval("[" + s1 + "]");
+		var s2 = spzsSkuBatch.substring(1);
+		var a2 = eval("[" + s2 + "]");
+		var s3 = spzsSkuIdCode.substring(1);
+		var a3 = eval("[" + s3 + "]");
+		$("#spzsSkuBarCode").autocomplete(a1,{minChars: 0});
+		$("#spzsSkuBatch").autocomplete(a2,{minChars: 0});
+      	$("#spzsSkuIdCode").autocomplete(a3,{minChars: 0});
+	}
+	
+</script>
+</html>

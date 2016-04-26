@@ -1,0 +1,38 @@
+#pagination()
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		<th><input type="checkbox" /></th>
+  		<th>序号</th>
+		<th>产品名称</th>
+		<th>产品条形码</th>
+		<th>生产批次</th>
+		<th>销售时间</th>
+		<th>销售数量</th>
+		<th>操作</th>
+	</tr>
+	#foreach($stock in $stockouts)
+	 #set($num = 1)
+	 <tr>
+		<td><input type="checkbox" name="operationOutIds" id="operationOutIds" value="${stock.operationOutIds}"></td>
+		<td>$num</td>
+		<td>$!{stock.skuName}</td>
+		<td>$!{stock.skuBarCode}</td>
+		<td>$!{stock.skuBatch}</td>
+		<td>$date.format("yyyy-MM-dd HH:mm:ss",$!{stock.saleDate})</td>
+		<td>$!{stock.saleQuantity}$!cache.getCachedName("SALE_UNIT","$!{stock.saleUnit}","")</td>
+		<td><a href="javascript:void(0)" class="modify" onclick="editInfo('${rc.ContextPath}/stock/merchant/update.do?operationOutId=${stock.operationOutId}')"><i class="iconfont icon-bianji"></i>修改</a></td>
+	 </tr>
+	 #set($num = $num + 1)
+	#end
+</table>
+<!-- 分页信息 -->
+<div class="pageBar clearfix">
+	 <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+		#end
+     </ul>
+</div>

@@ -1,0 +1,73 @@
+#parse("sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>移动执法</title>
+    #parse("head.vm")
+</head>
+
+<body>
+<!--头部及导航-->
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand sys_name" href="#"><img src="$RESOURCE_PATH/img/law_icon.png" alt="logo" />食药监管移动执法系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><img src="$RESOURCE_PATH/img/user.png" alt="..." class="img-circle"/></li>
+                <li><a href="#" target="cont">王小军，欢迎您！</a></li>
+                <li><a href="javascript:void(0)" onclick="dologout()"><i class="iconfont icon-tuichu"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="col-sm-12 main_nav">
+    <ul class="nav nav-pills">
+        <li><a href="javascript:void(0)" target="cont"><i class="iconfont icon-wodeshiwu"></i>我的事务</a></li>
+        <li><a href="$!{CONTEXT_PATH}/monitor/init?checkPlanType=0" target="cont"><i class="iconfont icon-richangjiandu"></i>日常监督</a></li>
+        <li data-target="#inspect"><a href="javascript:void(0)" target="cont"><i class="iconfont icon-jichabananrenwu"></i>稽查办案任务</a></li>
+        <li ><a href="${CONTEXT_PATH}/complaint/init" target="cont"><i class="iconfont icon-jichabananrenwu"></i>投诉举报</a></li>
+        <li><a href="javascript:void(0)" target="cont"><i class="iconfont icon-zhengchangfagui"></i>政策法规</a></li>
+        <li><a href="${CONTEXT_PATH}/templet/init?type=monitor" target="cont"><i class="iconfont icon-wenshuguanli"></i>文书管理</a></li>
+    </ul>
+    <div class="sec_nav" id="inspect">
+        <ul>
+            <li><a href="${CONTEXT_PATH}/complaint/init?complaintInspectStatus=0&type=lian" target="cont">投诉举报待立案</a></li>
+            <li><a href="${CONTEXT_PATH}/inspect/case/init" target="cont">稽查任务</a></li>
+        </ul>
+    </div>
+</div>
+<!--iframe-->
+<iframe src="javascript:void(0)" width="100%" height="85%" name="cont" frameborder="0"></iframe>
+<!--加载中遮罩-->
+<div class="loaderWrap"><div class="loaderbox"><p>加载中...</p></div></div>
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+<script src="$RESOURCE_PATH/js/bootstrap/js/bootstrap.min.js"></script>
+<script src="$RESOURCE_PATH/js/self.js"></script>
+</body>
+<script>
+    $(function(){
+        $('.conpanyInfo td input[type=text]').each(function(){
+            if($(this).val()!==""){
+                $(this).attr('readonly','readonly');
+            }
+        });
+        $('#complete').click(function(){
+            $('.conpanyInfo td input[type=text]').removeAttr('readonly');
+            $('.completePart').css('display','block');
+        });
+    })
+    function dologout(){
+        window.location.href = "${CONTEXT_PATH}/logout";
+    }
+</script>
+</html>
+

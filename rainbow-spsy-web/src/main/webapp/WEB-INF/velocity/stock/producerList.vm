@@ -1,0 +1,57 @@
+#pagination()
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		<th>序号</th>
+		<th>产品名称</th>
+		<th>产品条形码</th>
+		<th>生产日期</th>
+		<th>批次号</th>
+		<th>装箱编号</th>
+		<th>每箱数量</th>
+		#if($type==1)
+		    <th>经办人</th>
+		#else
+			<th>采购经销商</th>
+		#end
+		<th>操作</th>
+	</tr>
+	
+	#set($num = 1)
+	#foreach($stock in $stocks)
+	 <tr>
+		<td>${num}</td>
+		<td>$!{stock.skuName}</td>
+		<td>$!{stock.skuBarCode}</td>
+		<td>$!date.format("yyyy-MM-dd",$!{stock.productionDate})</td>
+		<td>$!{stock.skuBatch}</td>
+		#if($type==1)
+		<td>$!{stock.packingNumber}</td>
+		#else
+		<td>$!{stock.packingStartNumber}</td>
+		#end
+		<td>$!{stock.boxQuantity}</td>
+		#if($type==1)
+		    <td>$!{stock.managePerson}</td>
+		#else
+			<td>$!{stock.agencyName}</td>
+		#end
+		#if($type==1)
+			<td><a href="javascript:void(0)" class="modify" #if(${stock.status}=='01')  style="color:#736D68;cursor:default" #else onclick="editInfo('${rc.ContextPath}/stock/producer/updatein.do?operationInId=${stock.operationInId}')" #end><i class="iconfont icon-bianji"></i>修改</a></td>
+		#else
+			<td><a href="javascript:void(0)" class="modify" onclick="editOutInfo('${rc.ContextPath}/stock/producer/updateout.do?operationOutId=${stock.operationOutId}')"><i class="iconfont icon-bianji"></i>修改</a></td>
+		#end
+	 </tr>
+	 #set($num = $num + 1)
+	#end
+</table>
+<!-- 分页信息 -->
+<div class="pageBar clearfix">
+	 <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+		#end
+     </ul>
+</div>

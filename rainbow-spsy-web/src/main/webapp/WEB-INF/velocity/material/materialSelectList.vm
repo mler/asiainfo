@@ -1,0 +1,20 @@
+<div class="table_scroll m-t-sm">
+    <table id="materialtable" class="table table-bordered table-striped table-hover">
+        <tr>
+            <th>&nbsp;</th>
+            <th>原料名称</th>
+            <th>批次号</th>
+            <th>供应商</th>
+        </tr>
+		#foreach($purchaseInfo in $purchaseInfos)
+        <tr>
+            <td>
+                <input type="checkbox" name="purchaseIds" id="purchaseIds" value="$!{purchaseInfo.purchaseId}_$!{purchaseInfo.materialName}"/>
+            </td>
+            <td>$!{purchaseInfo.materialName}</td>
+            <td>$!{purchaseInfo.purchaseBatch}</td>
+            <td>$!{purchaseInfo.supplierName}</td>
+        </tr>
+        #end
+    </table>
+</div>

@@ -1,0 +1,194 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+    #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>商品追踪</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+<div class="container content moni_trace">
+    <div class="row">
+        <div class="searchArea">
+            <div class="panel-body">
+            <ul id="myTab" class="nav nav-tabs">
+                <li class="active"><a href="#double" data-toggle="tab">产品条码+产品批次</a></li>
+                <li><a href="#single" data-toggle="tab">溯源码</a></li>
+            </ul>
+             <form action="" onsubmit="return false;" id="track">
+                 <div id="myTabContent" class="tab-content ssbtnbox">
+                            <div class="tab-pane fade clearfix in active" id="double">
+                                <label class="control-label">产品条码</label>
+                                <div class="rows">
+                                    <input type="text" id="skuBarCode" name="skuBarCode" class="form-control" />
+                                </div>
+                                <label class="control-label ">产品批次</label>
+                                <div class="rows">
+                                    <input type="text" id="skuBatch" name="skuBatch" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="tab-pane fade clearfix" id="single">
+                                <label class="control-label ">追溯码</label>
+                                <div class="rows">
+                                    <input type="text" name="productIdCode" id="productIdCode"  class="form-control" />
+
+                                </div>
+                            </div>
+                <div class="ssbtn">
+                <div class="rows">
+                    <button type="button" onclick="goSearch()" class="btn btn-blue"><i class="iconfont icon-shangpinzhuizong"></i>商品追踪</button>
+                </div>
+               </div>
+
+                <div class="clear"></div>
+                 </div>
+                </form>
+
+        </div>
+        </div>
+        <div id="pagelist" class="tab_cont col-sm-12">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+
+                </h4>
+            </div>
+            <div class="modal-body" id="editContext">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</body>
+#parse("/layout/sys_js.vm")
+<script src="${RESOURCE_PATH}/js/sys/sys.js"></script>
+<script src="${RESOURCE_PATH}/js/echarts-2.2.7 2/build/dist/echarts.js"></script>
+<script type="text/javascript">
+    function goSearch(){
+        var ret=false;
+        if($("#productIdCode").val()!=''){
+            ret=true;
+        }else if($("#skuBarCode").val()!=''&&$("#skuBatch").val()!=''){
+            ret=true;
+        }
+        if(ret){
+            var data = $("#track").serialize();
+            $("#pagelist").load("${rc.ContextPath}/track/list.do",data);
+        }else{
+            alert("请输入追溯码或产品编号和产品批次");
+        }
+
+    }
+##    function showTree(){
+##        jQuery.ajax({
+##            type: "POST",
+##            url: "${rc.ContextPath}/track/tree.do",
+##            data:data,
+##            success: function(data){
+##                // 路径配置
+##                require.config({
+##                    paths: {
+##                        echarts: '${RESOURCE_PATH}/js/echarts-2.2.7 2/build/dist'
+##                    }
+##                });
+##                require(	[
+##                            'echarts',
+##                            'echarts/chart/tree'   // 使用柱状图就加载line模块，按需加载
+##                        ],
+##                        function	(ec){
+##                            // 基于准备好的dom，初始化echarts图表
+##                            var myChart=ec.init(document.getElementById('relation_chart'));
+##                            //参数配置
+##                            option = {
+##                                title : {
+##                                    text: '酸牛奶2016-02-01批次追踪信息图',
+##                                    textStyle: {
+##                                        color: '#00A9F1',
+##                                        fontSize: 20
+##                                    }
+##                                },
+##                                toolbox: {
+##                                    show : true,
+##                                    feature : {
+##                                        mark : {show: true},
+##                                        dataView : {show: true, readOnly: false},
+##                                        restore : {show: true},
+##                                        saveAsImage : {show: true}
+##                                    }
+##                                },
+##                                series : [
+##                                    {
+##                                        name:'树图',
+##                                        type:'tree',
+##                                        orient: 'horizontal',  // vertical horizontal
+##                                        rootLocation: {x: 100,y: 230}, // 根节点位置  {x: 100, y: 'center'}
+##                                        nodePadding: 20,
+##                                        layerPadding: 150,
+##                                        hoverable: false,
+##                                        roam: false,
+##                                        symbolSize: 15,
+##                                        itemStyle: {
+##                                            normal: {
+##                                                color: '#4883b4',
+##                                                label: {
+##                                                    show: true,
+##                                                    position: 'right',
+##                                                    formatter: "{b}",
+##                                                    textStyle: {
+##                                                        color: '#000',
+##                                                        fontSize: 5
+##                                                    }
+##                                                },
+##                                                lineStyle: {
+##                                                    color: '#ccc',
+##                                                    type: 'curve' // 'curve'|'broken'|'solid'|'dotted'|'dashed'
+##
+##                                                }
+##                                            },
+##                                            emphasis: {
+##                                                color: '#4883b4',
+##                                                label: {
+##                                                    show: false
+##                                                },
+##                                                borderWidth: 0
+##                                            }
+##                                        },
+##
+##                                        data: [{
+##                                            "name":"冰桶挑战",
+##                                            "children":[{
+##                                                "name":"刘德华",
+##                                                "children":[{
+##                                                    "name":"张惠妹"
+##                                                },{
+##                                                    "name":"张家辉"
+##                                                }]
+##                                            },{
+##                                                "name":"郭富城"
+##                                            } ,{
+##                                                "name":"梁朝伟"
+##                                            }]
+##                                        }]
+##
+##                                    }
+##                                ]
+##                            };
+##
+##                            myChart.setOption(option);
+##                        }
+##                );
+##
+##            }
+##        });
+##    }
+</script>
+</html>

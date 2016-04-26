@@ -1,0 +1,59 @@
+<div id="codes" class="col-sm-10 col-sm-offset-2">
+	<input type="hidden" name="type" id="type" value="$!{type}"/>
+	   #if($codedetails.size() > 0)
+    	#if($type==1)
+    		<table class="table table-bordered table-hover table-striped infotable">
+                <tr>
+                    <td></td>
+                    <td>产品标识码</td>
+                </tr>
+        		#foreach($detail in $codedetails)
+                <tr>
+    				<td><input type="checkbox" name="buildIds" value="$!{detail.codeNumber}"/></td>
+                    <td>$!{detail.codeNumber}</td>
+                </tr>
+        		#end
+    		</table>
+		<button type="button" class="btn btn-success fr m-t-sm" onclick="goSure()"><i class="iconfont icon-zhengque"></i>确认</button>
+		#else
+			<table class="table table-bordered table-hover table-striped infotable">
+            <tr>
+                <td></td>
+                <td>装箱标识码</td>
+            </tr>
+    		#foreach($detail in $codedetails)
+            <tr>
+				<td><input type="radio" onclick="packSure('$!{detail.codeNumber}')" /></td>
+                <td>$!{detail.codeNumber}</td>
+            </tr>
+    		#end
+		</table>
+		#end
+      #else
+		<font style="color:red">没查询到该产品的附码信息</font>
+		<button type="button" class="btn btn-default fr" onclick="goClose()"><i class="iconfont icon-cuowu"></i>关闭</button>	
+	  #end
+</div>
+<script>
+     function goSure(){
+	    var codestring = "";
+		$("input:checked",$("#codes")).each(function (){
+    	   codestring = codestring + $(this).val()+";";
+        });
+		$("#codelist").val(codestring);
+		$("#skucodelist>div").slideUp()
+	 }
+	 
+	 function packSure(packNum){
+		$("#packingIdCode").val(packNum);
+		$("#packcodelist>div").slideUp();        
+	 }
+	 
+	 function goClose(){
+	   if($type==1){
+		  $("#skucodelist>div").slideUp()
+		}else{
+		  $("#packcodelist>div").slideUp();
+		}
+	 }
+</script>

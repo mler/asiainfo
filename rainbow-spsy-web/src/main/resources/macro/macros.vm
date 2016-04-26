@@ -1,0 +1,33 @@
+#macro (demo $productList)   
+    #set ($rowCount = 1)               
+    #foreach($product in $productList)             
+    #if ($rowCount % 2 == 0)   
+        #set ($bgcolor = "#FFFFFF")   
+    #else   
+        #set ($bgcolor = "#CCCCCC")            
+    #end   
+        <tr>  
+            <td bgcolor="$bgcolor">$product</td>  
+            <td bgcolor="$bgcolor">$product</td>  
+        </tr>                          
+        #set ($rowCount = $rowCount + 1)   
+    #end   
+#end
+
+#macro (pagination)
+		<div>
+    		<input type="hidden" value="${pageinfo.pageStart}" id="pageStart" />
+            <input type="hidden" value="${pageinfo.pageCount}" id="pageCount"/>
+            <input type="hidden" value="${pageinfo.totalCount}" id="totalCount"/>
+            <input type="hidden" value="${pageinfo.pageNumber}" id="pageNumber"/>
+            <input type="hidden" value="${pageinfo.pageSize}" id="pageSize"/>
+		</div>
+#end
+
+#macro(paginationDiv)
+	<div id="pp" class="pageBar" oldCondition="" style="background:#efefef;border:1px solid #ccc;" ppath="$!{request.ContextPath}"></div>
+#end
+
+#macro(ErrorClew)
+	<div class="ErrorClew" style="display:none"></div>
+#end

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ORGI_PAGE展示页</title>
+
+    #parse("sys_param.vm")
+
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/css/app-v1.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/global.css"/>
+    <!--
+    作者：wulz
+    时间：2015-08-18
+    描述：字体文件
+    -->
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.woff" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.svg" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.ttf" type="text/css">
+    <script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/jquery-1.11.1.js"></script>
+</head>
+<body>
+<section class="container">
+    <header class="C">
+        <h1>Excel上传测试</h1>
+    </header>
+    <div class="tablebox m-t-lg">
+        <form role="form" action="$!{CONTEXT_PATH}/excelUpload" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="rowStart" value="3" />
+            <input type="hidden" name="colTotal" value="8" />
+            <input type="hidden" name="serviceKey" value="purchase" />
+
+            <div class="form-group">
+                <label for="inputfile">文件输入</label>
+                <input type="file" id="inputfile" name="file">
+                <p class="help-block">请选择Excel文件</p>
+            </div>
+
+            <button type="submit" class="btn btn-default">提交</button>
+        </form>
+    </div>
+</section>
+
+</body>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+</script>
+</html>

@@ -1,0 +1,221 @@
+#parse("sys_param.vm")
+##<link rel="stylesheet" href="$RESOURCE_PATH/css/jquery-ui.css" />
+<link rel="stylesheet" href="$RESOURCE_PATH/css/autocomplete.css" />
+<form method="POST" action="$!{CONTEXT_PATH}/monitor/${nextAction}?checkPlanType=3" id="monitorEdit" onsubmit="return false">
+    <div class="form-group">
+        <label class="control-label col-sm-2">巡检任务编号</label>
+#if(${nextAction}=='update')
+    <input type="hidden" value="${obj.ydzfMonitorPlan.monitorPlanId}" name="monitorPlanId">
+    <input type="hidden" value="${obj.ydzfMonitorPlan.monitorTempletId}" name="monitorTempletId">
+
+#end
+        <div class="col-sm-4">
+#if(${nextAction}=='create')
+           ${planCode}
+    <input type="hidden" value="${planCode}"name="checkPlanCode"/>
+    #else ${obj.ydzfMonitorPlan.checkPlanCode}
+        <input type="hidden" value="${obj.ydzfMonitorPlan.checkPlanCode}"name="checkPlanCode"/>
+      #end
+
+        </div>
+        <label class="control-label col-sm-2">任务制定部门</label>
+        <div class="col-sm-4">
+#if(${nextAction}=='create')
+            ${dept.deptName}
+    <input type="hidden" value="${dept.deptId}"name="checkPlanCreatDepId"/>
+    #else   $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfMonitorPlan.checkPlanCreatDepId}", "","urs")
+        <input type="hidden" value="$!{obj.ydzfMonitorPlan.checkPlanCreatDepId}"name="checkPlanCreatDepId"/>
+#end
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">任务制定人</label>
+        <div class="col-sm-4">
+#if(${nextAction}!='update')
+    ${username}
+    <input type="hidden" value="${userId}"name="checkPlanCreatUserCode"/>
+    #else   $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfMonitorPlan.checkPlanCreatUserCode}", "","urs")
+        <input type="hidden" value="$!{obj.ydzfMonitorPlan.checkPlanCreatUserCode}"name="checkPlanCreatUserCode"/>
+#end
+
+        </div>
+        <label class="control-label col-sm-2">任务制定时间</label >
+        <div class="col-sm-4">
+#if(${nextAction}!='update')
+         ${time}
+    <input type="hidden" value="${time}"name="checkPlanCreatCreatDate"/>
+    #else    $!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanCreatCreatDate})
+        <input type="hidden" value="$!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanCreatCreatDate})"name="creatDate"/>
+#end
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" style="line-height:30px;">巡检单位</label>
+        <div class="col-sm-10">
+
+            <div class="searchArea" style="padding:0px;">
+                <div class="inputbox form-control">
+                    <select name="checkExecuteDepId" class="form-control">
+                     <option value="">请选择</option>
+                     #foreach($dep in $depts)
+                         <option value="$!{dep.deptId}" #if(${obj.ydzfMonitorPlan.checkPlanCreatDepId}==${dep.deptId})
+                       selected  #end>$!{dep.deptName}</option>
+
+                          #end
+
+
+</select>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" style="line-height:30px;">任务计划执行时间</label>
+        <div class="col-sm-10">
+            <div class="searchArea" style="padding:0px;">
+                <div class="form-group">
+                    <div class="inputbox form-control" style="margin-right:0px;">
+                        <input type="text" name="beginDate" value="$!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanBeginDate})"class="date1 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                        <i class="iconfont icon-date"></i>
+                    </div>
+
+                    <div class="inputbox form-control">
+                        <input type="text" name="endDate" value="$!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanEndDate})"class="date2 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                        <i class="iconfont icon-date"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">巡查类别</label>
+        <div class="col-sm-10 CaseReviewRadio DailySupervision">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios1" value=" 食品生产"#if(${obj.ydzfMonitorPlan.checkEnterpriseType}==" 食品生产")checked="checked"#end >
+                    食品生产
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value=" 食品流通" #if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="食品流通")checked="checked"#end>
+                    食品流通
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value="餐饮服务" #if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="餐饮服务")checked="checked"#end>
+                    餐饮服务
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value="药品、医疗器械生产"#if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="药品、医疗器械生产")checked="checked"#end>
+                    药品、医疗器械生产
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value="药品、医疗器械经营"#if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="药品、医疗器械经营")checked="checked"#end>
+                    药品、医疗器械经营
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value="医疗机构"#if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="医疗机构")checked="checked"#end>
+                    医疗机构
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="checkEnterpriseType" id="optionsRadios2" value="化妆品经营"#if(${obj.ydzfMonitorPlan.checkEnterpriseType}=="化妆品经营")checked="checked"#end>
+                    化妆品经营
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" style="line-height:30px;">巡检范围</label>
+            <div class="col-sm-10 inputbox form-control" style="width:200px;">
+
+                    <select class="col-sm-4" name="province" id="province"dict='PROVINCEN' url='$!{CONTEXT_PATH}/cache' linkSelect='city' notnull="true">
+                    </select>
+                    <select class="col-sm-4" name="areaid" id="city"  dict='CITY' url='$!{CONTEXT_PATH}/cache' linkSelect='county' notnull="true">
+                    </select>
+                    <select class="col-sm-4" name="countyid" id="county"  dict='COUNTY' style="margin-right:0px;" notnull="true">
+                    </select>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-2" style="line-height:30px;">监管对象</label>
+        <div class="col-sm-10 CaseReviewRadio">
+            <input type="text" class="FormGroupInput FormGroupInputNew">
+            <button type="button" class="btn_determine" >确定</button>
+            <div class="jgdx_box">
+                <ul>
+                    <li><span>天源海鲜狮子楼</span><a href="#" class="iconfont icon-cuowu"aria-label="Close"></a></li>
+                    <li><span>天源海鲜狮子楼</span><a href="#" class="iconfont icon-cuowu"aria-label="Close"></a></li>
+                    <div class="clear"></div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">备注</label>
+        <div class="col-sm-10">
+            <textarea name="remark" title="请输入备注内容" rows="6" placeholder="请输入备注内容" >$!{obj.ydzfMonitorPlan.remark}</textarea>
+        </div>
+    </div>
+
+
+</form>
+
+<div class="form-group" style=" text-align: center;margin-top: 40px;" >
+    <button type="button" class="btn btn-success" onclick="commit('monitorEdit','monitorQry','cancelId')"><i class="iconfont icon-baocun"></i>保存</button>
+    <button type="button" class="btn btn-default" id="cancelId" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+</div>
+
+
+
+##<script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+##<script type="text/javascript" src="$!{RESOURCE_PATH}/js/jquery-ui.js"></script>
+<script src="$RESOURCE_PATH/js/autocomplete.js"></script>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/jquery.select.js"></script>
+
+<script>
+    $(function(){
+
+        $("#province").selectBDX({dict:'PROVINCE',nullText:'请选择省', parentValue:'', linkSelect:'city',url:'$!{CONTEXT_PATH}/cache',selected:('$!{dept.province}'==''?'610000':'$!{dept.province}')});
+        $("#city").selectBDX({dict:'CITY',nullText:'请选择市',parentValue:('$!{dept.province}'==''?'610000':'$!{dept.province}'),linkSelect:'county',url:'$!{CONTEXT_PATH}/cache',selected:('$!{dept.areaid}'==''?'610400':'$!{dept.areaid}')});
+        $("#county").selectBDX({dict:'COUNTY', nullText:'请选择区',parentValue:('$!{dept.city}'==''?'610400':'$!{dept.areaid}'), url:'$!{CONTEXT_PATH}/cache',selected:'$!{dept.countyid}'});
+
+    });
+</script>
+<script>
+##    var proposals =[];
+##    $(function(){
+##        $(document).ready(function(){
+##
+##            $('#search-form').autocomplete({
+##                hints: proposals,
+##                height: 25,
+##                url:'$!{CONTEXT_PATH}/monitor/searchEnterprise?enterpriseBusinessType='+$("#enterpriseBusinessType").val(),
+##                onSubmit: function(text){
+##                    $('#complaintEnterpriseId').val(text);
+##                }
+##            });
+##
+##        });
+##    });
+
+</script>

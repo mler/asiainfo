@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SYJ_TABLE_BEAN展示页</title>
+
+    #parse("sys_param.vm")
+
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/css/app-v1.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/global.css"/>
+    <!--
+    作者：wulz
+    时间：2015-08-18
+    描述：字体文件
+    -->
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.woff" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.svg" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.ttf" type="text/css">
+    <script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/jquery-1.11.1.js"></script>
+</head>
+<body>
+<section class="container">
+    <header class="C">
+        <h1>SYJ_TABLE_BEAN展示页</h1>
+    </header>
+    <div style="text-align: right;">
+        <input class="btn btn-default" id="back" type="button" value="回退">
+        <input class="btn btn-default" id="execute" type="button" value="执行">
+        <input class="btn btn-default" id="executeAll" type="button" value="执行所有">
+    </div>
+    <div class="tablebox m-t-sm">
+        <table class="table table-hover table-striped  table-bordered">
+            <thead>
+            <th><input type="checkbox" value="$!{tableBean.id}" id="checkAll" /></th>
+            <th>编号</th>
+            <th>表名</th>
+            <th>标题</th>
+            <th>状态</th>
+            <th>总数量</th>
+            <th>正确数量</th>
+            <th>错误数量</th>
+            <th>创建时间</th>
+            <th>更新时间</th>
+            </thead>
+            <tbody>
+                #foreach($tableBean in $rows)
+                <tr>
+                    <td style="text-align: center"><input type="checkbox" value="$!{tableBean.id}" /></td>
+                    <td>$!{tableBean.id}</td>
+                    <td>$!{tableBean.tableName}</td>
+                    <td>$!{tableBean.title}</td>
+                    <td>$!{tableBean.status}</td>
+                    <td>$!{tableBean.total}</td>
+                    <td>$!{tableBean.correct}</td>
+                    <td>$!{tableBean.error}</td>
+                    <td>$!{tableBean.createTime}</td>
+                    <td>$!{tableBean.updateTime}</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+    <ul class="pager">
+        <li class="previous"><a href="javascript:void(0);">&larr; 上一页</a></li>
+        <li><a style="border: 0;">$!{pageInfo.pageNumber}/$!{pageInfo.pageSize}
+            &nbsp;&nbsp;&nbsp;共$!{pageInfo.totalCount}条</a></li>
+        <li class="next"><a href="javascript:void(0);">下一页 &rarr;</a></li>
+    </ul>
+</section>
+
+</body>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.previous a').click(function() {
+            var pageNum = '$!{pageInfo.pageNumber}';
+            if(pageNum == 1) {
+                pageNum = 1;
+            } else {
+                pageNum = pageNum - 1;
+            }
+            location.href = base + '/syjTable/list?pageStart=' + pageNum;
+        });
+
+        $('.next a').click(function() {
+            var pageNum = '$!{pageInfo.pageNumber}', pageSize = '$!{pageInfo.pageSize}';
+            if(pageNum == pageSize) {
+                pageNum = pageSize;
+            } else {
+                pageNum = parseInt(pageNum) + 1;
+            }
+            location.href = base + '/syjTable/list?pageStart=' + pageNum;
+        });
+
+        // 执行
+        $('#execute').click(function() {
+            var ids = '';
+            $('td>input[type=checkbox]:checked').each(function() {
+                var _this = $(this);
+                ids += _this.val() + ',';
+            });
+            $.get(
+                base + '/syj/data',
+                {
+                    ids : ids
+                },
+                function(data) {
+                    location.reload();
+                }
+            );
+        });
+
+        $('#executeAll').click(function() {
+            $.get(
+                base + '/syj/data',
+                function(data) {
+                    location.reload();
+                }
+            );
+        })
+
+        // 回退
+        $('#back').click(function() {
+            var ids = '';
+            $('td>input[type=checkbox]:checked').each(function() {
+                var _this = $(this);
+                ids += _this.val() + ',';
+            });
+            $.get(
+                base + '/syj/back',
+                {
+                    ids : ids
+                },
+                function(data) {
+                    if(data == 'success') {
+                        location.reload();
+                    } else {
+                        alert('回退失败');
+                    }
+                }
+            );
+        });
+
+        $('#checkAll').click(function() {
+            var _this = $(this);
+            if(_this.attr('checked')) {
+                $('td>input:checkbox:checked').each(function() {
+                    $(this).click();
+                });
+                _this.removeAttr('checked');
+            } else {
+                $('td>input:checkbox:checked').each(function() {
+                    $(this).click();
+                });
+                $('td>input:checkbox').each(function() {
+                   $(this).click();
+                });
+                _this.attr('checked', true);
+            }
+        });
+    });
+</script>
+</html>

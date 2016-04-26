@@ -1,0 +1,68 @@
+<div class="form-group">
+    <label class="control-label col-sm-2">文书名称</label>
+    <div class="col-sm-4">
+    #if(${type}=='monitor') $!{obj.monitorTempletName} #elseif(${type}=='inspectCase') ${obj.inspectCaseTempletName} #end
+    </div>
+    <label class="control-label col-sm-2">企业类型</label>
+    <div class="col-sm-4">
+        #if(${type}=='monitor') $!{obj.checkEnterpriseType} #elseif(${type}=='inspectCase') $!cache.getCachedName("BUSINESS_TYPE", "$!{obj.inspectEnterpriseType}","", "urs")#end
+    </div>
+</div>
+#if(${type}=='monitor')
+<div class="form-group">
+    <label class="control-label col-sm-2">巡检类型</label>
+    <div class="col-sm-4">
+         $!{obj.checkEnterpriseType}
+    </div>
+    <label class="control-label col-sm-2">内容</label>
+    <div class="col-sm-4">
+        $!{obj.monitorTempletContent}
+    </div>
+</div>
+#elseif(${type}=='inspectCase')
+<div class="form-group">
+    <label class="control-label col-sm-2">内容</label>
+    <div class="col-sm-4">
+        $!{obj.inspectCaseTempletContent}
+    </div>
+</div>
+#end
+<div class="form-group">
+    <label class="control-label col-sm-2">更新人</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_USER_NAME", "$!{obj.updateUserid}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">更新时间</label>
+    <div class="col-sm-4">
+       $!date.format('yyyy-MM-dd ',$!{obj.updateDate})
+    </div>
+</div>
+
+<div class="dailypatrol_info">
+    <h1>文书条目内容</h1>
+    <div class="table_area m-t-sm ">
+        <table class="table table-bordered table-striped table-hover">
+            <tbody>
+            <tr>
+                <th>序号</th>
+                <th>考核内容</th>
+                <th>说明</th>
+                <th>分值</th>
+            </tr>
+            #foreach($content in $lists)
+            <tr>
+                <td>${velocityCount}</td>
+                <td>${content.itemContent} </td>
+                <td>
+                    ${content.itemRemark}
+                </td>
+                <td>
+                    ${content.itemValue}
+                </td>
+            </tr>
+            #end
+
+            </tbody>
+        </table>
+    </div>
+</div>

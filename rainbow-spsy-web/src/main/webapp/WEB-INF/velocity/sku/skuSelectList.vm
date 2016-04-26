@@ -1,0 +1,38 @@
+<div id="selectskuId" class="col-sm-10 col-sm-offset-2">
+	   #if($skus.size() > 0)
+    	<table class="table table-bordered table-hover table-striped infotable">
+            <tr>
+                <td></td>
+                <td>商品名称</td>
+                <td>商品条形码</td>
+				<td>规格</td>
+				<td>保质期</td>
+            </tr>
+    		#foreach($sku in $skus)
+            <tr>
+                <td><input type="radio" value="$!{sku.skuId}" onclick="goSure('$!{sku.skuName}','$!{sku.skuId}','$!{sku.skuBarcode}')"/></td>
+                <td>$!{sku.skuName}</td>
+                <td>$!{sku.skuBarcode}</td>
+				<td>$!{sku.spec}</td>
+				<td>$!{sku.lifeTime}</td>
+            </tr>
+    		#end
+		</table>
+		#else
+			<font style="color:red">没查询到商品信息</font>
+			<button type="button" class="btn btn-default fr" onclick="goClose()"><i class="iconfont icon-cuowu"></i>关闭</button>
+		#end
+</div>
+<script>
+       function goSure(skuName,skuId,skuBarcode){
+         $("#skuId").val(skuId);
+		 $("#skuName").val(skuName);
+		 $("#oldSkuName").val(skuName);
+		 $("#skuBarcode").val(skuBarcode);
+		 $('#selectskuId').slideUp();          
+	   }
+	   
+	   function goClose(){
+	      $('#selectskuId').slideUp();
+	   }
+</script>

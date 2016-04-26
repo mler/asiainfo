@@ -1,0 +1,29 @@
+<table class="table table-bordered table-striped table-hover">
+	<thead>
+		<tr>
+    		<th>经销单位</th>
+			<th>单位负责人</th>
+			<th>联系方式</th>
+			<th>商品入库时间</th>
+			<th>商品出库时间</th>
+    	</tr>
+    </thead>
+	<tbody>
+		#if($passes && $!{passes.size} != 0) 
+			#foreach($pass in $passes)
+                <tr>
+                    <td>$!{pass.inName}</td>
+                    <td>$!{pass.inPrincipal}</td>
+        			<td>$!{pass.inPhone}</td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{pass.inDate})</td>
+                    <td>$!date.format('yyyy-MM-dd HH:mm:ss',$!{pass.outDate})</td>
+                </tr>
+			#end	
+		#else
+			<tr>
+                <td colspan="5" class="noinfo">没有数据记录</td>
+            </tr>
+		#end
+    </tbody>
+</table> 
+

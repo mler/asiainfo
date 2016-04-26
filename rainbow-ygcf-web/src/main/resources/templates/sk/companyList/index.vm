@@ -1,0 +1,150 @@
+#parse("sys_param.vm")
+
+<div class="container content companylist">
+    <div class="row paginationDiv">
+        <div class="map_search ">
+            <form action="$!{CONTEXT_PATH}/company/list" method="post" id="searchForm">
+                <ul>
+    ##                <li><b>企业类型：</b></li>
+    ##                <li><a href="#">全部</a></li>
+    ##                <li><a href="#">食品</a></li>
+    ##                <li><a href="#">药品</a></li>
+    ##                <li class="active"><a href="#">餐饮</a></li>
+    ##                <li><a href="#">保健品</a></li>
+    ##                <li><a href="#">化妆品</a></li>
+    ##                <li><a href="#">医疗器械品</a></li>
+    ##                <li><a href="#">保健品</a></li>
+                </ul>
+                <span class="fr sear">
+                    <label>企业名称：</label>
+                    <input type="text" name="enterpriseName" />
+                    <button type="button" onclick="qryData('searchForm')"><i class="iconfont icon-sousuo"></i>查询</button>
+                </span>
+            </form>
+        </div>
+        <div class="list queryResultList" id="queryResultList">
+
+        </div>
+        #paginationDiv()
+    </div>
+</div>
+
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加监控设备</h4>
+            </div>
+            <div class="modal-body">
+                <div class="modal_wrap">
+                    <div class="compamy_name">
+                        <label class="col-sm-2 control-label">企业名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="eName" disabled />
+                        </div>
+                    </div>
+                    <form id="addForm">
+                        <input type="hidden" name="enterpriseId" value="1">
+                        <table class="table table-bordered table-add">
+                            <tr class="caption">
+                                <th class="check_td">序号</th>
+                                <th>设备名称</th>
+                                <th>设备编号</th>
+                                <th class="check_td">操作</th>
+                            </tr>
+                            <tr>
+                                <td class="order">1</td>
+                                <td><input type="text" class="form-control" name="deviceName" /></td>
+                                <td><input type="text" class="form-control" name="deviceKey" /></td>
+                                <td><a href="javascript:void(0);" class="iconfont icon-shanchu" onclick="del(this)" style="display: none"></a></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div class="panel-body">
+                        <button class="btn btn-default fr btn-addrow"><i class="iconfont icon-jia"></i>新增一行</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border">
+                <button type="button" class="btn btn-success btn-baocun"><i class="iconfont icon-baocun"></i>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+       qryData('searchForm');
+
+        // 新增一行
+        $('.btn-addrow').click(function() {
+            var size = $('.table-add').children('tbody').children('tr').length;
+
+            if(size == 2) {
+                $('.table-add').children('tbody').children('tr:last-child').find('td:last-child').find('a').show();
+            }
+
+            var td1 = '$(<td class="order">' + size + '</td>)';
+            var td2 = '$(<td><input type="text" class="form-control" name="deviceName" /></td>)';
+            var td3 = '$(<td><input type="text" class="form-control" name="deviceKey" /></td>)';
+            var td4 = '$(<td><a href="javascript:void(0);" class="iconfont icon-shanchu" onclick="del(this)"></a></td>)';
+
+            var tr = $('<tr>');
+            tr.append(td1);
+            tr.append(td2);
+            tr.append(td3);
+            tr.append(td4);
+
+            $('.table-add').append(tr);
+        });
+
+        // 保存
+        $('.btn-baocun').click(function() {
+            showMask();
+            $.ajax({
+                url: base + '/device/add',
+                data: $('#addForm').serialize(),
+                type: 'post',
+                success: function(data) {
+                    hideMask();
+                    alert('添加成功');
+
+                    $('#add').modal('hide');
+                },
+                error : function (XMLHttpRequest, textStatus, errorThrown) {
+                    hideMask();
+                    alert('系统错误');
+                }
+            });
+        });
+
+        $('#add').on('show.bs.modal', function (e) {
+            var invoker = $(e.relatedTarget);
+
+            var id = invoker.attr('id');
+            var name = invoker.attr('name');
+
+            $('#add').find('input[name="enterpriseId"]').val(id);
+            $('#add').find('#eName').val(name);
+        });
+    });
+
+    function del(el) {
+        var row = $(el).parents('tr');
+
+        var rows = row.nextAll();
+        for(var i = 0; i < rows.length; i++) {
+            var orderTd = $(rows[i]).find('td:first-child');
+            orderTd.html(orderTd.html() - 1);
+        }
+
+        row.remove();
+
+        var size = $('.table-add').children('tbody').children('tr').length;
+        if(size == 2) {
+            $('.table-add').children('tbody').children('tr:last-child').find('td:last-child').find('a').hide();
+        }
+    }
+</script>

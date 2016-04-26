@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bdx.rainbow.ygcf.mapper.custom.LedgerCustomMapper">
+
+  <select id="selectLedgerGroupByLedgerDate" resultType="java.util.Map" parameterType="java.util.Map">
+      select a.LEDGER_DATE as ledgerDate
+      from t_ygcf_ledger a
+      where is_del = 0
+
+      <if test="param.begDate != null" >
+          and a.LEDGER_DATE >= #{param.begDate}
+      </if>
+
+      <if test="param.endDate != null">
+          and a.LEDGER_DATE &lt;= #{param.endDate}
+      </if>
+
+      <if test="param.enterpriseId != null">
+          and a.enterprise_id = #{param.enterpriseId}
+      </if>
+
+      group by a.LEDGER_DATE
+
+      order by a.LEDGER_DATE desc
+      limit #{param.start}, #{param.count}
+  </select>
+</mapper>

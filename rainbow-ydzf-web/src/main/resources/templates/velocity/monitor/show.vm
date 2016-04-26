@@ -1,0 +1,85 @@
+<div class="form-group">
+    <label class="control-label col-sm-2">巡检任务编号</label>
+    <div class="col-sm-4">
+       ${obj.ydzfMonitorPlan.checkPlanCode}
+    </div>
+    <label class="control-label col-sm-2">任务制定部门</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfMonitorPlan.checkPlanCreatDepId}", "","urs")
+
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">任务制定人</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfMonitorPlan.checkPlanCreatUserCode}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">任务创建时间</label >
+    <div class="col-sm-4">
+        $!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanCreatCreatDate})
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">巡检单位</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfMonitorPlan.checkExecuteDepId}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">任务计划执行日期</label >
+    <div class="col-sm-4">
+        $!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanBeginDate}) 至 $!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanEndDate})
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">执行进度</label>
+    <div class="col-sm-10">
+        <div class="ProgressBarBox">
+            <div class="ProgressBar"><div class="ProgressBarInfo" style="width:${listResultVO.planCountPercent};"></div></div><span>${listResultVO.planCountPercent}</span>
+        </div>
+        <div class="progress_info">
+            #if(${listResultVO.checkPlanStatus}==0)
+                <h1>待巡查<span>1</span></h1>
+                #else
+                    <h1>已巡查<span>2</span></h1>
+            #end
+        </div>
+    </div>
+</div>
+
+
+<div class="AuditObject">
+    <h1>巡检对象</h1>
+    #foreach($corp in $corps )
+    <div class="AuditObjectList">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <i class="iconfont icon-jichabananrenwu greens"></i><h2>$!{corp.manageEnterpriseName}</h2><span>$!cache.getCachedName("BUSINESS_TYPE", "$!{corp.checkEnterpriseType}","", "urs")</span>
+            </div>
+            <div class="col-sm-4">
+                <i class="iconfont icon-jichaduixiang orange"></i><h2 class="audit_object_margin">${corp.legalPerson}</h2><i class="iconfont icon-jichashouji greens"></i><h2>${corp.legalPersonPhone}</h2>
+            </div>
+            <div class="col-sm-2 blue textaling_r">
+                <h2 class="greens">$!cache.getCachedName("DETECTION_RESULT", "${corp.checkTaskResult}","", "urs")</h2>
+            </div>
+        </div>
+        <div class="form-group AuditObjectInfo">
+            <label class="col-sm-2 textaling_r">地址:</label>
+            <div class="col-sm-3">$!{corp.regiAddress}</div>
+            <label class="col-sm-2 textaling_r">抽验人员:</label>
+            <div class="col-sm-3">$!cache.getCachedName("SYS_USER_NAME", "$!{corp.checkTaskUserId}", "","urs")</div>
+            <div class="col-sm-2 textaling_r"> $!date.format('yyyy-MM-dd ',$!{obj.ydzfMonitorPlan.checkPlanCreatCreatDate})</div>
+            <label class="col-sm-2 textaling_r">取证材料:</label>
+            <div class="col-sm-10 ForensicMaterials">
+                <a href="#">1.执法文书.png</a>
+                <a href="#">2.录音取证<i class="iconfont icon-jichayuyin greens"></i></a>
+                <a href="#">3.照片取证.png</a>
+                <a href="#">4.巡查记录表.exl</a>
+            </div>
+##            <label class="col-sm-2 textaling_r">关联案件编号：</label>
+##            <div class="col-sm-10 blue">${corp.monitorPlanRelId}</div>
+        </div>
+    </div>
+
+#end
+</div>
+
+</div>

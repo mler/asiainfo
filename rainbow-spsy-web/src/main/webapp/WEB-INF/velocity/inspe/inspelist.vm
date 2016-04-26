@@ -1,0 +1,40 @@
+#pagination()
+<form id="inspeListForm" name="inspeListForm">
+<table class="table table-bordered table-striped table-hover">
+	<tr>
+		<th><input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('inspeListForm', this.checked, 'productDetectionIds')" /></th>
+  		<th>序号</th>
+        <th>检测对象</th>
+		<th>检测方式</th>
+		<th>检测标准</th>
+		<th>检测批次</th>
+        <th>抽检基数/数量</th>
+		<th>操作</th>
+	</tr>
+	
+	#set($num = 1)
+	#foreach($insp in $inspeInfos)
+		<tr>
+			<td><input type="checkbox" id="productDetectionIds" name="productDetectionIds" value="${insp.productDetectionId}"/></td>
+			<td>$!{num}</td>
+			<td>$!{insp.detectionObjectName}</td>
+			<td>$!cache.getCachedName("DETECTION_MODE","$!{insp.detectionMode}","")</td>
+			<td>$!{insp.detectionStandards}</td>
+			<td>$!{insp.detectionBatch}</td>
+			<td>$!{insp.detectionBaseNum}/$!{insp.detectionNumber}</td>
+			<td><a href="javascript:void(0)" class="modify" onclick="editInfo('${rc.ContextPath}/inspe/update.do?productDetectionId=${insp.productDetectionId}')"><i class="iconfont icon-bianji"></i>修改</a></td>
+		</tr>
+		#set($num = $num + 1)
+	#end
+</table>
+</form>
+<div class="pageBar clearfix">
+	 <ul class="pagination">
+		#if(${pageinfo.pageNumber}>1)
+		<li class="previous"><a href="javascript:void(0)" onclick="goPage(-1)">上一页</a></li>
+		#end
+		#if(${pageinfo.pageSize}>${pageinfo.pageNumber})
+		<li class="next"><a href="javascript:void(0)" onclick="goPage(1)">下一页</a></li>
+		#end
+     </ul>
+</div>

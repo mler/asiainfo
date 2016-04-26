@@ -1,0 +1,81 @@
+#parse("sys_param.vm")
+
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="middle-title">$!{enterpriseInfo.enterpriseName}</h1>
+            <!--info table-->
+            <table class="table infotable">
+                <tr class="caption">
+                    <th colspan="6">基本信息</th>
+                </tr>
+                <tr>
+                    <td>企业名称：</td>
+                    <td>$!{enterpriseInfo.enterpriseName}</td>
+                    <td>企业负责人：</td>
+                    <td colspan="3">$!{enterpriseInfo.legalPerson}</td>
+                </tr>
+                <tr>
+                    <td>企业负责人手机：</td>
+                    <td>$!{enterpriseInfo.legalPersonPhone}</td>
+                    <td>企业状态：</td>
+                    <td colspan="3">$!{enterpriseInfo.status}</td>
+                </tr>
+            </table>
+            <table class="table infotable">
+                <tr class="caption">
+                    <th colspan="6">企业信息</th>
+                </tr>
+                <tr>
+                    <td>经济性质：</td>
+                    <td>$!{enterpriseInfo.enterpriseType}</td>
+                    <td>固定资产(万元)：</td>
+                    <td>$!{enterpriseInfo.regiCapital}</td>
+                    <td>邮政编码：</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>法定代表人：</td>
+                    <td>$!{enterpriseInfo.legalPerson}</td>
+                    <td>法定代表人手机：</td>
+                    <td>$!{enterpriseInfo.legalPersonPhone}</td>
+                    <td>法定代表人身份证号：</td>
+                    <td>$!{enterpriseInfo.legalPersonCert}</td>
+                </tr>
+                <tr>
+                    <td>营业执照号：</td>
+                    <td>$!{enterpriseInfo.businessLicence}</td>
+                    <td>经度纬度：</td>
+                    <td>$!{enterpriseInfo.enterpriseRegiLbs}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>企业联系电话：</td>
+                    <td colspan="5">$!{enterpriseInfo.enterpriseLinkPhone}</td>
+                </tr>
+                <tr>
+                    <td>企业地址：</td>
+                    <td colspan="5">$!{enterpriseInfo.regiAddress}</td>
+                </tr>
+            </table>
+            <table class="table infotable">
+                <tr class="caption">
+                    <th colspan="6">许可信息</th>
+                </tr>
+                <tr>
+                    <td>许可类型：</td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <td>许可范围：</td>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+                    <td>餐次品种：</td>
+                    <td colspan="5"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+#parse("/sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    #parse("head.vm")
+    <link rel="stylesheet" href="$RESOURCE_PATH/css/paper.css" />
+
+</head>
+
+<body>
+
+<div class="SecondLevelMenu" id="templetMenu">
+    <a href="${CONTEXT_PATH}/templet/init?type=monitor"  #if($type=='monitor')class="active" #end target="cont">日常巡检文书</a>
+    <a href="${CONTEXT_PATH}/templet/init?type=inspectCase"  #if($type=='inspectCase')class="active" #end  target="cont" >稽查文书</a>
+</div>
+
+<div class="container content">
+    <div class="row" style="padding-top:20px;">
+        <div class="col-sm-12 paginationDiv">
+            <div class="col-sm-7 ConditionChoice" style="text-align:left;">
+                <div class="searchArea">
+                    <div class="form-group" #if(${type}=='monitor') id="checkEnterpriseType" #else id="inspectEnterpriseType" #end style="margin-right:0px;">
+                        <label> 企业类型：</label>
+                        <a var="" class="active">全部</a>
+                        <a var="001" >食品生产</a>
+                        <a var="002" >食品流通</a>
+                        <a var="003" >餐饮服务</a>
+                        <a var="004" >药品器械生产</a>
+                        <a var="005" >药品器械经营</a>
+                        <a var="006" >医疗机构</a>
+                        <a var="007" >化妆品经营</a>
+                    </div>
+                </div>
+            </div>
+            #if(${type}=='monitor')
+                <div class="col-sm-5 ConditionChoice">
+                    <div class="searchArea">
+                        <div class="form-group" id="checkPlanType" style="margin-right:0px;">
+                            <label>巡检类型：</label>
+                            <a var="" class="active">全部</a>
+                            <a var="1"  >日常</a>
+                            <a var="2" >专项</a>
+                            <a var="3" >抽查</a>
+                            <a var="4" >抽验</a>
+                        </div>
+                    </div>
+                </div>
+            #end
+            <div class="search_area clearfix ">
+                <div class="col-sm-6 SelectAll">
+                    <label class="checkbox" for="checkbox1"><span class="icon"></span><span class="icon-to-fade"></span>
+                        <input type="checkbox" value="" id="checkbox1" onclick="switchKeyBoxes('templetList', this.checked, 'templetIds')">
+                        全选
+                    </label>
+                    <button class="btn btn-success" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/templet/${type}/create?type=${type}', '模版录入')" ><i class="iconfont icon-jia"></i>添加</button>
+                    <button class="btn btn-blue" onclick="changeStatus('templetList', 'templetQry','templetIds', '$!{CONTEXT_PATH}/templet/delete?type=${type}')" ><i class="iconfont icon-shanchu"></i>删除</button>
+                </div>
+                <form class="conditionForm" id="templetQry" method="post" action="${CONTEXT_PATH}/templet/${type}/list">
+                <div class="col-sm-6 ConditionChoice" >
+                    <div class="searchArea">
+                        <div class="form-group" style="margin-right:0px;">
+                            <label>关键字</label>
+                            <input type="text" name="${type}TempletName" class="FormGroupInput" placeholder="请输入关键字">
+                        </div>
+                        <button class="btn btn-primary search" type="button" onclick="submitForm('templetQry')"><i class="iconfont icon-sousuo"></i>查询</button>
+                    </div>
+                </div>
+
+                </form>
+            </div>
+            <div class="table_area m-t-sm TableControl NewFile queryResultList">
+
+            </div>
+            <div class="pageBar clearfix">
+                <span id="pager" class="pager pagination"></span>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--modal start  -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">举报投诉录入</h4>
+            </div>
+            <div class="modal-body addinfo LabelHeight" id="editContext">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end -->
+
+
+
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+<script src="$RESOURCE_PATH/js/bootstrap/js/bootstrap.min.js"></script>
+<script src="$RESOURCE_PATH/js/self.js"></script>
+<script src="$RESOURCE_PATH/js/jquery.pager.js"></script>
+<script type="text/javascript" src="$!{RESOURCE_PATH}/js/pagination_m.js"></script>
+
+</body>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".conditionForm").each(function(){
+            $(this).append('<input type="text" value="不要删除这个input，只有在form里不只有一个input的情况下，在input里按回车才不会提交表单" style="display:none" />')
+        });
+        submitForm('templetQry');
+    });
+//    $("a",$("#templetMenu")).click(function(){
+//        var url=$(this).attr("url");
+//        alert(url);
+//        $(this).parent().find("a").each(function(){
+//            $(this).removeClass('active');
+//        });
+//        $(this).addClass('active');
+//        $("#templetQry").attr('action',url);
+//        submitForm('templetQry');
+//    });
+    $(".searchArea").find("a").on("click", function(){
+        $(this).parent().find("a").each(function(){
+            $(this).removeClass('active');
+        });
+        $(this).addClass('active');
+        var param='';
+        $(".searchArea").find("a").each(function(n){
+            if($(this).attr('class')=='active'){
+                if(param==''){
+                    param=$(this).parent().attr('id')+"="+ $(this).attr('var');
+                }else{
+                    param=param+"&"+$(this).parent().attr('id')+"="+ $(this).attr('var');
+                }
+            }
+        });
+        if(param!=''){
+            var url=$("#templetQry").attr('action');
+            if(url.indexOf("?")!=-1){
+                url=url.substr(0,url.indexOf("?"));
+                url=url+"?"+param;
+            }else{
+                url=url+"?"+param;
+            }
+            $("#templetQry").attr('action',url);
+        }
+        submitForm('templetQry');
+    });
+
+
+</script>
+</html>
+

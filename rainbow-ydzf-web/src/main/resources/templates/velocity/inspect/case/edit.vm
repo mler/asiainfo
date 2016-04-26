@@ -1,0 +1,125 @@
+#parse("sys_param.vm")
+<link rel="stylesheet" href="$RESOURCE_PATH/css/autocomplete.css" />
+<form action="$!{CONTEXT_PATH}/inspect/case/${nextAction}" id="caseEdit" onsubmit="return false">
+    <div class="form-group CaseReview" #if(${nextAction}=='create') style="overflow:inherit;"#end >
+        <label class="control-label col-sm-2">稽查对象</label>
+        #if(${nextAction}=='update')
+            <input type="text" value="${obj.manageEnterpriseName}" readonly class="col-sm-10"  />
+            <input type="hidden" value="$!{obj.ydzfInspectCase.inspectCaseId}" name="ydzfInspectCase.inspectCaseId"/>
+        #else
+            <style>
+                .autocomplete-container{z-index:999;}
+                .proposal-list li{height:auto;}
+                /* 清除浮动 */
+                .clear{ clear:both; height:0px!important;}
+                .proposal-box{background:#fff;}
+
+            </style>
+            <div class="col-sm-5" id="search-form">
+                <input type="hidden" id="complaintEnterpriseId" name="ydzfInspectCase.inspectCaseEnterpriseId" CORP_ID="true" />
+            </div>
+            <input type="hidden" value="" id="enterpriseBusinessType" />
+            <div class="clear"></div>
+        #end
+
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">稽查模版</label>
+        <div class="col-sm-10 inputbox form-control">
+            <select  name="ydzfInspectCase.inspectCaseTempletId" class="form-control">
+                <option value="">请选择</option>
+                #foreach($templet in $templets)
+                    <option value="${templet.inspectCaseTempletId}"
+                        #if(${obj.ydzfInspectCase.inspectCaseTempletId}==${templet.inspectCaseTempletId})
+                            selected #end>
+                        $!{templet.inspectCaseTempletName} </option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">稽查单位</label>
+        <div class="col-sm-10 inputbox form-control">
+            <select name="ydzfInspectCase.inspectCaseMainDepId" class="form-control" onchange="getUser(this.value,'inspectCaseMainUserId')" >
+                #foreach($dept in $depts)
+                    <option value="${dept.deptId}" #if(${obj.ydzfInspectCase.inspectCaseMainDepId}==${dept.deptId})
+                            selected #end>$!{dept.deptName} </option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">稽查人员</label>
+        <div class="col-sm-10 inputbox form-control">
+            <select id="inspectCaseMainUserId" name="ydzfInspectCase.inspectCaseMainUserId" class="form-control">
+                #if(${nextAction}=='update')
+                    <option value="${obj.ydzfInspectCase.inspectCaseMainUserId}"> $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseMainUserId}", "", "urs")</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">协办单位</label>
+        <div class="col-sm-10 inputbox form-control">
+            <select name="ydzfInspectCase.inspectCaseAssistDepId" class="form-control" onchange="getUser(this.value,'inspectCaseMainAssistId')">
+                <option value="">请选择</option>
+                #foreach($dept in $depts)
+                    <option value="$!{dept.deptId}" #if(${obj.ydzfInspectCase.inspectCaseAssistDepId}==${dept.deptId})
+                            selected #end >$!{dept.deptName} </option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">协办人员</label>
+        <div class="col-sm-10 inputbox form-control">
+            <select id="inspectCaseMainAssistId" name="ydzfInspectCase.inspectCaseMainAssistId" class="form-control">
+                #if(${nextAction}=='update')
+                    <option value="$!{obj.ydzfInspectCase.inspectCaseMainAssistId}"> $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseMainAssistId}", "", "urs")</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group CaseReview">
+        <label class="control-label col-sm-2">案件稽查内容</label >
+        <div class="col-sm-10" style="padding:0px;">
+            <textarea name="ydzfInspectCase.inspectCaseContent"  rows="4" placeholder="请输入案件稽查内容">$!{obj.ydzfInspectCase.inspectCaseContent}</textarea>
+        </div>
+    </div>
+</form>
+<div class="form-group" style=" text-align: center;margin-top: 40px;">
+    <button type="button" class="btn btn-success" onclick="commit('caseEdit','inspectQry','cancelId')"><i class="iconfont icon-baocun"></i>提交</button>
+    <button type="button" class="btn btn-default" id="cancelId" data-dismiss="modal"><i class="iconfont icon-cuowu"></i>关闭</button>
+</div>
+<script src="$RESOURCE_PATH/js/autocomplete.js"></script>
+<script>
+    $(function(){
+        $(document).ready(function(){
+            $('#search-form').autocomplete({
+                height: 25,
+                url:'$!{CONTEXT_PATH}/complaint/searchEnterprise',
+                onSubmit: function(text){
+                    $('#complaintEnterpriseId').val(text);
+                }
+            });
+
+        });
+    });
+    function getUser(deptId,target){
+        jQuery.ajax({
+            type: "POST",
+            url: '$!{CONTEXT_PATH}/complaint/getUsers',
+            data: 'deptId='+deptId,
+            success: function (msg) {
+                setOptions(msg.data,target);
+            }
+        });
+    }
+    var setOptions = function(data, target) {
+        var temp_html = "<option value='0'>请选择</option>";
+        $.each(data, function(n, value) {
+            temp_html += "<option value='" + value.userId + "'>" + value.userName + "</option>";
+        });
+        $("#"+target).html(temp_html);
+    };
+</script>

@@ -1,0 +1,46 @@
+<div class="table_area">
+    <form class="userList" id="menuList">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th><input name="all" id="all" type="checkbox" onclick="switchKeyBoxes('menuList', this.checked, 'menuIds')"></th>
+            <th>菜单名称</th>
+            <th>菜单状态</th>
+            <th>菜单上级</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+    #foreach($menu in $menus)
+    <tr>
+        <td class="C"><input name="menuIds" id="menuIds" value="${menu.menuId}" type="checkbox" #if(${menu.menuStatus}==2)
+            disabled
+        #end
+            /></td>
+        <td>${menu.menuName}</td>
+        <td>#if(${menu.menuStatus}==2) 禁用 #else 生效 #end</td>
+        <td>#if(${menu.menuPid} == 0)
+            根目录
+           #else
+            $!cache.getCachedName("MENU_NAME", "${menu.menuPid}", "")
+         #end</td>
+        <td>
+            <a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/sys/menu/update?menuId=${menu.menuId}', '菜单编辑') ">编辑</a>
+            #if(${menu.menuStatus}==2)
+                <a href="javascript:void(0)" onclick="changeStatu( 'menuQry', '$!{CONTEXT_PATH}/sys/menu/changeStatus?menuStatus=1','${menu.menuId}','menuIds') ">启用</a>
+            #end
+
+        </td>
+    </tr>
+    #end
+        </tbody>
+    </table>
+</form>
+    <form class="p_from">
+        <input type='hidden' class='p_startRow'id="pageNumber"  name='pageStart' value='${pageinfo.pageStart}'/>
+        <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+        <input type='hidden' class='p_total'id="pageSize"  name='totalCount' value='$!{pageinfo.totalCount}'/>
+        <input type='hidden' class='p_size' id="pageCount"  value='$!{pageinfo.pageSize}'/>
+        <input type='hidden' class='p_number' id="pageNumbers"  value='$!{pageinfo.pageNumber}'/>
+
+    </form>

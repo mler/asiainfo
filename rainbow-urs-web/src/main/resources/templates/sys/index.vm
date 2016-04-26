@@ -1,0 +1,123 @@
+#parse("sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>权限系统</title>
+    <!-- Bootstrap core CSS -->
+    <link href="$!{CONTEXT_PATH}/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!--link the font css-->
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/iconfont.css" />
+    <!--global css-->
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/css/global.css" />
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/css/paper.css" />
+    <!-- Custom styles for this template -->
+    <link href="$!{CONTEXT_PATH}/css/kitchen.css" rel="stylesheet">
+
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand sys_name" href="#"><i class="iconfont icon-shezhi"></i>用户权限系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><img src="$!{CONTEXT_PATH}/img/user.png" alt="..." class="img-circle"/></li>
+                <li><a href="#">萧十一郎，欢迎您！</a></li>
+                <li><a href="$!{CONTEXT_PATH}/logout"><i class="iconfont icon-tuichu"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-12 main_nav" id="subMenuDiv" >
+        <ul class="nav nav-pills">
+            #foreach($me in ${menuTree.keySet()})
+                #if(${me}==0)
+                    #foreach($item in ${menuTree.get(${me})})
+                        #if(${menuTree.get(${item.menuId})})
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="iconfont $!{item.menuIcon}"></i>$!{item.menuName}
+                                </a>
+                                <ul class="dropdown-menu">
+                              #foreach($meb in ${menuTree.get(${item.menuId})})
+                                    <li><a url="$!{CONTEXT_PATH}${meb.menuUrl}">$!{meb.menuName}</a></li>
+                              #end
+                                </ul>
+                            </li>
+                        #else
+                         <li class=""><a url="$!{CONTEXT_PATH}${item.menuUrl}"><i class="iconfont $!{item.menuIcon}"></i>$!{item.menuName}</a></li>
+                        #end
+                    #end
+                #end
+            #end
+        </ul>
+    </div>
+</nav>
+
+<div class="container content" id="main">
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+
+                </h4>
+            </div>
+            <div class="modal-body" id="editContext">
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="$!{CONTEXT_PATH}/js/jquery-1.11.1.js"></script>
+    <script src="$!{CONTEXT_PATH}/js/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="$!{CONTEXT_PATH}/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="$!{CONTEXT_PATH}/js/jquery.pager.js"></script>
+     <script src="$!{CONTEXT_PATH}/js/sys.js"></script>
+
+</body>
+<script>
+    $(document).ready(function() {
+        $("#subMenuDiv").find("a").on("click", function() {
+            var url = $(this).attr("url");
+            if(url) {
+                $("#main").load(encodeURI(url), function(data) {
+
+
+                });
+
+                $('li').removeClass("active");
+                var cssName= $(this).parent().parent().attr("class");
+                if(cssName=="dropdown-menu"){
+                    $(this).parent().parent().parent().addClass("active");
+                }else{
+                    $(this).parent().addClass("active");
+                }
+            }
+        });
+
+
+    });
+</script>
+</html>
+

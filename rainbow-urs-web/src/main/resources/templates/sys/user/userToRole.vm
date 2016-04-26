@@ -1,0 +1,103 @@
+#parse("sys_param.vm")
+<div class="viewNavMenu" id="menueroledit" >
+<form id="role2menuForm" method="POST" action="$!{CONTEXT_PATH}/sys/role/ybmsaverole2.do"  onsubmit="return false;">
+    <input type="hidden" name="existids" id="existids" value="$!{menuexistids}">
+    <div class="nav_menu">
+        <div id="myjd">
+            <h2>
+                #if($operflag==1)
+                    <span class="navKeyword">
+			 <input type="text" size="7" id="keyword" name="keyword" style="height:15px;border:1px solid RGB(248,115,56);display: none;" placeholder="关键字" value="$!{menuName}" onkeydown="if(event.keyCode==13||event.which==13){goSelectMenu(${roleId})}"/>
+		   </span>
+                #end
+            </h2>
+        </div>
+
+        #foreach($me in ${menus.keySet()}) ##menus 是根据pid区分的Map keyset获取所有key值 这里的key是pid值
+           #if(${me}==0)##是根菜单才有如下操作
+                #foreach($item in ${menus.get(${me})}) ##获取pid=0的 menu集合
+                    <dl id="${item.platId}" style="margin-bottom:0px">
+                        <dt>
+                            <input type="checkbox" id="menuids" class="commonCheck" value="${item.menuId}"
+                                   onclick="checkFaNode(this,${item.menuId},0,checked)"
+                                #if(${role2menus.get(${item.menuId})}) checked=true #end #if($operflag==0) disabled #end/>
+                            #if(${menus.get(${item.menuId})})
+                                <a href="javascript:void(0);" #if($selflag==0) class="plusm" #else class="minus" #end><span onclick="showHideView(this,'viewNavItem${item.menuId}');"></span>${item.menuName}</a>
+                            #else
+                                <a href="javascript:void(0);"><span></span>${item.menuName}</a>
+                            #end
+                        </dt>
+                        #if(${menus.get(${item.menuId})})
+                        <dd id="viewNavItem${item.menuId}" #if($selflag==0) style="display: none;" #else style="display: block;" #end>
+                        #else
+                        <dd id="viewNavItem${item.menuId}" style="display: none;">
+                        #end
+                        <ul>
+                            #foreach($meb in ${menus.get(${item.menuId})})
+                                <li>
+                                    <input type="checkbox" id="menuids" name="menu${meb.menuPid}" value="${meb.menuId}" class="commonCheck" onclick="checkFaNode(this,${meb.menuPid},1,checked)" #if(${role2menus.get(${meb.menuId})}) checked=true #end #if($operflag==0) disabled #end/>
+                                    <a href="javascript:void(0);">${meb.menuName}</a>
+                                </li>
+                            #end
+                        </ul>
+                    </dd>
+                    </dl>
+                #end
+            #end
+       #end
+    </div>
+</form>
+<div class="form-group">
+    #if($operflag==1)
+        <button type="button" class="btn btn-success" onclick="goSaveRole2Menu(${roleId})">提交</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>关闭</button>
+    #end
+</div>
+</div>
+<script>
+    function goSaveRole2Menu(roleid){
+        var menuex = $("#existids").val();
+        var delmenu = "";
+        if($("#keyword").val()!=null && $("#keyword").val()!=""){
+            if(addmenuid!=""){
+                if(delmenuid!=""){
+                    var menue = addmenuid.split(",");
+                    var menud = delmenuid.split(",");
+                    for(var i=0;i<menud.length;i++){
+                        var flag = 0;
+                        for(var j=0;j<menue.length;j++){
+                            if(menud[i]==menue[j]){
+                                flag = 1;
+                            }
+                        }
+                        if(flag==0){
+                            delmenu = delmenu + menud[i]+",";
+                        }
+                    }
+                }
+                menuex = menuex + addmenuid;
+            }else{
+                delmenu = delmenuid;
+            }
+        }else{
+            var inpt = $("#role2menuForm").find("input:checked");
+            inpt.each(function(){
+                menuex=menuex+$(this).val()+",";
+            });
+        }
+
+        $.ajax({
+            type:"post",
+            url: "$!{CONTEXT_PATH}/sys/role/saveRole2.do",
+            data:"roleId="+roleid+"&menus="+menuex+"&menuexist="+delmenu,
+            success:function(msg) {
+                if (msg.success) {
+                    alert(msg.message);
+                    $("#cancel").click();
+                } else {
+                    alert(msg.message);
+                }
+            }
+        });
+    }
+</script>

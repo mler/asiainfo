@@ -1,0 +1,52 @@
+<form  id="moList">
+
+        <table class="table table-bordered table-striped table-hover">
+            <tr>
+                <th><input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('moList', this.checked, 'compIds')" /></th>
+                <th>序号</th>
+                <th>巡检任务编号</th>
+                <th>巡检单位</th>
+                <th>巡检范围</th>
+                <th>任务计划执行开始日期</th>
+                <th>任务计划执行截止日期</th>
+                <th>执行状态</th>
+                <th>操作</th>
+            </tr>
+            #foreach($obj in $rows)
+                #if(${obj.checkPlanType}==2)
+
+    <tr>
+
+        <td><input type="checkbox" name="moplanIds"  value="${obj.monitorPlanId}" #if(${obj.checkPlanStatus}!=0)
+                   disabled
+        #end /></td>
+        <td>$velocityCount </td>
+        <td><a href="#" data-toggle="modal" data-target="#CaseReview"onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/monitor/show?checkPlanType=2&monitorPlanId=${obj.monitorPlanId}', '查看突击检查任务')">${obj.checkPlanCode}</a></td>
+        <td>$!cache.getCachedName("SYS_DEPT", "$!{obj.checkExecuteDepId}", "","urs")</td>
+        <td>$!cache.getCachedName("CITY", "$!{obj.areaid}", "","urs")</td>
+        <td>  $!date.format('yyyy-MM-dd ',$!{obj.checkPlanBeginDate})</td>
+        <td> $!date.format('yyyy-MM-dd ',$!{obj.checkPlanEndDate})</td>
+        <td>#if(${obj.checkPlanStatus}==0)待执行 #elseif(${obj.checkPlanStatus}==1)正在执行#elseif(${obj.checkPlanStatus}==9)完成
+#end</td>
+        <td>#if(${obj.checkPlanStatus}==0)<a href="javascript:void(0)" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/monitor/update?checkPlanType=2&monitorPlanId=${obj.monitorPlanId}', '突击检查任务修改') " class="btn-ca">修改</a>
+           #end
+        </td>
+
+
+
+
+        </tr>
+                #end
+            #end
+   </table>
+</form>
+
+
+<form class="p_from">
+    <input type='hidden' class='p_startRow' id="pageNumber" name='pageStart' value='${pageinfo.pageStart}'/>
+    <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+    <input type='hidden' class='p_total' id="pageSize" name='totalCount' value='$!{pageinfo.totalCount}'/>
+    <input type='hidden' class='p_size' id="pageCount" value='$!{pageinfo.pageSize}'/>
+    <input type='hidden' class='p_number' id="pageNumbers" value='$!{pageinfo.pageNumber}'/>
+
+</form>

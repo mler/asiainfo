@@ -1,0 +1,40 @@
+#parse("sys_param.vm")
+
+<div class="searchArea">
+    <form id="additifForm" action="$!{CONTEXT_PATH}/company/ledgerList" method="post">
+
+        <input type="hidden" name="ledgerType" value="$!{request.getParameter("type")}">
+        <input type="hidden" name="enterpriseId" value="$!{request.getParameter("enterpriseId")}">
+
+        <label>添加剂使用台账日期：</label>
+        <div class="form-group">
+            <div class="inputbox form-control">
+                <input type="text" name="startDate" id="startDate" class="" onclick="WdatePicker({el:'startDate', dateFmt:'yyyyMMdd', maxDate: '#F{$dp.$D(\'endDate\')}'})" readonly style="cursor: pointer;"/>
+                <i class="iconfont icon-date" style="cursor: pointer;"></i>
+            </div>
+            ——
+            <div class="inputbox form-control">
+                <input type="text" name="endDate" id="endDate" class="" onclick="WdatePicker({el:'endDate', dateFmt:'yyyyMMdd', minDate: '#F{$dp.$D(\'startDate\')}'})" readonly style="cursor: pointer;"/>
+                <i class="iconfont icon-date" style="cursor: pointer;"></i>
+            </div>
+        </div>
+    </form>
+
+    <button class="btn btn-primary search" onclick="qryData('additifForm');"><i class="iconfont icon-sousuo"></i>查询</button>
+</div>
+<!--table area-->
+<div class="table_area">
+    <input type="hidden" id="p_number" value="">
+
+    <div class="queryResultList" id="queryResultList">
+    </div>
+
+    #paginationDiv()
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        // 添加剂台账查询
+        qryData('additifForm');
+    });
+</script>

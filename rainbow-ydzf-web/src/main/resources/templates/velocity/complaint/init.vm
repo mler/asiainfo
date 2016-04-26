@@ -1,0 +1,112 @@
+#parse("/sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    #parse("head.vm")
+    <link rel="stylesheet" href="$RESOURCE_PATH/css/paper.css" />
+</head>
+
+<body>
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12 paginationDiv">
+            <div class="searchArea">
+                <form class="conditionForm" id="complaintQry" method="post" action="$!{CONTEXT_PATH}/complaint/list">
+                <div class="form-group">
+                    <label>企业类型：</label>
+                    <div class="inputbox form-control">
+                        <select name="enterpriseBusinessType" class="form-control"  notnull="true" >
+                                 <option value="-1">全部</option>
+                                 <option value="001">食品生产</option>
+                                <option value="002">食品流通</option>
+                                <option value="003">餐饮服务</option>
+                                <option value="004">药品器械生产</option>
+                                <option value="005">药品器械经营</option>
+                                <option value="006">医疗机构</option>
+                                <option value="007">化妆品经营</option>
+                        </select>
+                    </div>
+                    #if($type=='lian')
+                        <label>立案状态：</label>
+                        <div class="inputbox form-control">
+                            <select name="complaintStatus" class="form-control">
+                                <option value="1">待立案</option>
+                                <option value="3">已立案</option>
+                                <option value="4">立案不通过</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="type" value="lian"/>
+                        #else
+                            <label>审核状态：</label>
+                            <div class="inputbox form-control">
+                                <select name="complaintStatus" class="form-control">
+                                    <option value="-1">全部</option>
+                                    <option value="0">待审核</option>
+                                    <option value="1">审核通过</option>
+                                    <option value="2">审核不通过</option>
+                                    <option value="3">已立案</option>
+                                    <option value="4">立案不通过</option>
+                                </select>
+                            </div>
+                    #end
+
+                </div>
+                <button type="button" class="btn btn-primary search" onclick="submitForm('complaintQry')"><i class="iconfont icon-sousuo"></i>查询</button>
+              </form>
+            </div>
+        #if($type!='lian')
+            <div class="search_area clearfix">
+                <div class="col-sm-12">
+                    <button class="btn btn-success" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/complaint/create', '举报投诉录入') "><i class="iconfont icon-jia"></i>添加</button>
+                    <button class="btn btn-blue" onclick="changeStatus('compList', 'complaintQry','compIds', '$!{CONTEXT_PATH}/complaint/delete')"><i class="iconfont icon-shanchu"></i>删除</button>
+                </div>
+            </div>
+        #end
+            <div class="table_area m-t-sm TableControl queryResultList">
+
+            </div>
+            <div class="pageBar clearfix">
+                <span id="pager" class="pager pagination"></span>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--modal start  举报录入 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">举报投诉录入</h4>
+                </div>
+                <div class="modal-body addinfo" id="editContext">
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+    <script src="$RESOURCE_PATH/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="$RESOURCE_PATH/js/self.js"></script>
+    <script src="$RESOURCE_PATH/js/jquery.pager.js"></script>
+    <script type="text/javascript" src="$!{RESOURCE_PATH}/js/pagination_m.js"></script>
+</body>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".conditionForm").each(function(){
+            $(this).append('<input type="text" value="不要删除这个input，只有在form里不只有一个input的情况下，在input里按回车才不会提交表单" style="display:none" />')
+        })
+        submitForm('complaintQry');
+    })
+
+</script>
+</html>
+

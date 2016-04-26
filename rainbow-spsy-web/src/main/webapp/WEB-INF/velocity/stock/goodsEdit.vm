@@ -1,0 +1,247 @@
+#set($X=('/goods/update' == ${nextAction}))
+#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+  <form name="stockEditForm" id="stockEditForm" method="POST" onsubmit="return false">
+	<input type="hidden" id="type" name="type" value="${type}"/>
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">${action}</h4>
+    </div>
+	<div class="modal-body">
+		#if($X)
+			<input type="hidden" id="operationId" name="operationId" value="$!{stock.operationId}"/>
+		#end
+		<div class="form-group">
+			<label class="control-label col-sm-2"><font style="color:red">*</font>产品名称</label>
+            <div class="searInput col-sm-4">
+				<input type="hidden" id="skuId" name="skuId" value="$!{stock.skuId}"/>
+				<input type="hidden" id="oldSkuName" name="oldSkuName" value="$!{stock.skuName}"/>
+				<input type="hidden" id="skuBarCode" name="skuBarCode" value="$!{stock.skuBarcode}"/>
+                <input type="text" class="form-control" id="skuName" name="skuName" value="$!{stock.skuName}" placeholder="输入产品名称查询"/>
+				<a href="javascript:void(0)" class="btn btn-default" onclick="selectSku()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>产品批次</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="skuBatch" name="skuBatch" value="$!{stock.skuBatch}" notnull="true"/>
+            </div>
+        </div>
+        <div id="skudiv" class="form-group search_result"></div>
+		#if($type=='01' || $type=='03')
+    	<div class="form-group">
+    		<label class="control-label col-sm-2">生产日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" class="Wdate form-control" id="productionTime" name="productionTime" value="$!date.format('yyyy-MM-dd',$!{stock.productionDate})" onclick="WdatePicker({lang:'zh-cn'})"/>
+                <i class="iconfont icon-date" onclick="javascript:document.getElementById('productionTime').click();"></i>
+			</div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>入库日期</label>
+            <div class="inputbox col-sm-4">
+                <input type="text" class="Wdate form-control" id="operationTime" name="operationTime" value="$!date.format('yyyy-MM-dd',$!{stock.operationDate})" onclick="WdatePicker({lang:'zh-cn'})"/>
+				<i class="iconfont icon-date" onclick="javascript:document.getElementById('operationTime').click();"></i>
+            </div>	
+        </div>
+		<div class="form-group">
+    		<label class="control-label col-sm-2"><font style="color:red">*</font>装箱编号</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" notnull="true" id="packingNumber" name="packingNumber" value="$!{stock.packingNumber}"/>
+            </div>
+            <label class="control-label col-sm-2">每箱数量</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="packingQuantity" name="packingQuantity" value="$!{stock.packingQuantity}"/>
+            </div>	
+        </div>
+		<div class="form-group">
+    		<label class="control-label col-sm-2"><font style="color:red">*</font>上级经销商</label>
+            <div class="searInput col-sm-4">
+				<input type="hidden" id="supplierId" name="supplyAgencyId" value="$!{stock.supplyAgencyId}"/>
+				<input type="hidden" id="oldSupplierName" name="oldSupplierName" value="$!{stock.supplyAgencyName}" />
+                <input type="text" class="form-control" id="supplierName" name="supplyAgencyName" value="$!{stock.supplyAgencyName}" placeholder="输入商户名称查询"/>
+				<a href="javascript:void(0)" class="btn btn-default" onclick="selectAgency()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2">经办人</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="managerPerson" name="managerPerson" value="$!{stock.managerPerson}"/>
+            </div>	
+        </div>
+		<div id="agecyList" class="form-group search_result"></div>
+		<div id="agencyInfo" class="form-group" style="display:none">
+             <label class="control-label col-sm-2">商户负责人</label>
+             <div class="searInput col-sm-4">
+                 <input type="text" class="form-control" name="agencyManagePerson" id="agencyManagePerson" value="$!{purchaseInfo.managePerson}">
+             </div>
+             <label class="control-label col-sm-2">负责人联系电话</label>
+             <div class="col-sm-4">
+                 <input type="text" class="form-control" name="agencyLinkPhone" id="agencyLinkPhone" value="$!{purchaseInfo.linkPhone}"/>
+             </div>
+        </div>
+		#else
+		<div class="form-group">
+    		<label class="control-label col-sm-2"><font style="color:red">*</font>出库时间</label>
+            <div class="col-sm-4">
+                <input type="text" class="Wdate form-control" notnull="true" id="operationTime" name="operationTime" value="$!{stock.operationDate}" onFocus="WdatePicker({lang:'zh-cn'})"/>
+            </div>
+            <label class="control-label col-sm-2"><font style="color:red">*</font>装箱编号</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" notnull="true" id="packingNumber" name="packingNumber" value="$!{stock.packingNumber}"/>
+            </div>	
+        </div>
+		<div class="form-group">
+    		<label class="control-label col-sm-2"><font style="color:red">*</font>采购经销商</label>
+            <div class="searInput col-sm-4">
+                <input type="hidden" id="supplierId" name="buyAgencyId" value="$!{stock.buyAgencyId}"/>
+				<input type="hidden" id="oldSupplierName" name="oldSupplierName" value="$!{stock.buyAgencyName}"/>
+				<input type="text" class="form-control" id="supplierName" name="buyAgencyName" value="$!{stock.buyAgencyName}" placeholder="输入商户名称查询"/>
+				<a href="javascript:void(0)" class="btn btn-default" onclick="selectAgency()"><i class="iconfont icon-sousuo"></i></a>
+            </div>
+            <label class="control-label col-sm-2">经办人</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="managerPerson" name="managerPerson" value="$!{stock.managerPerson}"/>
+            </div>	
+        </div>
+		<div id="agecyList" class="form-group search_result"></div>
+		<div id="agencyInfo" class="form-group" style="display:none">
+         <label class="control-label col-sm-2">商户负责人</label>
+         <div class="searInput col-sm-4">
+             <input type="text" class="form-control" name="agencyManagePerson" id="agencyManagePerson" value="$!{purchaseInfo.managePerson}">
+         </div>
+         <label class="control-label col-sm-2">负责人联系电话</label>
+         <div class="col-sm-4">
+             <input type="text" class="form-control" name="agencyLinkPhone" id="agencyLinkPhone" value="$!{purchaseInfo.linkPhone}"/>
+         </div>
+     </div>
+		#end
+    </div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="saveStock(1)"><i class="iconfont icon-baocun"></i>保存</button>
+		#if(!$X)
+			<button type="button" class="btn btn-blue" onclick="saveStock(2)"><i class="iconfont icon-shuaxin"></i>保存并继续</button>
+		#end
+    </div>
+</form>
+<script>
+     function selectSku(){
+	    var skuName = $('#skuName').val();
+		if(skuName!=""){
+		 var data={skuName:skuName};
+	     var skuurl = '${rc.ContextPath}/stock/goods/skulist.do';
+	     $("#skudiv").load(skuurl,data,function(){
+  		 	$('#skudiv>div').slideDown();
+         });
+	   }else{
+	     alert("请输入产品名称进行查询");
+		 return false;
+	   }
+	 }
+     
+	 function selectAgency(){    
+		var agencyName = $('#supplierName').val();
+	    if(agencyName!=""){
+	       var agencyurl = '${rc.ContextPath}/agency/shoplist.do?agencyName='+encodeURI(encodeURI(agencyName))
+	       $("#agecyList").load(agencyurl,function(){
+  		 	  $('#agecyList>div').slideDown();
+           });
+	    }else{
+	       alert("请输入商户名称进行查询");
+		   return false;
+	    }
+	 }
+	 
+     function saveStock(type){
+	    var ret = true;
+        $("input,select", $("#stockEditForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}				
+        	 }
+        });
+	  
+	  if(ret){
+			var skuId = $('#skuId').val();
+			var skuName = $('#skuName').val();
+			var oldSkuName = $('#oldSkuName').val();
+			if(skuId==null || skuId==""){
+			   alert('请选择产品');
+			   selectSku();
+			   ret = false;
+			   return false;
+			}else{
+			   if(oldSkuName.indexOf(skuName)>=0){
+        		  $('#skuName').val(oldSkuName);
+        	   }else{
+            	  alert("请选择产品");
+				  $('#skuId').val('');
+            	  selectSku();
+            	  ret = false;
+            	  return false;
+               }
+			}
+			
+			var supplierId = $('#supplierId').val();
+			var oldsupplierName = $('#oldSupplierName').val();
+		    var supplierName = $('#supplierName').val();
+    		if(supplierId==null || supplierId==""){
+    		   var managePerson = $('#agencyManagePerson').val();
+    		   var linkPhone = $('#agencyLinkPhone').val();
+			   var agencydisplay = $('#agencyInfo').css("display");
+			   if(agencydisplay=="block"){
+        		   if(managePerson==""){
+        		      alert("商户负责人不能为空!");
+        			  $('#agencyManagePerson').focus();
+        			  ret = false;
+        			  return false;
+        		   }
+        		   if(linkPhone==""){
+        		      alert("负责人联系电话不能为空!");
+        			  $('#agencyLinkPhone').focus();
+        			  ret = false;
+        			  return false;
+        		   }else{
+        		      if(!checkPhone(linkPhone)){
+        				alert('请输入正确的电话号码')
+        				$('#agencyLinkPhone').focus();
+        				ret = false; 
+        				return false;
+        			 }
+        		   }
+			   }else{
+			      alert('请选择商户信息');
+				  selectAgency();
+				  ret = false;
+				  return false;
+			   }
+    		}else{
+			   if(oldsupplierName.indexOf(supplierName)>=0){
+        		  $('#supplierName').val(oldsupplierName);
+        	   }else{
+            	  alert('请选择商户信息');
+				  $('#supplierId').val('');
+				  selectAgency();
+				  ret = false;
+				  return false;
+               }
+			}
+			
+		}
+		if(ret){
+    	    jQuery.ajax({
+    				url: "${rc.ContextPath}/stock/${nextAction}.do",
+    				data:$("#stockEditForm").serialize(),
+    				type:'POST',
+    				success: function(result){
+    					if(result.success){
+    						alert(result.message);
+    						$('#addPro').modal('hide');
+                            window.location.reload();
+    					}else{
+    					    alert(result.message);
+    					}
+                }
+    		});
+		}
+	 }
+</script>

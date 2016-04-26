@@ -1,0 +1,82 @@
+#parse("sys_param.vm")
+
+#foreach($row in $pageInfo.list)
+
+    <div class="col-sm-2 card b-l">
+        #if($!{row.sex} == '1')
+            <p class="pic_head female"></p>
+        #else
+            <p class="pic_head"></p>
+        #end
+
+        <p class="name">$!{row.fullName}
+            #if($!{row.isneedHealth} == '1')
+                <span>健康证</span>
+            #end
+        </p>
+        <ul>
+            <li><i class="ico1"></i><span>$!{row.post}</span><span class="post">$!{row.jobTitle}</span></li>
+            <li><i class="ico2"></i><span>$!{row.enterpriseName}</span></li>
+            <li><i class="ico3"></i><span>$!{row.personalPhone}</span></li>
+        </ul>
+        <div class="oper clearfix">
+            <div class="col-sm-4 oper_ico1">
+                <a href="javascript:void(0)" onclick="doClick(this)" src="$!{CONTEXT_PATH}/employee/detail?employeeId=$!{row.employeeId}">
+                    <span></span>
+                    <p>查看</p>
+                </a>
+            </div>
+            <div class="col-sm-4 oper_ico2">
+                <a href="javascript:void(0)" onclick="doClick(this)" src="$!{CONTEXT_PATH}/employee/change?employeeId=$!{row.employeeId}">
+                    <span></span>
+                    <p>换证</p>
+                </a>
+            </div>
+            <div class="col-sm-4 oper_ico3">
+                <a href="javascript:void(0)" onclick="doDel('$!{row.employeeId}')">
+                    <span></span>
+                    <p>删除</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+#end
+
+#pagination()
+
+<script type="text/javascript">
+    function doDel(empId) {
+        var del = confirm('确认要删除该员工吗?');
+        if(!del) {
+            return;
+        }
+
+        showMask();
+
+        $.ajax({
+            url: base + '/employee/del',
+            type: 'POST',
+            dataType: 'json',
+            data: {'employeeId': empId},
+            error : function (XMLHttpRequest, textStatus, errorThrown) {
+                hideMask();
+            },
+            success : function (data, textStatus) {
+                if(data.flag) {
+                    location.reload();
+                } else {
+                    hideMask();
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+    function doClick(el) {
+        var _this = $(el);
+
+        load(_this.attr('src'));
+    }
+
+</script>

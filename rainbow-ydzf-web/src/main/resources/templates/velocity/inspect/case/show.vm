@@ -1,0 +1,79 @@
+<div class="form-group">
+    <label class="control-label col-sm-2">投诉编号</label>
+    <div class="col-sm-4">
+        $!{obj.ydzfInspectCase.inspectCaseId}
+    </div>
+    <label class="control-label col-sm-2">投诉创建部门</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfInspectCase.inspectCaseCreatDepId}", "", "urs")
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">投诉创建人</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseCreatUserId}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">投诉创建时间</label >
+    <div class="col-sm-4">
+       $!date.format('yyyy-MM-dd ',$!{obj.ydzfInspectCase.inspectCaseCreatDate})
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">稽查单位</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfInspectCase.inspectCaseMainDepId}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">稽查人员</label >
+    <div class="col-sm-4">
+       $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseMainUserId}", "","urs")
+    </div>
+</div>
+<div class="form-group">
+    <label class="control-label col-sm-2">协办单位</label>
+    <div class="col-sm-4">
+        $!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfInspectCase.inspectCaseAssistDepId}", "","urs")
+    </div>
+    <label class="control-label col-sm-2">协办人员</label >
+    <div class="col-sm-4">
+       $!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseMainAssistId}", "","urs")
+    </div>
+</div>
+<div class="AuditObject">
+    <h1>稽查对象</h1>
+    <div class="AuditObjectList">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <i class="iconfont icon-jichabananrenwu greens"></i><h2>$!{corp.manageEnterpriseName}</h2><span>&nbsp;</span><span>$!cache.getCachedName("BUSINESS_TYPE", "$!{corp.businessType}","", "urs")</span>
+            </div>
+            <div class="col-sm-4">
+                <i class="iconfont icon-jichaduixiang orange"></i><h2 class="audit_object_margin">$!{corp.legalPerson}</h2><i class="iconfont icon-jichashouji greens"></i><h2>$!{corp.legalPersonPhone}</h2>
+            </div>
+            <div class="col-sm-2 blue textaling_r">
+                <h2 class="greens">&nbsp;</h2>
+            </div>
+        </div>
+        <div class="form-group AuditObjectInfo">
+            <label class="col-sm-2 textaling_r">地址:</label>
+            <div class="col-sm-3">$!{corp.regiAddress}</div>
+            <label class="col-sm-2 textaling_r">稽查人员:</label>
+            <div class="col-sm-3">$!cache.getCachedName("SYS_USER_NAME", "$!{obj.ydzfInspectCase.inspectCaseMainUserId}", "","urs")</div>
+            <div class="col-sm-2 textaling_r">&nbsp;</div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="ExecutionStatus">
+    <h1>执行状态</h1>
+    <div class="ES_info">
+        <ul>
+            <li>执行状态</li>
+            <li #if($math.toInteger(${obj.ydzfInspectCase.inspectCaseStatus})< 3)class="invalid" #end>案件审核</li>
+            <li #if($math.toInteger(${obj.ydzfInspectCase.inspectCaseStatus})<2)class="invalid" #end>拟处罚</li>
+            <li #if($math.toInteger(${obj.ydzfInspectCase.inspectCaseStatus})<5 ||${obj.ydzfInspectCase.inspectCaseStatus}==6)class="invalid" #end>执行处罚</li>
+            <li  #if($math.toInteger(${obj.ydzfInspectCase.inspectCaseStatus})<4)class="invalid" #end>听证</li>
+            <li #if($math.toInteger(${obj.ydzfInspectCase.inspectCaseStatus})<7)class="invalid" #end >结案</li>
+        </ul>
+    </div>
+</div>

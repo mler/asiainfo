@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<meta name="description" content="">
+    	<meta name="author" content="">
+		<title>食品质量追溯平台-企业注册</title>
+		<link rel="stylesheet" type="text/css" href="${RESOURCE_PATH}/js/bootstrap/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="${RESOURCE_PATH}/fonts/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="${RESOURCE_PATH}/css/regist.css"/>
+	</head>
+	<body>
+		<div class="header">
+			<div class="container head">
+				<img src="${RESOURCE_PATH}/img/trace_logo.png"/>
+				<span class="web_name">食品质量追溯平台</span>
+				<span class="oper_name">企业注册</span>
+			</div>
+		</div>
+		<div class="container">
+			<form name="registForm" id="registForm" method="POST" onsubmit="return false">
+			<div class="row">
+				<div class="col-sm-6 right">
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>企业名称</label>
+						<div class="col-sm-10">
+                            <input type="text" name="enterpriseName" id="enterpriseName" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>企业类型</label>
+						<div class="col-sm-10">
+							<select name="businessType" id="businessType" class="form-control newico" notnull="true">
+								#foreach($param in $params)
+									<option value="${param.pValue}">$!{param.pDesc}</option>
+								#end
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>组织机构代码</label>
+						<div class="col-sm-10">
+							<input type="text" id="organizationCode" name="organizationCode" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>生产许可证</label>
+						<div class="col-sm-10">
+							<input type="text" id="productionLicense" name="productionLicense" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>流通许可证</label>
+						<div class="col-sm-10">
+							<input type="text" id="circulationLicense" name="circulationLicense" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>企业法人</label>
+						<div class="col-sm-10">
+							<input type="text" name="legalPerson" id="legalPerson" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>法人联系电话</label>
+						<div class="col-sm-10">
+							<input type="text" name="legalPersonPhone" id="legalPersonPhone" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"><font style="color:red">*</font>企业地址</label>
+						<div class="col-sm-10">
+							<input type="text" name="regiAddress" id="regiAddress" class="form-control" notnull="true"/>
+						</div>
+					</div>
+					<div class="form-group C">
+						<button class="btn btn-reg" onclick="register()">立即注册</button>
+					</div>
+				</div>
+				<div class="col-sm-6 left">
+					<img src="${RESOURCE_PATH}/img/title_logo.png" alt="" />
+					<article>
+						<p>亚信数据公司是亚信集团旗下致力于大数据产品和解决方案的软件公司。</p>
+						<p>亚信数据公司以推动数据的高效处理，广泛共享和价值释放，为用户、
+							企业和社会创造财富为使命，凭借自身雄厚的大数据加工和处理的技术优势，
+							以数据资产为核心，以“数据、能力、资本”为纽带，聚合数据资产，领航
+							产业升级，创建产业生态。</p>
+						<p>亚信数据已在大数据全产业链进行布局，拥有BI、橘云分布式计算平台、
+							数据资产管理平台、互联网工具、供应链电商、大数据一体机等软硬件产品线。
+							并与地方政府合作，建立数据交易平台，提出“数据货币化”的交易模式，促
+							进数据合法流通；参与智慧城市及政府大数据平台建设；深入各行业的大数据
+							运营，在电信、金融、公共安全、医疗、保险、交通、教育、广告等行业，积
+							累了丰富的运营经验，在运营过程中汇聚了大量的数据资产。</p>
+					</article>
+				</div>
+			</div>
+          </form>
+		</div>
+	</body>
+	<script src="${RESOURCE_PATH}/js/jquery-1.11.1.js"></script>
+	<script src="${RESOURCE_PATH}/js/common.js"></script>
+    <script>
+	    function register(){
+    		var ret = true;
+            $("input,select", $("#registForm")).each(function(i) {
+        	if($(this).attr("notnull") && $(this).attr("notnull") == "true") {
+        		if ($(this).val() == null || $(this).val() == "") {
+        			alert("带*标记的字段不能为空！");
+        			$(this).focus();
+        			ret = false;
+        			return false;
+        		}
+        	 }
+            });
+			if(ret){
+    			var phone = $('#legalPersonPhone').val();
+    			if(!checkPhone(phone)){
+    				alert('请输入正确的电话号码')
+    				$('#legalPersonPhone').focus();
+    				ret = false; 
+    				return false;
+    			}
+		    }
+	       if(ret){
+		       var username=$('#legalPersonPhone').val();
+    		   jQuery.ajax({
+    				url: "${rc.ContextPath}/enterprise/create.do",
+    				data:$("#registForm").serialize(),
+    				type:'POST',
+    				success: function(result){
+    					if(result.success){
+    						alert(result.message);
+							document.write("<form action=\"${rc.ContextPath}/poplogin.do\" method=\"post\" name=\"formx1\" style=\"display:none\">");
+							document.write("<input type=\"hidden\" name=\"userName\" value=\""+username+"\">");
+							document.write("</form>");
+							document.formx1.submit();							
+    					}else{
+    					    alert(result.message);
+    					}
+                     }
+    		    });
+			}
+		}
+	</script>
+</html>

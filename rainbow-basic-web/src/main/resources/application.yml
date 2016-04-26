@@ -1,0 +1,31 @@
+jdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://10.1.234.158:3306/basicdata
+  username: syj
+  password: syj
+  maxActive: 3
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 3000
+  validationQuery: /* ping */ select 1
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1
+  
+vfsjdbc:
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://60.194.3.163:3306/file_sys
+  username: syj
+  password: syj
+  maxActive: 3
+  maxIdle: 30
+  minIdle: 5
+  maxWait: 3000
+  validationQuery: /* ping */ select 1
+  testOnBorrow: false
+  testOnReturn: false
+  testWhileIdle: true
+  timeBetweenEvictionRunsMillis: 60000
+  minEvictableIdleTimeMillis: -1

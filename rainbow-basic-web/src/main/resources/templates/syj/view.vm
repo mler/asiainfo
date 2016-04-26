@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ORGI_PAGE展示页</title>
+
+    #parse("sys_param.vm")
+
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/css/app-v1.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="$!{CONTEXT_PATH}/css/global.css"/>
+    <!--
+    作者：wulz
+    时间：2015-08-18
+    描述：字体文件
+    -->
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.woff" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.svg" type="text/css">
+    <link rel="stylesheet" href="$!{CONTEXT_PATH}/fonts/fontawesome-webfont.ttf" type="text/css">
+    <script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/jquery-1.11.1.js"></script>
+</head>
+<body>
+<section class="container">
+    <header class="C">
+        <h1>ORGI_PAGE展示页</h1>
+    </header>
+    <div class="tablebox m-t-lg">
+        <table class="table table-hover table-striped  table-bordered">
+            <thead>
+            <th>编号</th>
+            <th>实体类名</th>
+            <th>执行状态</th>
+            <th>解析类型</th>
+            <th>更新时间</th>
+            </thead>
+            <tbody>
+                #foreach($orgiPage in $rows)
+                <tr>
+                    <td>$!{orgiPage.id}</td>
+                    <td>$!{orgiPage.className}</td>
+                    <td>$!{orgiPage.status}</td>
+                    <td>$!{orgiPage.resolveType}</td>
+                    <td>$!{orgiPage.updateDate}</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+    <ul class="pager">
+        <li class="previous"><a href="javascript:void(0);">&larr; 上一页</a></li>
+        <li><a style="border: 0;">$!{pageInfo.pageNumber}/$!{pageInfo.pageSize}
+            &nbsp;&nbsp;&nbsp;共$!{pageInfo.totalCount}条</a></li>
+        <li class="next"><a href="javascript:void(0);">下一页 &rarr;</a></li>
+    </ul>
+</section>
+
+</body>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.previous a').click(function() {
+            var pageNum = '$!{pageInfo.pageNumber}';
+            if(pageNum == 1) {
+                pageNum = 1;
+            } else {
+                pageNum = pageNum - 1;
+            }
+            location.href = base + '/orgipage/list?pageStart=' + pageNum;
+        });
+
+        $('.next a').click(function() {
+            var pageNum = '$!{pageInfo.pageNumber}', pageSize = '$!{pageInfo.pageSize}';
+            if(pageNum == pageSize) {
+                pageNum = pageSize;
+            } else {
+                pageNum = parseInt(pageNum) + 1;
+            }
+            location.href = base + '/orgipage/list?pageStart=' + pageNum;
+        });
+    });
+</script>
+</html>

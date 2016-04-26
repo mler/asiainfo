@@ -1,0 +1,35 @@
+#parse("sys_param.vm")
+<div class="row">
+    <div class="col-sm-12 paginationDiv">
+        <div class="searchArea ">
+            <form class="conditionForm" id="mappQry" method="post" action="$!{CONTEXT_PATH}/sys/mappList">
+                <div class="form-group">
+                    <label>令牌名称</label>
+                    <input type="text" name="token" placeholder="根据令牌门名称检索终端" class="form-control"/>
+                </div>
+                <button type="button" class="btn btn-primary search" onclick="submitForm('mappQry')"><i class="iconfont icon-sousuo"></i>查询</button>
+
+            </form>
+        </div>
+        <div class="btn-list">
+            <button class="btn btn-success" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/sys/mapp/create', '新建终端') "><i class="iconfont icon-jia"></i>新增</button>
+            <button class="btn btn-warning" onclick="changeStatus('mappList', 'mappQry','mappIds', '$!{CONTEXT_PATH}/sys/mapp/changeStatus?valid=0') "><i class="iconfont icon-jinzhi"></i>禁用</button>
+        </div>
+        <div class="list-box clearfix queryResultList">
+
+        </div>
+        <div class="pageBar clearfix">
+            <span id="pager" class="pager pagination"></span>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="$!{CONTEXT_PATH}/js/pagination_m.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".conditionForm").each(function(){
+            $(this).append('<input type="text" value="不要删除这个input，只有在form里不只有一个input的情况下，在input里按回车才不会提交表单" style="display:none" />')
+        })
+        submitForm('mappQry');
+    })
+</script>

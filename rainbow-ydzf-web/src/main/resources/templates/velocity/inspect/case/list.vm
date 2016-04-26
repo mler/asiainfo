@@ -1,0 +1,59 @@
+<form  id="caseList">
+    <table class="table table-bordered table-striped table-hover">
+        <tr>
+            <th><input type="checkbox" name="all" id="all" onclick="switchKeyBoxes('caseList', this.checked, 'caseIds')" /></th>
+            <th>序号</th>
+            <th>案件创建部门</th>
+            <th>稽查对象</th>
+            <th>稽查单位</th>
+            <th>案件创建日期</th>
+            <th>执行状态</th>
+            <th>操作</th>
+        </tr>
+
+        #foreach($obj in $rows)
+            <tr>
+                <td><input type="checkbox" name="caseIds"  value="${obj.ydzfInspectCase.inspectCaseId}"  #if(${obj.ydzfInspectCase.inspectCaseStatus}!='0')
+                    disabled
+                #end /></td>
+                <td>$velocityCount</td>
+                <td>$!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfInspectCase.inspectCaseCreatDepId}", "","urs")</td>
+                <td>${obj.manageEnterpriseName}</td>
+                <td>$!cache.getCachedName("SYS_DEPT", "$!{obj.ydzfInspectCase.inspectCaseMainDepId}", "","urs")</td>
+                <td>$!date.format('yyyy-MM-dd ',$!{obj.ydzfInspectCase.inspectCaseCreatDate})</td>
+                <td>#if(${obj.ydzfInspectCase.inspectCaseStatus}==0)
+                    待执行
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==1)
+                    调查取证
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==2)
+                    拟处罚
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==3)
+                    案件审核
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==4)
+                    听证
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==5)
+                    已执行
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==6)
+                    已执行
+                #elseif(${obj.ydzfInspectCase.inspectCaseStatus}==7)
+                    结案
+                #else
+                    &nbsp;
+                #end</td>
+                <td>#if(${obj.ydzfInspectCase.inspectCaseStatus}=='0')<a href="javascript:void(0)" class="btn-ca" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/inspect/case/update?inspectCaseId=${obj.ydzfInspectCase.inspectCaseId}', '稽查案件修改') ">修改</a>#end
+                    <a href="javascript:void(0)" class="btn-ca" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/inspect/case/show?inspectCaseId=${obj.ydzfInspectCase.inspectCaseId}', '稽查案件查看') ">查看</a>
+                </td>
+            </tr>
+        #end
+
+
+    </table>
+</form>
+<form class="p_from">
+    <input type='hidden' class='p_startRow' id="pageNumber" name='pageStart' value='${pageinfo.pageStart}'/>
+    <input type='hidden' class='p_count' name='pageCount' value='$!{pageinfo.pageCount}'/>
+    <input type='hidden' class='p_total' id="pageSize" name='totalCount' value='$!{pageinfo.totalCount}'/>
+    <input type='hidden' class='p_size' id="pageCount" value='$!{pageinfo.pageSize}'/>
+    <input type='hidden' class='p_number' id="pageNumbers" value='$!{pageinfo.pageNumber}'/>
+
+</form>

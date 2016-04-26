@@ -1,0 +1,37 @@
+#set($layout="/sk/company/layout.vm")
+#parse("sys_param.vm")
+
+<ul>
+    #foreach($row in $pageInfo.list)
+        <li>
+            <div class="fl">
+                <p class="com_name"><i class="iconfont icon-iconfontqiye">$!{row.enterpriseName}</i><span>$!{row.legalPerson}</span><span><i class="iconfont icon-shouji"></i>$!{row.legalPersonPhone}</span></p>
+                <p class="other_info">
+                    <span>地址：$!{row.regiAddress}</span>
+##                    <span>发证机关：咸阳市食药监局长 </span>
+                    <span>管辖机关：$!{row.areaCode}</span>
+                </p>
+            </div>
+            <div class="fr">
+                <a href="javascript:void(0);" onclick="doClick(this)" src="$!{CONTEXT_PATH}/company/monitor?id=$!{row.enterpriseId}&from=l"><i class="iconfont icon-shipinjiankong"></i><p>视频监控</p></a>
+                <a href="javascript:void(0);" onclick="doClick(this)" src="$!{CONTEXT_PATH}/company/companySimple?id=$!{row.enterpriseId}"><i class="iconfont icon-iconfontqiye"></i><p>企业信息</p></a>
+                <a href="javascript:void(0);" onclick="doClick(this)" src="$!{CONTEXT_PATH}/company/companyHealthStat?enterpriseId=$!{row.enterpriseId}&from=l"><i class="iconfont icon-idcard"></i><p>健康证</p></a>
+                <a href="javascript:void(0);" onclick="doClick(this)" src="$!{CONTEXT_PATH}/company/ledgerInfo?enterpriseId=$!{row.enterpriseId}"><i class="iconfont icon-jichutaizhangguanli"></i><p>台账</p></a>
+                <a href="#add" data-toggle="modal" id="$!{row.enterpriseId}" name="$!{row.enterpriseName}"><i class="iconfont icon-jia"></i><p>添加监控</p></a>
+            </div>
+        </li>
+    #end
+</ul>
+
+#pagination()
+
+<script type="text/javascript">
+    $(function() {
+
+    });
+
+    function doClick(el) {
+        var _this = $(el);
+        load(_this.attr('src'));
+    }
+</script>

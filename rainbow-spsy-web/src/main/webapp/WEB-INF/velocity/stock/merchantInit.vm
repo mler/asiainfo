@@ -1,0 +1,65 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>零售商出库信息管理</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+<div class="container content">
+    <div class="row">
+       <div class="col-sm-12">
+	        <div class="search_area clearfix">
+	        	<div class="col-sm-12">
+		        	<button class="btn btn-success" data-toggle="modal" onclick="editInfo('${rc.ContextPath}/stock/merchant/create.do')"><i class="iconfont icon-jia"></i>添加</button>
+		        	<!--<button class="btn btn-warning" data-toggle="modal" data-target="#upload"><i class="iconfont icon-shangchuan"></i>批量上传</button>-->
+	        	</div>
+	        </div>
+		    <div id="pagelist" class="table_area m-t-sm"></div>
+	   </div>
+   </div>
+</div>
+<div class="modal fade" id="addPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+	   <div class="modal-content">
+		 #parse('/stock/merchantEdit.vm')
+       </div>
+	</div>
+</div>
+##parse("/layout/uploadfile.vm")
+#parse('/layout/sys_js.vm')
+</body>
+<script type="text/javascript">
+    $(document).ready(function() { 
+	   goSearch(1);
+	   //移除数据，让模态框打开时重新加载数据
+	   $("#addPro").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+       });
+    });
+	
+	function goSearch(page){
+	  var data ={pageStart:page};
+	  $("#pagelist").load("${rc.ContextPath}/stock/merchant/list.do",data);
+	}
+	
+	function goPage(page){
+	   var currpage = $("#pageNumber").val();
+       var nextpage;
+       if(page>0){
+          nextpage = parseInt(currpage)+1;
+       }else{
+          nextpage = parseInt(currpage)-1;
+       }
+	   goSearch(nextpage);
+	}
+	
+	function editInfo(url){
+	   $("#addPro").modal({
+	      remote:url,
+		  backdrop:'static'
+	   });
+	}
+</script>
+</html>

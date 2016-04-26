@@ -1,0 +1,68 @@
+#parse("sys_param.vm")
+<style type="text/css">
+    .ax {
+        font-family: 'Arial Normal', 'Arial';
+        font-weight: 400;
+        font-style: normal;
+        font-size: 13px;
+        color: #000000;
+        text-align: center;
+        line-height: normal;
+        width: 1130px;
+        height:134px;
+    }
+</style>
+<form class="form-horizontal goodsAdd" id="paramCreateForm"  action="$!{CONTEXT_PATH}/sys/param/${nextAction}" method="post" >
+                <div class="form-group ga-m-b">
+                    <!-- 根据类目获取详细输入信息 -->
+                    <label class="col-sm-4 control-label m-t-xs" >
+                         参数名称：
+                    </label>
+
+                    <div class="col-sm-8 regcon_mb" >
+
+                        <input type="text" id="pKey" name="pKey" class="form-control" value="$!{obj.pKey}" notnull="true" >
+                        <input type="hidden" name="keyId"  class="form-control" value="$!{obj.pKey}">
+                    </div>
+                </div>
+                <div class="form-group ga-m-b">
+                    <label class="col-sm-4 control-label m-t-xs" >
+                        参数代号：
+                    </label>
+                    <div class="col-sm-8 regcon_mb" >
+                        <input type="text" name="pValue"  class="form-control" value="$!{obj.pValue}" notnull="true">
+                       <input type="hidden" name="valueId"  class="form-control" value="$!{obj.pValue}">
+                    </div>
+
+                </div>
+                <div class="form-group ga-m-b">
+                    <label class="col-sm-4 control-label m-t-xs">
+                        参数描述：
+                    </label>
+                    <div class="col-sm-8 regcon_mb" >
+                        <input type="text" name="pDesc"  class="form-control" value="$!{obj.pDesc}" notnull="true">
+                    </div>
+
+                </div>
+
+
+            </form>
+    <!--脚部-->
+        <div class="form-group" style=" text-align: center;margin-top: 40px;">
+                <button type="button" class="btn btn-success" onclick="saveInfo('paramQry','paramCreateForm','cancel')"><i class="iconfont icon-baocun"></i>保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="cancel"><i class="iconfont icon-cuowu"></i>取消</button>
+        </div>
+
+<script>
+   /* function getMenuPid(value){
+        if(!isNaN(value)) {
+            $.ajax({
+                url: "$!{CONTEXT_PATH}/sys/menu/getMenuPid?platId=" + value,
+                type: "get",
+                success: function (data) {
+                    setOptions(data, "menuPid");
+                }
+            });
+        }
+    }*/
+</script>

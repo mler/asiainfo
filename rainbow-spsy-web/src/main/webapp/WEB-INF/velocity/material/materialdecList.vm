@@ -1,0 +1,44 @@
+<div class="col-sm-10 col-sm-offset-2">
+    #if($purchaseInfos.size() > 0)
+	<table class="table table-bordered table-hover table-striped infotable">
+        <tr>
+            <th>&nbsp;</th>
+            <th>原料名称</th>
+            <th>批次号</th>
+            <th>供应商</th>
+			<th>采购时间</th>
+        </tr>
+		#foreach($purchaseInfo in $purchaseInfos)
+        <tr>
+            <td>
+                <input type="radio" name="purchaseIds" id="purchaseIds" onclick="goSure('$!{purchaseInfo.purchaseId}','$!{purchaseInfo.materialName}','$!{purchaseInfo.purchaseBatch}','$!date.format('yyyy-MM-dd',${purchaseInfo.purchaseTime})')" value="$!{purchaseInfo.purchaseId}"/>
+            </td>
+            <td>$!{purchaseInfo.materialName}</td>
+            <td>$!{purchaseInfo.purchaseBatch}</td>
+            <td>$!{purchaseInfo.supplierName}</td>
+			<td>$!date.format('yyyy-MM-dd',${purchaseInfo.purchaseTime})</td>
+        </tr>
+        #end
+    </table>
+	#else
+        <font style="color:red">没有查询到原材料信息</font>
+		<button type="button" class="btn btn-default fr" onclick="goClose()"><i class="iconfont icon-cuowu"></i>关闭</button>
+	#end
+</div>
+<script>
+	function goSure(purchaseId,materialName,batch,purchaseTime){
+	    if (confirm("你确定选择原材料:"+materialName)) {
+		    $("#skuId").val(purchaseId);
+            $("#purchaseId").val(purchaseId);
+			$("#skuName").val(materialName);
+			$('#oldSkuName').val(materialName);
+			$('#detectionBatch').val(batch);
+			$('#productionTime').val(purchaseTime);
+			$('#objList>div').slideUp();
+        } 
+	 }
+	 
+	 function goClose(){
+	 	$('#objList>div').slideUp();
+	 }
+</script>

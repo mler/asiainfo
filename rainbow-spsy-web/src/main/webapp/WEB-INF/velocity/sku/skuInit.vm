@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	#set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>企业商品信息管理</title>
+    #parse('/layout/head.vm')
+</head>
+
+<body>
+  <div class="container content">
+	<div class="row">
+        <div class="col-sm-12">
+	        	<div class="search_area clearfix">
+	        		<div class="col-sm-4">
+		        		<button class="btn btn-success" data-toggle="modal" onclick="editInfo('${rc.ContextPath}/sku/create.do')"><i class="iconfont icon-jia"></i>添加</button>
+		        		<button class="btn btn-blue" onclick="goDel()"><i class="iconfont icon-shanchu"></i>删除</button>
+		        		<button class="btn btn-warning" data-toggle="modal" data-target="#upload" data-backdrop="static"><i class="iconfont icon-shangchuan"></i>批量上传</button>
+	        		</div>
+	        		<div class="col-sm-5 col-sm-offset-3 ser_group">
+	        			<input type="text" id="keyword" name="keyword" class="form-control" placeholder="输入商品名称或条码信息"/>
+	        			<button class="btn btn-blue" onclick="goSearch(1)"><i class="iconfont icon-sousuo"></i>查询</button>
+	        		</div>
+	        	</div>
+        		<div id="pagelist" class="table_area m-t-sm"></div>
+        </div>
+    </div>
+  </div>
+  <div class="modal fade" id="addPro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+            <div class="modal-content">
+				#parse("/sku/skuEdit.vm")
+            </div>
+    </div>
+  </div>
+   #parse("/sku/skuUpload.vm")
+   #parse("/layout/sys_js.vm")
+<script type="text/javascript">	
+	$(document).ready(function() { 
+	   goSearch(1);
+	   //移除数据，让模态框打开时重新加载数据
+	   $("#addPro").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+    	});
+		
+		$("#upload").on("hidden.bs.modal", function() {
+          $(this).removeData("bs.modal");
+    	});
+    });
+	
+	function goSearch(page){
+	  var key = $("#keyword").val();
+	  var data ={keyword:key,pageStart:page};
+	  $("#pagelist").load("${rc.ContextPath}/sku/list.do",data);
+	}
+	
+	function goPage(page){
+	   var currpage = $("#pageNumber").val();
+       var nextpage;
+       if(page>0){
+          nextpage = parseInt(currpage)+1;
+       }else{
+          nextpage = parseInt(currpage)-1;
+       }
+	   goSearch(nextpage);
+	}
+	
+	function editInfo(url){
+	   $("#addPro").modal({
+	      remote:url,
+		  backdrop:'static'
+	   });
+	}
+	
+	function goDel(){
+	   if(checkSelect('skuIds','skuListForm')==0){
+	      alert("请至少选择一条数据");
+		  return false;
+	   }else{
+	     if(confirm("你确定删除这些产品吗?")){
+    	     jQuery.ajax({
+                url: "${rc.ContextPath}/sku/delete.do",
+                data:$("#skuListForm").serialize(),
+                type:'POST',
+                success: function(result){
+                    if(result.success){
+                        alert(result.message);
+                        goSearch(1);
+                    }else{
+                    	alert(result.message);
+    					return false;
+                    }
+                }
+             }); 
+		 }
+	   }
+	}
+	
+	function modalActive() {
+        $('#fileQueue').empty();
+		$('#error').html('');
+    }
+
+    $('#upload').on('show.bs.modal', function () {
+        // 上传输入框设置为空
+        $('#fileName').val('');
+        modalActive();
+     });
+</script>
+</body>
+</html>

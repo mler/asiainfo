@@ -1,0 +1,5 @@
+mapp:
+  validIp: 127.0.0.1,localhost,192.168.1.101,10.10.10.78,42.121.57.229,10.10.19.4,211.140.18.100
+  actionPackage: com.bdx.rainbow.mapp.core
+  encryptPermission: false
+  defaultKey: AILK_MAPP_DESKEY

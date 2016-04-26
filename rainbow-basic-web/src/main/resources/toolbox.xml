@@ -1,0 +1,12 @@
+<toolbox>
+    <tool>
+        <key>date</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+    <tool>
+        <key>session</key>
+        <scope>application</scope>
+        <class>com.bdx.rainbow.common.SessionManager</class>
+    </tool>
+</toolbox>

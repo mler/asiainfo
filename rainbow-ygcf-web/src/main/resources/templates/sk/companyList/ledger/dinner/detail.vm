@@ -1,0 +1,56 @@
+#parse("sys_param.vm")
+
+##<div class="container content">
+##    <div class="row paginationDiv">
+##        <div class="col-sm-12">
+##            <div class="page-nav">
+##                <a href="$!{CONTEXT_PATH}/ledgerDinner/list#ledger-additif">集体聚餐台账</a>
+##                &gt;
+##                <a href="javascript:void(0)" class="last">集体聚餐台账明细</a>
+##
+##                <button class="reback" onclick="goBack()"><i class="iconfont icon-left"></i>返回</button>
+##            </div>
+            <!--search  area-->
+            <div class="searchArea">
+                <form id="dinnerForm" action="$!{CONTEXT_PATH}/company/ledgerDinnerDetailList?ledgerId=$!{request.getParameter("lid")}" method="post">
+
+                </form>
+##                <button class="btn btn-primary search" onclick="qryData('dinnerForm')"><i class="iconfont icon-sousuo"></i>查询</button>
+##                <button class="btn btn-success reset" onclick="reset('dinnerForm')"><i class="iconfont icon-shuaxin"></i>重置</button>
+
+                <button class="btn btn-default btn-xs pull-right" onclick="loadLedger('dinnerLab', '$!{CONTEXT_PATH}/company/ledgerIndex?type=12')"><i class="iconfont icon-left"></i>返回</button>
+            </div>
+            <!--table area-->
+            <div class="table_area">
+                <input type="hidden" id="p_number" value="">
+
+                <div class="queryResultList" id="queryResultList">
+                </div>
+
+                #paginationDiv()
+            </div>
+##        </div>
+##    </div>
+##</div>
+<script type="text/javascript">
+    $(function() {
+
+//        if(sessionStorage.getItem('d_s_from') == 'b') {
+//            $('#p_number').val(sessionStorage.getItem('d_s_number'));
+//        }
+//
+//        sessionStorage.removeItem('d_s_from');
+//        sessionStorage.removeItem('d_s_number');
+
+        qryData('dinnerForm');
+    });
+
+    function reset(form) {
+        $('#searchForm')[0].reset();
+    }
+
+##    function goBack() {
+##        sessionStorage.setItem('d_f_from', 'b');
+##        load('$!{CONTEXT_PATH}/ledgerDinner/list');
+##    }
+</script>

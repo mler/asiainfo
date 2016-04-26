@@ -1,0 +1,109 @@
+#parse("/sys_param.vm")
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    #parse("head.vm")
+    <link rel="stylesheet" href="$RESOURCE_PATH/css/paper.css" />
+</head>
+
+<body>
+<div class="container content">
+    <div class="row">
+        <div class="col-sm-12 paginationDiv">
+            <div class="searchArea">
+                <form class="conditionForm" id="inspectQry" method="post" action="$!{CONTEXT_PATH}/inspect/case/list">
+                    <div class="form-group">
+                        <label>稽查单位：</label>
+                        <div class="inputbox form-control">
+                            <select name="ydzfInspectCase.inspectCaseMainDepId" class="form-control"  >
+                                <option value="">请选择</option>
+                                #foreach($dept in $depts)
+                                    <option value="${dept.deptId}">$!{dept.deptName} </option>
+                                #end
+                            </select>
+                        </div>
+                        <label>案件创建开始时间：</label>
+                        <div class="inputbox form-control">
+                            <input type="text"name="startTime" class="date1 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                            <i class="iconfont icon-date"></i>
+                        </div>
+                        <label>案件创建结束时间：</label>
+                        <div class="inputbox form-control">
+                            <input type="text" name="endTime" class="date2 Wdate" onFocus="WdatePicker({lang:'zh-cn'})"/>
+                            <i class="iconfont icon-date"></i>
+                        </div>
+                        <label>执行状态：</label>
+                        <div class="inputbox form-control">
+                            <select name="ydzfInspectCase.inspectCaseStatus" class="form-control">
+                                <option value="">请选择</option>
+                                <option value="0">待执行</option>
+                                <option value="1">调查取证</option>
+                                <option value="2">拟处罚</option>
+                                <option value="3">案件审核</option>
+                                <option value="4">听证</option>
+                                <option value="5">已执行</option>
+                                <option value="6">已执行</option>
+                                <option value="7">结案</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary search" onclick="submitForm('inspectQry')"><i class="iconfont icon-sousuo"></i>查询</button>
+                </form>
+            </div>
+            #if($type!='lian')
+                <div class="search_area clearfix">
+                    <div class="col-sm-12">
+                        <button class="btn btn-success" onclick="normalModal('myModal', 'editContext', '$!{CONTEXT_PATH}/inspect/case/create', '稽查案件录入') "><i class="iconfont icon-jia"></i>添加</button>
+                        <button class="btn btn-blue" onclick="changeStatus('caseList', 'inspectQry','caseIds', '$!{CONTEXT_PATH}/inspect/case/delete')"><i class="iconfont icon-shanchu"></i>撤案</button>
+                    </div>
+                </div>
+            #end
+            <div class="table_area m-t-sm TableControl queryResultList">
+
+            </div>
+            <div class="pageBar clearfix">
+                <span id="pager" class="pager pagination"></span>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--modal start  举报录入 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">举报投诉录入</h4>
+                </div>
+                <div class="modal-body addinfo" id="editContext">
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="$RESOURCE_PATH/js/jquery-1.11.1.js"></script>
+    <script src="$RESOURCE_PATH/js/bootstrap/js/bootstrap.min.js"></script>
+    <script src="$RESOURCE_PATH/js/self.js"></script>
+    <script src="$RESOURCE_PATH/js/jquery.pager.js"></script>
+    <script type="text/javascript" src="$!{RESOURCE_PATH}/js/pagination_m.js"></script>
+    <script src="${RESOURCE_PATH}/js/date/WdatePicker.js"></script>
+</body>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".conditionForm").each(function(){
+            $(this).append('<input type="text" value="不要删除这个input，只有在form里不只有一个input的情况下，在input里按回车才不会提交表单" style="display:none" />')
+        })
+        submitForm('inspectQry');
+    })
+
+</script>
+</html>
+

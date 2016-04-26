@@ -1,0 +1,104 @@
+#parse("sys_param.vm")
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand sys_name" href="$!{CONTEXT_PATH}/index"><img src="$!{CONTEXT_PATH}/img/kitchen_logo.png" alt="logo" />阳光厨房监管系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><img src="$!{CONTEXT_PATH}/img/user.png" alt="..." class="img-circle"/></li>
+                <li><a href="#">$!{session.getUserName($!{request})}，欢迎您！</a></li>
+                <li><a href="javascript:void(0);" onclick="logout()"><i class="iconfont icon-tuichu"></i></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-12 main_nav">
+        <ul class="nav nav-pills">
+        ##            企业用户
+            #if($!{session.getUserType($!{request})} == '2')
+                <li class="ledger" data-target="#ledger"><a href="javascript:void(0)"><i class="iconfont icon-jichutaizhangguanli"></i>台账管理</a></li>
+                <li class="employee" data-target="#employee"><a href="javascript:void(0)"><i class="iconfont icon-idcard"></i>员工管理</a></li>
+                <li class="active"><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/company"><i class="iconfont icon-iconfontqiye"></i>企业信息</a></li>
+            #end
+
+        ##            食药监用户
+            #if($!{session.getUserType($!{request})} == '1')
+                <li class="active"><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/map"><i class="iconfont icon-weizhi"></i>企业地图</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/company/index"><i class="iconfont icon-richangbiaoxian"></i>企业列表</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/device"><i class="iconfont icon-richangbiaoxian"></i>监控列表</a></li>
+            #end
+        </ul>
+
+        <div class="sec_nav" id="ledger">
+            <ul>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerPurchase/list">采购台账</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerAdditif/list">添加剂使用台账</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerWaste/list">废弃物回收台账</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerSterilize/list">消毒记录台账</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerTravel/list">接待旅游台账</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/ledgerDinner/list">集体用餐台账</a></li>
+            </ul>
+        </div>
+        <div class="sec_nav" id="employee">
+            <ul>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/employee">员工列表</a></li>
+                <li><a href="javascript:void(0)" onclick="menu_load(this)" src="$!{CONTEXT_PATH}/employee/stat">健康证管理</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<script type="text/javascript">
+    $(function() {
+        // 食药监
+        if($!{session.getUserType($!{request})} == '1') {
+            load('$!{CONTEXT_PATH}/map');
+        } else {
+            load('$!{CONTEXT_PATH}/company');
+        }
+    });
+
+    function logout() {
+        $.ajax({
+           url: '$!{CONTEXT_PATH}/logout',
+           type: 'post',
+           success : function (data, textStatus) {
+                var flag = data.flag;
+
+                if(flag) {
+                    location.href = '$!{CONTEXT_PATH}/'
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+    }
+
+    function menu_load(el) {
+        $('.main_nav').find('.active').removeClass('active');
+
+        var _this = $(el);
+        // 当前点击选中状态
+        _this.parent().addClass('active');
+
+        // 上次菜单选中
+        var id = _this.parents('div.sec_nav').attr('id');
+        $('.nav').find('li.' + id).addClass('active');
+
+        $('.body').load(_this.attr('src'));
+    }
+
+    function load(url) {
+        showMask();
+        $('.body').load(url, '', function() {
+            hideMask();
+        });
+    }
+</script>

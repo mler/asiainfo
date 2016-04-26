@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	 xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd" 
+	default-autowire="byName" default-lazy-init="true">
+
+	<bean id="inspectionInfoService" name="inspectionInfoService" class="com.bdx.rainbow.spsy.service.impl.TInspectionInfoServiceImpl"></bean>
+	<bean id="materialInfoService" name="materialInfoService" class="com.bdx.rainbow.spsy.service.impl.MaterialInfoServiceImpl"></bean>
+	<bean id="enterpriseInfoService" name="enterpriseInfoService" class="com.bdx.rainbow.spsy.service.impl.EnterpriseInfoServiceImpl"></bean>
+	<bean id="skuService" name="skuService" class="com.bdx.rainbow.spsy.service.impl.SkuServiceImpl"></bean>
+	<bean id="paramDetailService" name="paramDetailService" class="com.bdx.rainbow.spsy.service.impl.ParamDetailServiceImpl"></bean>
+	<bean id="agencyCompanyService" name="agencyCompanyService" class="com.bdx.rainbow.spsy.service.impl.AgencyCompanyServiceImpl"></bean>
+	<bean id="goodsStockInfoService" name="goodsStockInfoService" class="com.bdx.rainbow.spsy.service.impl.GoodsStockInfoServiceImpl"></bean>
+	<bean id="identificationCodeService" name="identificationCodeService" class="com.bdx.rainbow.spsy.service.impl.IdentificationCodeServiceImpl"></bean>
+	<bean id="producerStockService" name="producerStockService" class="com.bdx.rainbow.spsy.service.impl.ProducerStockServiceImpl"></bean>
+    <bean id="trackService" name="trackService" class="com.bdx.rainbow.spsy.service.impl.ProductTrackServiceImpl"></bean>
+    <bean id="traceService" name="traceService" class="com.bdx.rainbow.spsy.service.impl.TraceServiceImpl"></bean>
+	<bean id="licenseService" name="licenseService" class="com.bdx.rainbow.spsy.service.impl.EnterpriseLicenseServiceImpl"></bean>
+    <import resource="classpath*:applicationContext-dao.xml"/>
+	<import resource="applicationContext-tx.xml"/>
+	
+</beans>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="track" >
+    <resultMap id="produce" class="java.util.HashMap">
+        <result property="producerId" column="ENTERPRISE_ID" javaType="java.lang.Integer" />
+        <result property="detectionId" column="PRODUCT_DETECTION_ID" javaType="java.lang.String" />
+        <result property="skuName" column="SKU_NAME" javaType="java.lang.String" />
+        <result property="productionDate" column="PRODUCTION_DATE" javaType="java.sql.Timestamp" />
+        <result property="createTime" column="CREATE_TIME" javaType="java.sql.Timestamp" />
+        <result property="phone" column="LINK_PHONE" javaType="java.lang.String" />
+        <result property="principal" column="AGENCY_RESPONSIBLE_PERSON" javaType="java.lang.String" />
+        <result property="enterpriseName" column="AGENCY_NAME" javaType="java.lang.String" />
+    </resultMap>
+    <resultMap id="agency" class="java.util.HashMap" >
+        <result property="buyAgencyId" column="BUY_AGENCY_ID" javaType="java.lang.Integer" />
+        <result property="sums" column="sums" javaType="java.lang.Integer" />
+    </resultMap>
+    <resultMap id="circulate" class="java.util.HashMap">
+        <result property="buyAgencyId" column="BUY_AGENCY_ID" javaType="java.lang.Integer" nullValue="0" />
+        <result property="outDate" column="outDate" javaType="java.sql.Timestamp" />
+        <result property="outNumber" column="outNumber" javaType="java.lang.Integer" nullValue="0" />
+        <result property="seName" column="seName" javaType="java.lang.String" />
+        <result property="outPrincipal" column="outPrincipal" javaType="java.lang.String" />
+        <result property="outPhone" column="outPhone" javaType="java.lang.String" />
+        <result property="agencyId" column="agencyId" javaType="java.lang.Integer" nullValue="0" />
+        <result property="skuName" column="SKU_NAME" javaType="java.lang.String" />
+        <result property="inDate" column="inDate" javaType="java.sql.Timestamp" />
+        <result property="inNumber" column="inNumber" javaType="java.lang.Integer" nullValue="0"/>
+        <result property="supAgencyId" column="supAgencyId" javaType="java.lang.Integer" nullValue="0" />
+        <result property="supName" column="supName" javaType="java.lang.String" />
+        <result property="inName" column="inName" javaType="java.lang.String" />
+        <result property="inPrincipal" column="inPrincipal" javaType="java.lang.String" />
+        <result property="inPhone" column="inPhone" javaType="java.lang.String" />
+    </resultMap>
+    <resultMap id="sale" class="java.util.HashMap">
+        <result property="agencyId" column="agencyId" javaType="java.lang.Integer" nullValue="0" />
+        <result property="inDate" column="inDate" javaType="java.sql.Timestamp" />
+        <result property="inNumber" column="inNumber" javaType="java.lang.Integer" nullValue="0"/>
+        <result property="supAgencyId" column="supAgencyId" javaType="java.lang.Integer" nullValue="0" />
+        <result property="skuName" column="SKU_NAME" javaType="java.lang.String" />
+        <result property="supName" column="supName" javaType="java.lang.String" />
+        <result property="inName" column="inName" javaType="java.lang.String" />
+        <result property="inPrincipal" column="inPrincipal" javaType="java.lang.String" />
+        <result property="inPhone" column="inPhone" javaType="java.lang.String" />
+        <result property="sums" column="sums" javaType="java.lang.Integer" nullValue="0" />
+    </resultMap>
+    <select id="selectCorp" parameterClass="java.util.Map" resultMap="produce">
+        select DISTINCT
+        a.ENTERPRISE_ID,PRODUCT_DETECTION_ID,SKU_NAME,PRODUCTION_DATE,a.CREATE_TIME,b.LINK_PHONE,b.AGENCY_RESPONSIBLE_PERSON,b.AGENCY_NAME
+        from t_origin_producer_stock_in  a
+        left join t_origin_agency_company b on a.ENTERPRISE_ID = b.AGENCY_ID
+        where 1=1 and STATUS='01'
+
+        <isNotEmpty property="skuBatch" >
+            and SKU_BATCH = #skuBatch#
+        </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+
+    </select>
+    <select id="selectSkuBatch" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        SELECT DISTINCT SKU_BATCH from t_origin_producer_stock_out WHERE PRODUCT_ID_CODE LIKE #productIdCode#
+    </select>
+    <select id="selectFirAgency" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        select DISTINCT
+        AGENCY_ID
+        from t_origin_producer_stock_out where 1=1
+
+        <isNotEmpty property="skuBatch" >
+            and SKU_BATCH = #skuBatch#
+        </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+    </select>
+    <select id="selectCirculate" parameterClass="java.util.Map" resultMap="circulate">
+        SELECT
+        result.BUY_AGENCY_ID,
+        result.outDate,
+        result.outNumber,
+        result.seName,
+        result.outPrincipal,
+        result.outPhone,
+        a.BUY_AGENCY_ID agencyId,
+        a.SKU_NAME,
+        a.OPERATION_DATE inDate,
+        a.PACKING_QUANTITY inNumber,
+        a.SUPPLY_AGENCY_ID supAgencyId,
+        a.SUPPLY_AGENCY_NAME supName,
+        cy.AGENCY_NAME inName,
+        cy.AGENCY_RESPONSIBLE_PERSON inPrincipal,
+        cy.LINK_PHONE inPhone
+        FROM
+        t_origin_goods_stock a
+        JOIN t_origin_agency_company cy ON a.BUY_AGENCY_ID = cy.AGENCY_ID
+        LEFT JOIN (
+        SELECT
+        b.BUY_AGENCY_ID,
+        b.SUPPLY_AGENCY_ID,
+        b.OPERATION_DATE outDate,
+        b.PACKING_QUANTITY outNumber,
+        agency.AGENCY_NAME seName,
+        agency.AGENCY_RESPONSIBLE_PERSON outPrincipal,
+        agency.LINK_PHONE outPhone
+        FROM
+        t_origin_goods_stock b
+        JOIN t_origin_agency_company agency ON b.BUY_AGENCY_ID = agency.AGENCY_ID
+        WHERE
+        b.OPERATION_TYPE != '02' <isNotEmpty property="skuBatch" >
+        and b.SKU_BATCH = #skuBatch#
+    </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and b.SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+        <isNotEmpty property="buyAgencyIds">
+            and b.SUPPLY_AGENCY_ID in
+            <iterate property="buyAgencyIds" open="(" conjunction="," close=")">
+                #buyAgencyIds[]#
+            </iterate>
+        </isNotEmpty>
+        ) result ON a.BUY_AGENCY_ID = result.SUPPLY_AGENCY_ID and a.OPERATION_DATE &lt;&gt;result.outDate
+        WHERE
+        a.OPERATION_TYPE != '02'
+        <isNotEmpty property="skuBatch" >
+            and a.SKU_BATCH = #skuBatch#
+        </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and a.SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+        <isNotNull property="buyAgencyIds">
+            and a.BUY_AGENCY_ID in
+            <iterate property="buyAgencyIds" open="(" conjunction="," close=")">
+                #buyAgencyIds[]#
+            </iterate>
+        </isNotNull> order by inDate desc
+    </select>
+
+    <select id="selectSale" parameterClass="java.util.Map" resultMap="sale">
+        SELECT
+        a.BUY_AGENCY_ID agencyId,
+        a.OPERATION_DATE inDate,
+        a.PACKING_QUANTITY inNumber,
+        a.SUPPLY_AGENCY_ID supAgencyId,
+        a.SKU_NAME,
+        a.SUPPLY_AGENCY_NAME supName,
+        cy.AGENCY_NAME inName,
+        cy.AGENCY_RESPONSIBLE_PERSON inPrincipal,
+        cy.LINK_PHONE inPhone,
+        result.sums
+        FROM
+        t_origin_goods_stock a
+        JOIN t_origin_agency_company cy ON a.BUY_AGENCY_ID = cy.AGENCY_ID
+        LEFT JOIN (
+        SELECT
+        b.ENTERPRISE_ID,SUM(b.SALE_QUANTITY) sums,b.SALE_DATE
+        FROM
+        t_origin_merchant_stock_out b
+        WHERE 1=1
+        <isNotEmpty property="skuBatch" >
+            and b.SKU_BATCH = #skuBatch#
+        </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and b.SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+        GROUP BY
+        b.ENTERPRISE_ID
+        ) result ON a.BUY_AGENCY_ID = result.ENTERPRISE_ID
+        AND a.OPERATION_DATE &lt;&gt; result.SALE_DATE
+        WHERE
+        a.OPERATION_TYPE = '03'
+        <isNotEmpty property="skuBatch" >
+            and a.SKU_BATCH = #skuBatch#
+        </isNotEmpty>
+        <isNotEmpty property="skuBarCode">
+            and a.SKU_BAR_CODE=#skuBarCode#
+        </isNotEmpty>
+    </select>
+</sqlMap>

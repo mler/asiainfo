@@ -1,0 +1,177 @@
+<!doctype html public "-//w3c//dtd xhtml 1.0 transitional//en" "http://www.w3.org/tr/xhtml1/dtd/xhtml1-transitional.dtd">
+<html>
+    #set($RESOURCE_PATH=$!{rc.ContextPath}+'/statics')
+<head>
+    <title>商品追踪</title>
+    #parse('/layout/head.vm')
+</head>
+<body>
+    <div class="container content">
+      <div class="row">
+        <div class="col-sm-12">
+	        	<div class="search_area clearfix">
+	        		<div class="col-sm-5 ser_group">
+	        			<input type="text" class="form-control" placeholder="输入商品名称或条形码" id="skuName"/>
+	        			<button type="button" class="btn btn-blue" onclick="searchSpjg()"><i class="iconfont icon-sousuo"></i>查询</button>
+	        		</div>
+	        	</div>
+        		<div id="pagelist" class="table_area m-t-sm"></div>
+        		<div class="chart">
+        			<div class="chart_name" id="chartParent" style="display:none;">
+        				<h1 id="spjg_skuName"></h1>
+						<input type="hidden" value="" id="spjg_skuId"/>
+						<select id="spjg_months" class="form-control" onchange="changeChart()">
+							<option value="201512">201512
+                            </option>
+							#foreach($month in $lastMonths)
+        					<option value="$month">$month</option>
+							#end
+        				</select>
+        			</div>
+        			<div class="chart_shape" id="chart" style="height:400px"></div>
+        		</div>
+        </div>
+    </div>
+  </div>
+    <!-- Placed at the end of the document so the pages load faster -->
+	#parse("/layout/sys_js.vm")
+    <script src="${RESOURCE_PATH}/js/echarts-2.2.7 2/build/dist/echarts.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() { 
+    	   searchSpjg();
+        });
+		var myChart;
+		// 路径配置
+        require.config({
+            paths: {
+                echarts: '$RESOURCE_PATH/js/echarts-2.2.7 2/build/dist'
+            }
+        });
+		var option = {
+		        		title :{
+		        			text:'商品追溯信息图形报表',
+						x:60		        			
+		        		},
+				    tooltip : {
+				        trigger: 'axis'
+				    },
+				    legend: {
+				        data:[]
+				    },
+				    toolbox: {
+				        show : true,
+				        feature : {
+				            mark : {show: true},
+				            dataView : {show: true, readOnly: false},
+				            magicType : {show: true, type: ['line', 'stack', 'tiled']},
+				            restore : {show: true},
+				            saveAsImage : {show: true}
+				        }
+				    },
+				    calculable : true,
+				    xAxis : [
+				        {
+				        	name :'商品批次',
+				            type : 'category',
+				            boundaryGap : false,
+				            data : []
+				        }
+				    ],
+				    yAxis : [
+				        	{
+							name : '单位：条',				        	
+				            type : 'value'
+				        }
+				    ],
+				    series : []
+				};
+				
+				
+		require(	[
+        		'echarts',
+        		'echarts/chart/line'   // 使用柱状图就加载bar模块，按需加载
+        		],
+	        function	(ec){
+	        	// 基于准备好的dom，初始化echarts图表
+	        		myChart=ec.init(document.getElementById('chart'));
+		        	myChart.setOption(option);
+	        }
+        );
+		function searchSpjg(){
+           var skuName = $.trim($("#skuName").val());
+           var data = {skuName:skuName,pageStart:1};
+           $("#pagelist").load("${rc.ContextPath}/trace/spjgList.do",data);
+        }
+		
+		function changeChart(){
+			var skuName = $("#spjg_skuName").html();
+			var skuId = $("#spjg_skuId").val();
+			spjg_openChart(skuId,skuName);
+		}
+		
+		function spjg_openChart(skuId,skuName){
+			$("#chartParent").show();
+			$("#spjg_skuName").html(skuName);
+			$("#spjg_skuId").val(skuId);
+			myChart.clear();  
+        	myChart.showLoading({text: '正在努力的读取数据中...'});  
+			
+			var yyyyMM = $("#spjg_months").val();
+	 		$.ajax({
+    			url: '${rc.ContextPath}/trace/getSpjgChart.do',
+    			type:"post",
+    			data:{'skuId':skuId,
+					   'yyyyMM':yyyyMM
+    				 },
+    			success:function(data){	
+    				if(data.success){
+						var jsData = eval("(" + data.data + ")");
+						if(jsData == null || jsData == '' || data.data == '{}'){
+							alert("没有相关数据");
+						}
+    					var xData = jsData['xAxis'];
+						var yData_sale = jsData['yAxis_sale'];
+						var yData_pass = jsData['yAxis_pass'];
+						var yData_produce = jsData['yAxis_produce'];
+						var seriesData=[];
+						var legendData = ['生产信息','经销信息','销售信息'];
+						seriesData.push({
+                                "name":legendData[2],
+                                "type":"line",
+                                "data":yData_sale
+                            });
+    					seriesData.push({
+                                "name":legendData[1],
+                                "type":"line",
+                                "data":yData_pass
+                            });
+						seriesData.push({
+                                "name":legendData[0],
+                                "type":"line",
+                                "data":yData_produce
+                            });
+						//var option = myChart.getOption();
+						option.legend["data"]=legendData;
+                        option.xAxis[0]["data"]=xData;
+						
+    					myChart.setOption(option);
+						myChart.setSeries(seriesData);
+						myChart.hideLoading(); 
+    				}else{
+						alert(data.msg);
+					}
+    			}
+    		});
+		}
+        function loadSpzs(skuBarcode){
+		    var ob = $(window.parent.document.getElementById("parent39"));
+			var oldUrl = ob.parent().attr("href");
+			ob.parent().attr("href",oldUrl + "?spzsSkuBarCode=" + skuBarcode);
+			ob.click();
+		
+		}
+		
+    </script>
+  </body>
+</html>
+
